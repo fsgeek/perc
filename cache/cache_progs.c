@@ -5,6 +5,8 @@
 #include <errno.h>
 #include <string.h>
 #include <memory.h>
+#include "cache.h"
+#include "cpu.h"
 
 const char *USAGE = "\
 usage:             \n\
@@ -22,6 +24,7 @@ static struct option gLongOptions[] = {
 int main(int argc, char **argv) 
 {
     int option_char = '\0';
+    int clsize = 0;
 
     setbuf(stdout, NULL); // disable buffering
 
@@ -37,7 +40,15 @@ int main(int argc, char **argv)
     }
 
     printf("Starting\n");
+  	clsize = cpu_cacheline_size();
 
+	printf("RTM: %s\n", cpu_has_rtm() ? "Yes" : "No");
+	printf("HLE: %s\n", cpu_has_hle() ? "Yes" : "No");
+	printf("CLFLUSHOPT: %s\n", cpu_has_clflushopt() ? "Yes" : "No");
+	printf("CLWB: %s\n", cpu_has_clwb() ? "Yes" : "No");
+	printf("CLFLUSH cache line 0x%x\n", clsize);
+
+    // (void) cache_test();
     printf("Finished\n");
 
     return (0);
