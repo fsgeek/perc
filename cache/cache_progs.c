@@ -56,5 +56,16 @@ int main(int argc, char **argv)
     printf("elapsed time is %llu\n", timestamp2 - timestamp1);
     printf("Finished\n");
 
+#if 0
+    _mm_sfence();
+    _mm_stream_pi();
+    _mm_stream_ps();
+    _mm256_stream_ps();
+    _mm_prefetch();
+    _mm_clflush();
+    _mm_clflushopt();
+    _mm_clwb();
+#endif // 0
+
     return (0);
 }

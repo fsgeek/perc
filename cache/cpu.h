@@ -9,6 +9,7 @@
 //
 int cpu_has_rtm(void);
 int cpu_has_hle(void);
+int cpu_has_clflush(void);
 int cpu_has_clwb(void);
 int cpu_has_clflushopt(void);
 size_t cpu_cacheline_size(void);
@@ -18,4 +19,9 @@ void cpu_prefetch_l1(const void *addr);
 void cpu_prefetch_l2(const void *addr);
 void cpu_prefetch_l3(const void *addr);
 void cpu_prefetch_oneuse(const void *addr);
+
+void (*cpu_clflush)(void *addr);
+void (*cpu_clflushopt)(void *addr);
+void (*cpu_clwb)(void *addr);
+
 
