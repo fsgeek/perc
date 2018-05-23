@@ -25,6 +25,7 @@ int main(int argc, char **argv)
 {
     int option_char = '\0';
     int clsize = 0;
+    unsigned long long timestamp1, timestamp2;
 
     setbuf(stdout, NULL); // disable buffering
 
@@ -40,15 +41,19 @@ int main(int argc, char **argv)
     }
 
     printf("Starting\n");
+    timestamp1 = cpu_rdtsc();
   	clsize = cpu_cacheline_size();
 
 	printf("RTM: %s\n", cpu_has_rtm() ? "Yes" : "No");
 	printf("HLE: %s\n", cpu_has_hle() ? "Yes" : "No");
 	printf("CLFLUSHOPT: %s\n", cpu_has_clflushopt() ? "Yes" : "No");
 	printf("CLWB: %s\n", cpu_has_clwb() ? "Yes" : "No");
-	printf("CLFLUSH cache line 0x%x\n", clsize);
+	printf("CLFLUSH cache line: 0x%x\n", clsize);
+    printf("Ticks per second: 0x%d\n", cpu_frequency());
 
-    // (void) cache_test();
+    (void) cache_test();
+    timestamp2 = cpu_rdtsc();
+    printf("elapsed time is %llu\n", timestamp2 - timestamp1);
     printf("Finished\n");
 
     return (0);
