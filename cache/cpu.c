@@ -213,8 +213,11 @@ static void clflushopt(void const *addr)
 {
     assert(cpu_info.has_clflushopt);
 
-    // _mm_clflushopt(addr);
+#if defined(__INTEL_COMPILER)
+    _mm_clflushopt(addr);
+#else
     asm volatile(".byte 0x66; clflush %P0" : "+m" (*(volatile char *)addr));
+#endif 
 
 }
 
@@ -227,5 +230,10 @@ static void clwb(void const *addr)
     // as the time of writing the more obvious 
     // asm volatile("clwb %0" : "+m" (*(volatile char *) addr));
     // wouldn't build.  I suspect the tool chain is too old.
+#if defined(__INTEL_COMPILER)
+    _mm_clwb(addr);
+#else
     asm volatile(".byte 0x66, 0x0f, 0xae, 0x30" : "+m" (*(volatile char *)addr));
+#endif 
+
 }
