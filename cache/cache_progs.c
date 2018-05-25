@@ -26,6 +26,7 @@ int main(int argc, char **argv)
     int option_char = '\0';
     int clsize = 0;
     unsigned long long timestamp1, timestamp2;
+    cpu_cache_data_t *cd;
 
     setbuf(stdout, NULL); // disable buffering
 
@@ -51,10 +52,22 @@ int main(int argc, char **argv)
 	printf("CLFLUSH cache line: 0x%x\n", clsize);
     printf("Ticks per second: 0x%d\n", cpu_frequency());
 
-    (void) cache_test();
+    // (void) cache_test();
     timestamp2 = cpu_rdtsc();
     printf("elapsed time is %llu\n", timestamp2 - timestamp1);
     printf("Finished\n");
+
+
+    for (unsigned index = 0; ; index++) {
+        cd = cpu_get_cache_info(index);
+        if (NULL == cd) {
+            break;
+        }
+        
+        cpu_free_cache_info(cd);
+        cd = NULL;
+        printf("index is %u\n", index);
+    }
 
 #if 0
     _mm_sfence();

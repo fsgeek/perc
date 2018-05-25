@@ -3,6 +3,24 @@
  */
 
 #include <stdlib.h>
+#include <malloc.h>
+
+//
+//  Cache data type
+//
+typedef struct {
+    unsigned id;
+    unsigned level;
+    unsigned type;
+    char type_name[32];
+    unsigned sets;
+    unsigned line_size;
+    unsigned partitions;
+    unsigned associativity;
+    unsigned cache_size;
+    unsigned fully_associative;
+    unsigned self_initializing;
+} cpu_cache_data_t;
 
 //
 // Some CPU functions
@@ -20,8 +38,10 @@ void cpu_prefetch_l2(const void *addr);
 void cpu_prefetch_l3(const void *addr);
 void cpu_prefetch_oneuse(const void *addr);
 
-void (*cpu_clflush)(void *addr);
-void (*cpu_clflushopt)(void *addr);
-void (*cpu_clwb)(void *addr);
+extern void (*cpu_clflush)(void const *addr);
+extern void (*cpu_clflushopt)(void const *addr);
+extern void (*cpu_clwb)(void const *addr);
 
 
+cpu_cache_data_t *cpu_get_cache_info(unsigned cache);
+inline void cpu_free_cache_info(cpu_cache_data_t *cd) { free (cd); }
