@@ -37,10 +37,13 @@ void cpu_prefetch_l1(const void *addr);
 void cpu_prefetch_l2(const void *addr);
 void cpu_prefetch_l3(const void *addr);
 void cpu_prefetch_oneuse(const void *addr);
+void cpu_sfence(void);
+void cpu_mfence(void);
 
 extern void (*cpu_clflush)(void const *addr);
 extern void (*cpu_clflushopt)(void const *addr);
 extern void (*cpu_clwb)(void const *addr);
+extern void (*cpu_init)(void);
 
 
 cpu_cache_data_t *cpu_get_cache_info(unsigned cache);

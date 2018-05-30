@@ -121,6 +121,14 @@ static void dummy_init(void)
     return;
 }
 
+void cpu_sfence(void)
+{
+    _mm_sfence();
+}
+
+void cpu_mfence(void) {
+    _mm_mfence();
+}
 
 
 int cpu_has_rtm(void)
