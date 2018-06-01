@@ -8,8 +8,10 @@ AM_INIT_AUTOMAKE([-Wall -Wno-portability foreign])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
-AC_PATH_PROG(CC_PATH, $CC, )
-CC=/opt/intel/system_studio_2018/compilers_and_libraries/linux/bin/intel64/icc
+#AC_PATH_PROG(CC_PATH, $CC, )
+#CC=/opt/intel/system_studio_2018/compilers_and_libraries/linux/bin/intel64/icc
+CC=icc
+#CXX=icpc
 
 # use gnu extensions
 # AC_USE_SYSTEM_EXTENSIONS
@@ -21,7 +23,7 @@ AC_SUBST(LIBTOOL)
 # Checks for programs.
 AM_PROG_AS
 AC_PROG_CC([icc gcc])
-AC_PROG_CXX
+AC_PROG_CXX([icpc g++])
 LT_INIT
 
 # enable libtool library interdepenency checks
