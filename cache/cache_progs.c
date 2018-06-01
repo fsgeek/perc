@@ -57,6 +57,11 @@ static void flush_cache(void)
     memset(buffer, c++, buffer_length);
 }
 
+//
+// Reference to: http://blog.stuffedcow.net/2013/01/ivb-cache-replacement/
+// this is about cache replacement policies and includes some code on determining specific policy.
+//
+// It might be possible to use a hybrid approach here: a probabalistic 
 
 static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs, void *memory)
 {
