@@ -38,7 +38,7 @@ typedef union {
 C_ASSERT(64 == sizeof(record_t));
 
 #define RECORDS_PER_PAGE (PAGE_SIZE / sizeof(record_t))
-typedef union {
+typedef struct {
     record_t records[RECORDS_PER_PAGE];
 } record_page_t;
 
@@ -57,17 +57,45 @@ static void flush_cache(void)
     memset(buffer, c++, buffer_length);
 }
 
-void test_cache_behavior_5(const unsigned pagecount, const unsigned runs, void *memory)
+
+static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs, void *memory)
+{
+    record_page_t *recpages = (record_page_t *)memory;
+
+    if (6 != pagecount) {
+        // only need to test this one case.
+        return;
+    }
+    printf("memory is at 0x%p", memory);
+
+    memset(memory, 0, pagecount * PAGE_SIZE);
+    for (unsigned index = 0; index < RECORDS_PER_PAGE; index++) {
+        record_t *r = &recpages[0].records[index];
+        printf("initialize page 0x%p, index %u\n", r, index);
+        for (unsigned index2 = 0; index2 < pagecount; index2++) {
+            uintptr_t diff1, diff2;
+
+            r->s.next = &recpages[(index2 + 1) % pagecount].records[index];
+            r->s.counter = 0;
+            diff1 = (uintptr_t)r - (uintptr_t)r->s.next;
+            diff2 = (uintptr_t)r->s.next - (uintptr_t)r;
+            printf("set %p to point to %p (difference %lu)\n", r, r->s.next, diff1 < diff2 ? diff1 : diff2);
+            r = r->s.next; // advance to the next location. 
+        }
+    }
+}
+
+static void test_cache_behavior_5(const unsigned pagecount, const unsigned runs, void *memory)
 {
 
 }
 
-void test_cache_behavior_4(const unsigned pagecount, const unsigned runs, void *memory)
+static void test_cache_behavior_4(const unsigned pagecount, const unsigned runs, void *memory)
 {
 
 }
 
-void test_cache_behavior_3(const unsigned pagecount, const unsigned runs, void *memory)
+static void test_cache_behavior_3(const unsigned pagecount, const unsigned runs, void *memory)
 {
     unsigned start, end;
     double time = 0.0;
@@ -89,7 +117,7 @@ void test_cache_behavior_3(const unsigned pagecount, const unsigned runs, void *
     done = 1;
 }
 
-void test_cache_behavior_2(const unsigned pagecount, const unsigned runs, void *memory)
+static void test_cache_behavior_2(const unsigned pagecount, const unsigned runs, void *memory)
 {
     uintptr_t eom = ((uintptr_t)memory + PAGE_SIZE * pagecount);
     record_page_t *rp = (record_page_t *)memory;
@@ -301,7 +329,7 @@ void test_cache_behavior_2(const unsigned pagecount, const unsigned runs, void *
 
 }
 
-void test_cache_behavior_1(const unsigned pagecount, const unsigned runs, void *memory)
+static void test_cache_behavior_1(const unsigned pagecount, const unsigned runs, void *memory)
 {
     unsigned start, end;
     double time;
@@ -428,11 +456,12 @@ void test_cache_behavior_1(const unsigned pagecount, const unsigned runs, void *
 typedef void (*cache_test_t)(const unsigned pagecount, const unsigned runs, const void *memory);
 
 cache_test_t cache_tests[] = {
-    (cache_test_t)test_cache_behavior_1,
-    (cache_test_t)test_cache_behavior_2,
-    (cache_test_t)test_cache_behavior_3,
-    (cache_test_t)test_cache_behavior_4,
-    (cache_test_t)test_cache_behavior_5,
+    // (cache_test_t)test_cache_behavior_1,
+    // (cache_test_t)test_cache_behavior_2,
+    // (cache_test_t)test_cache_behavior_3,
+    // (cache_test_t)test_cache_behavior_4,
+    // (cache_test_t)test_cache_behavior_5,
+    (cache_test_t)test_cache_behavior_6,
     NULL,
 };
 
@@ -482,7 +511,7 @@ int main(int argc, char **argv)
     int clsize = 0;
     unsigned long long timestamp1, timestamp2;
     cpu_cache_data_t *cd;
-    static const unsigned samples[] = {4, 8, 12, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536};
+    static const unsigned samples[] = {4, 6, 8, 12, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536};
 
     setbuf(stdout, NULL); // disable buffering
 
