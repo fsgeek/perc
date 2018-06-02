@@ -17,9 +17,6 @@
 // Explicitly force definitions so we will load the intrinsics
 // Note that we handle non-existence in this file (or we SHOULD)
 //
-#include <x86intrin.h>
-#include <xmmintrin.h>
-#include <emmintrin.h>
 #include <pthread.h>
 #include <assert.h>
 #include "cpuid.h" // need latest definitions
@@ -51,6 +48,32 @@ void (*cpu_clflush)(void const *addr) = dummy_clflush;
 void (*cpu_clflushopt)(void const *addr) = dummy_clflush;
 void (*cpu_clwb)(void const *addr) = dummy_clflush;
 
+unsigned char cpu_xtest(void)
+{
+    if ((0 == cpu_info.has_rtm) && (0 == cpu_info.has_hle)) {
+        return 0;
+    }
+
+    return _xtest();
+}
+
+unsigned int cpu_xbegin(void)
+{
+    if (0 == cpu_info.has_rtm) {
+        return 0;
+    }
+
+    return _xbegin();
+}
+
+void cpu_xend(void)
+{
+    if (0 == cpu_info.has_rtm) {
+        return;
+    }
+
+    _xend();
+}
 
 static int cpu_test_level7_flag(unsigned flag)
 {
@@ -305,6 +328,11 @@ cpu_cache_data_t *cpu_get_cache_info(unsigned cache_id)
     }
 
     return cd;
+}
+
+void cpu_free_cache_info(cpu_cache_data_t *cd) 
+{ 
+    free (cd); 
 }
 
 #if 0

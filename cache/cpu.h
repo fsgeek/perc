@@ -4,6 +4,9 @@
 
 #include <stdlib.h>
 #include <malloc.h>
+#include <x86intrin.h>
+#include <xmmintrin.h>
+#include <emmintrin.h>
 
 //
 //  Cache data type
@@ -40,6 +43,15 @@ void cpu_prefetch_oneuse(const void *addr);
 void cpu_sfence(void);
 void cpu_mfence(void);
 
+#define cpu_xabort(mm) do { \
+    if (0 == cpu_info.has_rtm) return; \
+    _xabort(mm); \
+} while(0)
+
+unsigned char cpu_xtest(void);
+unsigned int cpu_xbegin(void);
+void cpu_xend(void);
+
 extern void (*cpu_clflush)(void const *addr);
 extern void (*cpu_clflushopt)(void const *addr);
 extern void (*cpu_clwb)(void const *addr);
@@ -47,4 +59,4 @@ extern void (*cpu_init)(void);
 
 
 cpu_cache_data_t *cpu_get_cache_info(unsigned cache);
-inline void cpu_free_cache_info(cpu_cache_data_t *cd) { free (cd); }
+void cpu_free_cache_info(cpu_cache_data_t *cd);

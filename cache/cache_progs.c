@@ -59,11 +59,152 @@ static void flush_cache(void)
 
 void test_cache_behavior_5(const unsigned pagecount, const unsigned runs, void *memory)
 {
+    static unsigned done = 0;
+    unsigned start, end;
+    double time = 0.0;
+    record_t *r, *r2;
+    record_t *record_array[RECORDS_PER_PAGE];
+    record_page_t *rp_start = (record_page_t *)memory;
+    int xresult = 36;
+    int hits = 0;
 
+
+    if (pagecount != 12) {
+        // this is our magic number - ignore all others.
+        return;
+    }
+
+    if (0 == cpu_has_rtm()) { // no RTM, nothing to do
+        if (!done) {
+            LOG_RESULTS(pagecount, 0, 0.0, "No RTM support");
+            done = 1;
+        }
+        return;
+    }
+
+    fprintf(stderr, "starting %s\n", __FUNCTION__);
+
+    //
+    // Build a list of starting addresses.  Staggering is my attempt to foil the prefetcher
+    //
+    memset(record_array, 0, sizeof(record_array));
+    for (unsigned index = 0, index2 = 0; index < RECORDS_PER_PAGE; index++) {
+        // printf("%u\n", index2);
+        assert(NULL == record_array[index]);
+        record_array[index] = &rp_start->records[index2];
+        index2 = (index2 + 23) % 64; // forms a ring
+    }
+
+    for (unsigned index = 0; index < RECORDS_PER_PAGE; index++) { // walk through by strides
+        for (unsigned page = 0; page < pagecount; page++) {
+            record_page_t *rp = &rp_start[page];
+        }
+        for (record_page_t *rp = rp_start; rp < rp_start + pagecount; rp++) {
+            record_page_t *nrp = rp+1;
+            (rp+index)->records[index].s.next = &(rp+(index % pagecount))->records[index];
+            (rp+index)->records[index].s.counter = 0;
+        }
+    }
+
+    for (unsigned run = 1; run < RECORDS_PER_PAGE; run++) {
+        record_t *r0 = record_array[0];
+        record_t *r1 = record_array[run];
+        unsigned status = 0;
+        unsigned retries = 0;
+        char committed = 0;
+
+        // fprintf(stderr, "starting to test run %u\n", run);
+        while (1) {
+
+            r0 = record_array[0];
+            r1 = record_array[run];
+            
+            do {
+                fprintf(stderr, "0x%p points to 0x%p\n", r0, r0->s.next);
+                r0 = r0->s.next;
+            } while (r0 != record_array[0]);
+
+            committed = -1;
+            status = _xbegin();
+            if (_XBEGIN_STARTED == status) {
+                committed = 0;
+                do {
+                    r0->s.counter++;
+                    r0 = r0->s.next;
+                    r1->s.counter++;
+                    r1 = r1->s.next;
+                } while (r0 != record_array[0]);
+                _xend();                       
+                committed = 1;
+            }
+            switch(committed) {
+                case -1:
+                    fprintf(stderr, "transaction didn't start\n");
+                    break;
+                case 0:
+                    fprintf(stderr, "transaction started, didn't commit\n");
+                    break;
+                case 1:
+                    fprintf(stderr, "transaction committed\n");
+            }
+            break;
+        }
+    }
+
+#if 0
+        unsigned retries = 0;
+        unsigned original_count = record_array[0]->s.counter;
+        char committed = 0;
+
+
+
+
+
+        while (retries++ < 10) {
+            committed = 0;
+            r = record_array[0];
+            r2 = record_array[index];
+            xresult = ~0;
+            flush_cache();
+            if (_XBEGIN_STARTED ==_xbegin()) {
+                do {
+                    r->s.counter++;
+                    r = r->s.next;
+                } while(r != record_array[0]);
+                r2->s.counter++;
+                _xend();
+                if (original_count == record_array[0]->s.counter) {
+                    asm("movl %%eax, %0;" : "=r" (xresult): );
+                    if (0x2 & xresult) continue;
+                }
+                else {
+                    committed = 1;
+                }
+                break;
+            }
+        }
+
+        if (1 == committed) {
+            LOG_RESULTS(pagecount, xresult, (double)index, "Appears to be same associative set");
+            hits++;
+        }
+        else {
+            LOG_RESULTS(pagecount, xresult, (double)index, "Appears to be a different associative set");
+        }
+    }
+    LOG_RESULTS(pagecount, hits, 0.0, "Hitcount (in runs)");
+#endif // 0
 }
 
 void test_cache_behavior_4(const unsigned pagecount, const unsigned runs, void *memory)
 {
+    unsigned start, end;
+    double time = 0.0;
+
+    start = cpu_rdtsc();
+    end = cpu_rdtsc();
+    time = ((double)(end - start));
+    // LOG_RESULTS(pagecount, 1, time, "run nop 1 billion times");
 
 }
 
@@ -428,10 +569,10 @@ void test_cache_behavior_1(const unsigned pagecount, const unsigned runs, void *
 typedef void (*cache_test_t)(const unsigned pagecount, const unsigned runs, const void *memory);
 
 cache_test_t cache_tests[] = {
-    (cache_test_t)test_cache_behavior_1,
-    (cache_test_t)test_cache_behavior_2,
-    (cache_test_t)test_cache_behavior_3,
-    (cache_test_t)test_cache_behavior_4,
+    // (cache_test_t)test_cache_behavior_1,
+    // (cache_test_t)test_cache_behavior_2,
+    // (cache_test_t)test_cache_behavior_3,
+    // (cache_test_t)test_cache_behavior_4,
     (cache_test_t)test_cache_behavior_5,
     NULL,
 };
@@ -482,7 +623,7 @@ int main(int argc, char **argv)
     int clsize = 0;
     unsigned long long timestamp1, timestamp2;
     cpu_cache_data_t *cd;
-    static const unsigned samples[] = {4, 8, 12, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536};
+    static const unsigned samples[] = {4, 6, 8, 12, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536};
 
     setbuf(stdout, NULL); // disable buffering
 
