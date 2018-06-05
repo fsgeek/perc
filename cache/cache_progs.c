@@ -57,6 +57,38 @@ static void flush_cache(void)
     memset(buffer, c++, buffer_length);
 }
 
+static void init_cache_test_memory(const unsigned pagecount, void *memory)
+{
+    record_page_t *recpages = (record_page_t *)memory;
+
+    // printf("memory is at 0x%p", memory);
+
+    memset(memory, 0, pagecount * PAGE_SIZE);
+    for (unsigned index = 0; index < RECORDS_PER_PAGE; index++) {
+        record_t *r = &recpages[0].records[index];
+        // printf("initialize page 0x%p, index %u\n", r, index);
+        for (unsigned index2 = 0; index2 < pagecount; index2++) {
+            uintptr_t diff1, diff2;
+
+            r->s.next = &recpages[(index2 + 1) % pagecount].records[index];
+            r->s.counter = 0;
+            diff1 = (uintptr_t)r - (uintptr_t)r->s.next;
+            diff2 = (uintptr_t)r->s.next - (uintptr_t)r;
+            // printf("set %p to point to %p (difference %lu)\n", r, r->s.next, diff1 < diff2 ? diff1 : diff2);
+            r = r->s.next; // advance to the next location. 
+        }
+    }
+    
+    for (unsigned index = 0; index < RECORDS_PER_PAGE; index++) {
+        record_t *r = &recpages[0].records[index];
+
+        do {
+            r = r->s.next;
+            assert(NULL != r);
+        } while (r != &recpages[0].records[index]);
+    }
+}
+
 //
 // Reference to: http://blog.stuffedcow.net/2013/01/ivb-cache-replacement/
 // this is about cache replacement policies and includes some code on determining specific policy.
@@ -66,28 +98,295 @@ static void flush_cache(void)
 static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs, void *memory)
 {
     record_page_t *recpages = (record_page_t *)memory;
-
-    if (6 != pagecount) {
+    record_t *r0_start = &recpages[0].records[0];
+    record_t *r0 = r0_start;
+    double time = 0.0;
+    unsigned start, end;
+ 
+    if (12 != pagecount) {
         // only need to test this one case.
         return;
     }
-    printf("memory is at 0x%p", memory);
 
-    memset(memory, 0, pagecount * PAGE_SIZE);
-    for (unsigned index = 0; index < RECORDS_PER_PAGE; index++) {
-        record_t *r = &recpages[0].records[index];
-        printf("initialize page 0x%p, index %u\n", r, index);
-        for (unsigned index2 = 0; index2 < pagecount; index2++) {
-            uintptr_t diff1, diff2;
+    init_cache_test_memory(pagecount, memory);
+    (void) runs;
 
-            r->s.next = &recpages[(index2 + 1) % pagecount].records[index];
-            r->s.counter = 0;
-            diff1 = (uintptr_t)r - (uintptr_t)r->s.next;
-            diff2 = (uintptr_t)r->s.next - (uintptr_t)r;
-            printf("set %p to point to %p (difference %lu)\n", r, r->s.next, diff1 < diff2 ? diff1 : diff2);
-            r = r->s.next; // advance to the next location. 
-        }
-    }
+    flush_cache();
+    // prime the cache
+    start = _rdtsc();
+    r0 = r0->s.next;
+    r0 = r0->s.next;
+    r0 = r0->s.next;
+    r0 = r0->s.next;
+    r0 = r0->s.next;
+    r0 = r0->s.next;
+    r0 = r0->s.next;
+    r0 = r0->s.next;
+    r0 = r0_start;
+    end = _rdtsc();
+
+    time = ((double) end - start);
+
+    fprintf(stderr, "%s: priming step took %f ticks\n", __PRETTY_FUNCTION__, time);
+
+    // now re-run it
+    r0 = r0_start;
+    start = _rdtsc();
+    r0->s.counter++; // 1
+    _mm_clflush(r0);
+    r0 = r0->s.next; 
+    r0->s.counter++; // 2
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 3
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 4
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 5
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 6
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 7
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 8
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 9
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 10
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 11
+    _mm_clflush(r0);
+    _mm_sfence();
+    end = _rdtsc();
+
+    time = ((double) end - start);
+
+    fprintf(stderr, "%s: first run sequence took %f ticks\n", __PRETTY_FUNCTION__, time);
+
+    start = _rdtsc();
+    _mm_clflush(r0);
+    end = _rdtsc();
+
+    time = ((double) end - start);
+
+    fprintf(stderr, "%s: clflush took %f ticks for clean cache line flush\n", __PRETTY_FUNCTION__, time);
+
+    r0 = r0_start;
+    start = _rdtsc();
+    r0->s.counter++; // 1
+    _mm_clflush(r0);
+    r0 = r0->s.next; 
+    r0->s.counter++; // 2
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 3
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 4
+    _mm_clflush(r0);
+    _mm_sfence();
+    end = _rdtsc();
+
+    time = ((double) end - start);
+
+    fprintf(stderr, "%s: clflush took %f ticks for 4 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+
+    r0 = r0_start;
+    start = _rdtsc();
+    r0->s.counter++; // 1
+    _mm_clflush(r0);
+    r0 = r0->s.next; 
+    r0->s.counter++; // 2
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 3
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 4
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 5
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 6
+    _mm_clflush(r0);
+    _mm_sfence();
+    end = _rdtsc();
+
+    time = ((double) end - start);
+
+    fprintf(stderr, "%s: clflush took %f ticks for 6 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+
+    r0 = r0_start;
+    start = _rdtsc();
+    r0->s.counter++; // 1
+    _mm_clflush(r0);
+    r0 = r0->s.next; 
+    r0->s.counter++; // 2
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 3
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 4
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 5
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 6
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 7
+    _mm_clflush(r0);
+    _mm_sfence();
+    end = _rdtsc();
+
+    time = ((double) end - start);
+
+    fprintf(stderr, "%s: clflush took %f ticks for 7 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+
+
+    r0 = r0_start;
+    start = _rdtsc();
+    r0->s.counter++; // 1
+    _mm_clflush(r0);
+    r0 = r0->s.next; 
+    r0->s.counter++; // 2
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 3
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 4
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 5
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 6
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 7
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 8
+    _mm_clflush(r0);
+    _mm_sfence();
+    end = _rdtsc();
+
+    time = ((double) end - start);
+
+    fprintf(stderr, "%s: clflush took %f ticks for 8 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+
+
+    r0 = r0_start;
+    start = _rdtsc();
+    r0->s.counter++; // 1
+    _mm_clflush(r0);
+    r0 = r0->s.next; 
+    r0->s.counter++; // 2
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 3
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 4
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 5
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 6
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 7
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 8
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 9
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 10
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 11
+    _mm_clflush(r0);
+    _mm_sfence();
+    end = _rdtsc();
+
+    time = ((double) end - start);
+
+    fprintf(stderr, "%s: clflush took %f ticks for 11 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+
+    r0 = r0_start;
+    start = _rdtsc();
+    r0->s.counter++; // 1
+    _mm_clflush(r0);
+    r0 = r0->s.next; 
+    r0->s.counter++; // 2
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 3
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 4
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 5
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 6
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 7
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 8
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 9
+    _mm_clflush(r0);
+    r0 = r0->s.next; 
+    r0->s.counter++; // 10
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 11
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 12
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 13
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 14
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 15
+    _mm_clflush(r0);
+    r0 = r0->s.next;
+    r0->s.counter++; // 16
+    _mm_clflush(r0);
+    _mm_sfence();
+    end = _rdtsc();
+
+    time = ((double) end - start);
+
+    fprintf(stderr, "%s: clflush took %f ticks for 16 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+
+
+
 }
 
 static void test_cache_behavior_5(const unsigned pagecount, const unsigned runs, void *memory)
@@ -96,10 +395,9 @@ static void test_cache_behavior_5(const unsigned pagecount, const unsigned runs,
     unsigned start, end;
     double time = 0.0;
     record_t *r, *r2;
-    record_t *record_array[RECORDS_PER_PAGE];
-    record_page_t *rp_start = (record_page_t *)memory;
     int xresult = 36;
     int hits = 0;
+    record_page_t *recpages = (record_page_t *)memory;
 
 
     if (pagecount != 12) {
@@ -120,66 +418,90 @@ static void test_cache_behavior_5(const unsigned pagecount, const unsigned runs,
     //
     // Build a list of starting addresses.  Staggering is my attempt to foil the prefetcher
     //
-    memset(record_array, 0, sizeof(record_array));
-    for (unsigned index = 0, index2 = 0; index < RECORDS_PER_PAGE; index++) {
-        // printf("%u\n", index2);
-        assert(NULL == record_array[index]);
-        record_array[index] = &rp_start->records[index2];
-        index2 = (index2 + 23) % 64; // forms a ring
-    }
-
-    for (unsigned index = 0; index < RECORDS_PER_PAGE; index++) { // walk through by strides
-        for (unsigned page = 0; page < pagecount; page++) {
-            record_page_t *rp = &rp_start[page];
-        }
-        for (record_page_t *rp = rp_start; rp < rp_start + pagecount; rp++) {
-            record_page_t *nrp = rp+1;
-            (rp+index)->records[index].s.next = &(rp+(index % pagecount))->records[index];
-            (rp+index)->records[index].s.counter = 0;
-        }
-    }
-
+    init_cache_test_memory(pagecount, memory);
+    
     for (unsigned run = 1; run < RECORDS_PER_PAGE; run++) {
-        record_t *r0 = record_array[0];
-        record_t *r1 = record_array[run];
         unsigned status = 0;
         unsigned retries = 0;
         char committed = 0;
 
+        time = 0.0;
         // fprintf(stderr, "starting to test run %u\n", run);
         while (1) {
+            record_t *r0_start = &recpages[0].records[0];
+            record_t *r0 = r0_start;
+            record_t *r1_start = &recpages[0].records[run];
+            record_t *r1 = r1_start;
 
-            r0 = record_array[0];
-            r1 = record_array[run];
-            
+            // fprintf(stderr, "testing stride 0x%x\n", run);
+#if 0
             do {
                 fprintf(stderr, "0x%p points to 0x%p\n", r0, r0->s.next);
                 r0 = r0->s.next;
-            } while (r0 != record_array[0]);
+            } while (r0 != r0_start);
+#endif // 0
+
+            // prime the cache
+            r0 = r0->s.next;
+            r0 = r0->s.next;
+            r0 = r0->s.next;
+            r0 = r0->s.next;
+            r0 = r0->s.next;
+            r0 = r0->s.next;
+            r0 = r0->s.next;
+            r0 = r0->s.next;
+            r0 = r0_start;
+
 
             committed = -1;
+            start = _rdtsc();
             status = _xbegin();
             if (_XBEGIN_STARTED == status) {
-                committed = 0;
-                do {
-                    r0->s.counter++;
-                    r0 = r0->s.next;
-                    r1->s.counter++;
-                    r1 = r1->s.next;
-                } while (r0 != record_array[0]);
-                _xend();                       
+                r0->s.counter++; // 1
+                r0 = r0->s.next;
+                r0->s.counter++; // 2
+                r0 = r0->s.next;
+                r0->s.counter++; // 3
+                r0 = r0->s.next;
+                r0->s.counter++; // 4
+                r0 = r0->s.next;
+                r0->s.counter++; // 5
+                r0 = r0->s.next;
+                r0->s.counter++; // 6
+                r0 = r0->s.next;
+                r0->s.counter++; // 7
+                r0 = r0->s.next;
+                r0->s.counter++; // 8
+                r0 = r0->s.next;
+                r0->s.counter++; // 9               
+                _xend();
                 committed = 1;
             }
-            switch(committed) {
-                case -1:
-                    fprintf(stderr, "transaction didn't start\n");
-                    break;
-                case 0:
-                    fprintf(stderr, "transaction started, didn't commit\n");
-                    break;
-                case 1:
-                    fprintf(stderr, "transaction committed\n");
+            end = _rdtsc();
+            time = ((double)end - start);
+            fprintf(stderr, "transaction time was %f\n", time);
+            r0 = r0_start;
+            start = _rdtsc();
+            r0->s.counter++;
+            end = _rdtsc();
+            time = ((double)end - start);
+            fprintf(stderr, "load time was %f\n", time);
+            if (1 != committed) {
+
+                if(0x8 == (0x8 & status)) {
+                    retries++;
+                    if (retries > 100) {
+                        time /= (double) retries;
+                        fprintf(stderr, "multiple aborts on line 0x%x\n", run);
+                        break;
+                    }
+                    continue;
+                }
+                fprintf(stderr, "abort on line 0x%x (status 0x%x)\n", run, status);
             }
+
+            // fprintf(stderr, "run 0x%x does not conflict\n", run);
+
             break;
         }
     }
