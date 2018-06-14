@@ -203,6 +203,30 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
     start = _rdtsc();
     r0->s.counter++; // 1
     _mm_clflush(r0);
+    _mm_sfence();
+    r0 = r0->s.next; 
+    r0->s.counter++; // 2
+    _mm_clflush(r0);
+    _mm_sfence();
+    r0 = r0->s.next;
+    r0->s.counter++; // 3
+    _mm_clflush(r0);
+    _mm_sfence();
+    r0 = r0->s.next;
+    r0->s.counter++; // 4
+    _mm_clflush(r0);
+    _mm_sfence();
+    end = _rdtsc();
+
+    time = ((double) end - start);
+
+    fprintf(stderr, "%s: clflush took %f ticks for 4 writes on same cache line with clflush and fence\n", __PRETTY_FUNCTION__, time);
+
+
+    r0 = r0_start;
+    start = _rdtsc();
+    r0->s.counter++; // 1
+    _mm_clflush(r0);
     r0 = r0->s.next; 
     r0->s.counter++; // 2
     _mm_clflush(r0);
@@ -385,6 +409,76 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
 
     fprintf(stderr, "%s: clflush took %f ticks for 16 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
 
+    r0 = r0_start;
+    start = _rdtsc();
+    r0->s.counter++; // 1
+    _mm_clflush(r0);
+    _mm_sfence();
+    r0 = r0->s.next; 
+    r0->s.counter++; // 2
+    _mm_clflush(r0);
+    _mm_sfence();
+    r0 = r0->s.next;
+    r0->s.counter++; // 3
+    _mm_clflush(r0);
+    _mm_sfence();
+    r0 = r0->s.next;
+    r0->s.counter++; // 4
+    _mm_clflush(r0);
+    _mm_sfence();
+    r0 = r0->s.next;
+    r0->s.counter++; // 5
+    _mm_clflush(r0);
+    _mm_sfence();
+    r0 = r0->s.next;
+    r0->s.counter++; // 6
+    _mm_clflush(r0);
+    _mm_sfence();
+    r0 = r0->s.next;
+    r0->s.counter++; // 7
+    _mm_clflush(r0);
+    _mm_sfence();
+    r0 = r0->s.next;
+    r0->s.counter++; // 8
+    _mm_clflush(r0);
+    _mm_sfence();
+    r0 = r0->s.next;
+    r0->s.counter++; // 9
+    _mm_clflush(r0);
+    _mm_sfence();
+    r0 = r0->s.next; 
+    r0->s.counter++; // 10
+    _mm_clflush(r0);
+    _mm_sfence();
+    r0 = r0->s.next;
+    r0->s.counter++; // 11
+    _mm_clflush(r0);
+    _mm_sfence();
+    r0 = r0->s.next;
+    r0->s.counter++; // 12
+    _mm_clflush(r0);
+    _mm_sfence();
+    r0 = r0->s.next;
+    r0->s.counter++; // 13
+    _mm_clflush(r0);
+    _mm_sfence();
+    r0 = r0->s.next;
+    r0->s.counter++; // 14
+    _mm_clflush(r0);
+    _mm_sfence();
+    r0 = r0->s.next;
+    r0->s.counter++; // 15
+    _mm_clflush(r0);
+    _mm_sfence();
+    r0 = r0->s.next;
+    r0->s.counter++; // 16
+    _mm_clflush(r0);
+    _mm_sfence();
+    end = _rdtsc();
+
+    time = ((double) end - start);
+
+    fprintf(stderr, "%s: clflush took %f ticks for 16 writes on same cache line with clflush + fence\n", __PRETTY_FUNCTION__, time);
 
 
 }
