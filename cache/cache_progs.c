@@ -89,6 +89,963 @@ static void init_cache_test_memory(const unsigned pagecount, void *memory)
     }
 }
 
+
+//
+// This is a skeleton for cache test code
+//
+static unsigned long test_cache_skel(record_page_t *rp)
+{
+    record_t *r = rp->records[0].s.next;
+    unsigned long start, end, time;
+    unsigned count = 0;
+
+    time = 0;
+
+    while (r != &rp->records[0]) {
+        start = _rdtsc();
+        /* this is where you put the specfic cache logic */
+        /* 
+         * Options would include:
+         *   - flushing: none, clflush, clflushopt, clflushwb
+         *   - fencing: none, sfence, lfence, mfence
+         *   - fence frequency
+         */
+        end = _rdtsc();
+        time += end - start;
+        count++;
+    }
+
+    // report the amount of CPU time
+    return time;
+
+}
+
+static unsigned long test_cache_noflush_nofence(record_page_t *rp)
+{
+    record_t *r = rp->records[0].s.next;
+    unsigned long start, end, time;
+    unsigned count = 0;
+
+    time = 0;
+
+    while (r != &rp->records[0]) {
+        start = _rdtsc();
+        r->s.counter++;
+        r = r->s.next;
+        end = _rdtsc();
+        time += end - start;
+        count++;
+    }
+
+    // report the amount of CPU time
+    return time;
+
+}
+
+
+static unsigned long test_cache_noflush_sfence_end(record_page_t *rp)
+{
+    record_t *r = rp->records[0].s.next;
+    unsigned long start, end, time;
+    unsigned count = 0;
+
+    time = 0;
+
+    while (r != &rp->records[0]) {
+        start = _rdtsc();
+        r->s.counter++;
+        r = r->s.next;
+        end = _rdtsc();
+        time += end - start;
+        count++;
+    }
+    start = _rdtsc();
+    _mm_sfence();
+    end = _rdtsc();
+    time += (end - start);
+
+    // report the amount of CPU time
+    return time;
+
+}
+
+
+static unsigned long test_cache_noflush_sfence_every_n_updates(record_page_t *rp, unsigned n)
+{
+    record_t *r = rp->records[0].s.next;
+    unsigned long start, end, time;
+    unsigned count = 0;
+
+    time = 0;
+
+    while (r != &rp->records[0]) {
+
+        // change memory value, follow pointer
+        start = _rdtsc();
+        r->s.counter++;
+        r = r->s.next;
+        end = _rdtsc();
+        time += end - start;
+
+        // check to see if we are at the end of the loop
+    
+        if (r == &rp->records[0]) {
+            start = _rdtsc();
+            _mm_sfence();
+            end = _rdtsc();
+            time += end - start;
+            break;
+        }
+
+        // update counter
+        count++;
+
+        // is it time to flush?
+
+        if (0 == (count % n)) {
+            start = _rdtsc();
+            _mm_sfence();
+            end = _rdtsc();
+            time += end - start;
+        }
+    }
+
+    // report the amount of CPU time
+    return time;
+
+}
+
+
+static unsigned long test_cache_clflush_sfence_every_n_updates(record_page_t *rp, unsigned n)
+{
+    record_t *r = rp->records[0].s.next;
+    unsigned long start, end, time;
+    unsigned count = 0;
+
+    time = 0;
+
+    assert(cpu_has_clflush());
+
+    while (r != &rp->records[0]) {
+
+        // change memory value, follow pointer
+        start = _rdtsc();
+        r->s.counter++;
+        _mm_clflush(r);
+        r = r->s.next;
+        end = _rdtsc();
+        time += end - start;
+
+        // check to see if we are at the end of the loop
+    
+        if (r == &rp->records[0]) {
+            start = _rdtsc();
+            _mm_sfence();
+            end = _rdtsc();
+            time += end - start;
+            break;
+        }
+
+        // update counter
+        count++;
+
+        // is it time to flush?
+
+        if (0 == (count % n)) {
+            start = _rdtsc();
+            _mm_sfence();
+            end = _rdtsc();
+            time += end - start;
+        }
+    }
+
+    // report the amount of CPU time
+    return time;
+
+}
+
+static unsigned long test_cache_clflushopt_sfence_every_n_updates(record_page_t *rp, unsigned n)
+{
+    record_t *r = rp->records[0].s.next;
+    unsigned long start, end, time;
+    unsigned count = 0;
+
+    time = 0;
+
+    assert (cpu_has_clflushopt());
+
+    while (r != &rp->records[0]) {
+
+        // change memory value, follow pointer
+        start = _rdtsc();
+        r->s.counter++;
+        _mm_clflushopt(r);
+        r = r->s.next;
+        end = _rdtsc();
+        time += end - start;
+
+        // check to see if we are at the end of the loop
+    
+        if (r == &rp->records[0]) {
+            start = _rdtsc();
+            _mm_sfence();
+            end = _rdtsc();
+            time += end - start;
+            break;
+        }
+
+        // update counter
+        count++;
+
+        // is it time to flush?
+
+        if (0 == (count % n)) {
+            start = _rdtsc();
+            _mm_sfence();
+            end = _rdtsc();
+            time += end - start;
+        }
+    }
+
+    // report the amount of CPU time
+    return time;
+
+}
+
+static unsigned long test_cache_clwb_sfence_every_n_updates(record_page_t *rp, unsigned n)
+{
+    record_t *r = rp->records[0].s.next;
+    unsigned long start, end, time;
+    unsigned count = 0;
+
+    time = 0;
+
+    assert(cpu_has_clwb());
+
+    while (r != &rp->records[0]) {
+
+        // change memory value, follow pointer
+        start = _rdtsc();
+        r->s.counter++;
+        _mm_clwb(r);
+        r = r->s.next;
+        end = _rdtsc();
+        time += end - start;
+
+        // check to see if we are at the end of the loop
+    
+        if (r == &rp->records[0]) {
+            start = _rdtsc();
+            _mm_sfence();
+            end = _rdtsc();
+            time += end - start;
+            break;
+        }
+
+        // update counter
+        count++;
+
+        // is it time to flush?
+
+        if (0 == (count % n)) {
+            start = _rdtsc();
+            _mm_sfence();
+            end = _rdtsc();
+            time += end - start;
+        }
+    }
+
+    // report the amount of CPU time
+    return time;
+
+}
+
+static void test_cache_behavior_clflush(const unsigned pagecount, const unsigned runs, void *memory)
+{
+    record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+    unsigned time, start, end;
+
+    if (!cpu_has_clflush()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+
+    // TODO: finish this (I've just started doing so)
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                /* stick the calls to the various stubs in here. */
+            }
+        }
+    }
+
+
+}
+
+
+
+static unsigned long test_cache_noflush_sfence_every_update(record_page_t *rp)
+{
+    record_t *r = rp->records[0].s.next;
+    unsigned long start, end, time;
+    unsigned count = 0;
+
+    time = 0;
+
+    while (r != &rp->records[0]) {
+        start = _rdtsc();
+        r->s.counter++;
+        r = r->s.next;
+        _mm_sfence();
+        end = _rdtsc();
+        time += end - start;
+        count++;
+    }
+
+    // report the amount of CPU time
+    return time;
+
+}
+
+static unsigned long test_cache_noflush_sfence_every_2_updates(record_page_t *rp)
+{
+    record_t *r = rp->records[0].s.next;
+    unsigned long start, end, time;
+    unsigned count = 0;
+
+    time = 0;
+
+    while (r != &rp->records[0]) {
+        start = _rdtsc();
+        r->s.counter++;
+        r = r->s.next;
+        end = _rdtsc();
+        time += (end - start);
+        count++;
+        if (r == &rp->records[0]) {
+            start = _rdtsc();
+            _mm_sfence();
+            end = _rdtsc();
+            time += end - start;
+            break;
+        }
+        start = _rdtsc();
+        r->s.counter++;
+        r = r->s.next;
+        _mm_sfence();
+        end = _rdtsc();
+        time += end - start;
+        count++;
+    }
+
+    // report the amount of CPU time
+    return time;
+
+}
+
+static unsigned long test_cache_noflush_sfence_every_3_updates(record_page_t *rp)
+{
+    record_t *r = rp->records[0].s.next;
+    unsigned long start, end, time;
+    unsigned count = 0;
+
+    time = 0;
+
+    while (r != &rp->records[0]) {
+        start = _rdtsc();
+        r->s.counter++;
+        r = r->s.next; // note this assumes there is an even number of  
+        end = _rdtsc();
+        time += end - start;
+        count++;
+        if (r == &rp->records[0]) {
+            start = _rdtsc();
+            _mm_sfence();
+            end = _rdtsc();
+            time += end - start;
+            break;
+        }
+        start = _rdtsc();
+        r->s.counter++;
+        r = r->s.next; // note this assumes there is an even number of  
+        end = _rdtsc();
+        time += end - start;
+        count++;
+        if (r == &rp->records[0]) {
+            start = _rdtsc();
+            _mm_sfence();
+            end = _rdtsc();
+            time += end - start;
+            break;
+        }
+        start = _rdtsc();
+        r->s.counter++;
+        r = r->s.next;
+        _mm_sfence();
+        end = _rdtsc();
+        time += end - start;
+        count++;
+    }
+
+    // report the amount of CPU time
+    return time;
+
+}
+
+static unsigned long test_cache_noflush_sfence_every_4_updates(record_page_t *rp)
+{
+    record_t *r = rp->records[0].s.next;
+    unsigned long start, end, time;
+    unsigned count = 0;
+
+    time = 0;
+
+    while (r != &rp->records[0]) {
+        // 1
+        start = _rdtsc();
+        r->s.counter++;
+        r = r->s.next;
+        end = _rdtsc();
+        time += end - start;
+        count++;
+        if (r == &rp->records[0]) {
+            start = _rdtsc();
+            _mm_sfence();
+            end = _rdtsc();
+            time += end - start;
+            break;
+        }
+        // 2
+        start = _rdtsc();
+        r->s.counter++;
+        r = r->s.next;
+        end = _rdtsc();
+        time += end - start;
+        count++;
+        if (r == &rp->records[0]) {
+            start = _rdtsc();
+            _mm_sfence();
+            end = _rdtsc();
+            time += end - start;
+            break;
+        }
+        // 3
+        start = _rdtsc();
+        r->s.cou    record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+
+        r = r->s    record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+
+        end = _r    record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+
+        time +=     record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+
+        count++;    record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+
+        if (r ==    record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+
+            star    record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+
+            _mm_    record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+
+            end     record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+
+            time    record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+
+            brea    record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+
+        }
+        // 4
+        start =     record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+
+        r->s.cou    record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+
+        r = r->s    record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+
+        _mm_sfen    record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+
+        end = _r    record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+
+        time +=     record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+
+        count++;    record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+
+    }
+
+    // report the amount of CPU time
+    return time;
+
+}
+
+
+
+static void test_cache_clflushopt(const unsigned pagecount, const unsigned runs, void *memory) 
+{
+    record_page_t *rp = (record_page_t *)memory;
+    record_t *r = NULL;
+
+    if (!cpu_has_clflushopt()) {
+        // can't test clflushopt if it isn't supported
+        return;
+    }
+    unsigned time, start, end;
+
+    // This weaves the offset cache blocks of the given memory into a linked list
+    init_cache_test_memory(pagecount, memory); 
+
+    for (unsigned index = 0; index < runs; index++) {
+        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
+            r = rp[index2].records[0].s.next;
+            while (r != &rp[index2].records[0]) {
+                start = _rdtsc();
+                r->s.counter++;
+                r = r->s.next;
+                end = _rdtsc();
+                time += (end - start);
+            }
+        }
+    }
+
+}
+
+
 //
 // Reference to: http://blog.stuffedcow.net/2013/01/ivb-cache-replacement/
 // this is about cache replacement policies and includes some code on determining specific policy.
