@@ -89,6 +89,73 @@ static void init_cache_test_memory(const unsigned pagecount, void *memory)
     }
 }
 
+//
+// This routine initializes the records so they are threaded into the same cache set
+//
+static void init_cache_test_memory_same_set(const unsigned pagecount, void *memory)
+{
+    record_page_t *recpages = (record_page_t *)memory;
+
+    // printf("memory is at 0x%p", memory);
+
+    memset(memory, 0, pagecount * PAGE_SIZE);
+    for (unsigned index = 0; index < RECORDS_PER_PAGE; index++) {
+        record_t *r = &recpages[0].records[index];
+        // printf("initialize page 0x%p, index %u\n", r, index);
+        for (unsigned index2 = 0; index2 < pagecount; index2++) {
+            uintptr_t diff1, diff2;
+
+            r->s.next = &recpages[(index2 + 1) % pagecount].records[index];
+            r->s.counter = 0;
+            diff1 = (uintptr_t)r - (uintptr_t)r->s.next;
+            diff2 = (uintptr_t)r->s.next - (uintptr_t)r;
+            // printf("set %p to point to %p (difference %lu)\n", r, r->s.next, diff1 < diff2 ? diff1 : diff2);
+            r = r->s.next; // advance to the next location. 
+        }
+    }
+    
+    for (unsigned index = 0; index < RECORDS_PER_PAGE; index++) {
+        record_t *r = &recpages[0].records[index];
+
+        do {
+            r = r->s.next;
+            assert(NULL != r);
+        } while (r != &recpages[0].records[index]);
+    }
+}
+
+//
+// This routine initializes the records so they are threaded into different cache sets
+// (note this is done in a diagonal fashion).
+//
+static void init_cache_test_memory_different_set(const unsigned pagecount, void *memory)
+{
+    record_page_t *recpages = (record_page_t *)memory;
+
+    // printf("memory is at 0x%p", memory);
+
+    memset(memory, 0, pagecount * PAGE_SIZE);
+    for (unsigned index1 = 0; index1 < RECORDS_PER_PAGE; index1++) {
+        record_t *r = &recpages[0].records[index1];
+        for (unsigned index2 = 0; index2 < pagecount; index2++) {
+            unsigned offset = (index2 + 1) % pagecount;
+            r->s.next = &recpages[offset].records[(index1 + offset) % RECORDS_PER_PAGE];
+            fprintf(stderr, "%s: %p -> %p\n", __PRETTY_FUNCTION__, r, r->s.next);
+            r = r->s.next;
+        }
+    }
+
+    for (unsigned index = 0; index < RECORDS_PER_PAGE; index++) {
+        record_t *r = &recpages[0].records[index];
+
+        do {
+            r = r->s.next;
+            assert(NULL != r);
+        } while (r != &recpages[0].records[index]);
+    }
+}
+
+
 
 //
 // This is a skeleton for cache test code
@@ -360,141 +427,29 @@ static unsigned long test_cache_clwb_sfence_every_n_updates(record_page_t *rp, u
 
 }
 
-static void test_cache_behavior_clflush(const unsigned pagecount, const unsigned runs, void *memory)
+static void test_cache_behavior_7(const unsigned pagecount, const unsigned runs, void *memory)
 {
+    //if (!cpu_has_clwb()) {
+    //    return;
+    //}
+
+    init_cache_test_memory_different_set(pagecount, memory);
     record_page_t *rp = (record_page_t *)memory;
-    record_t *r = NULL;
-    unsigned time, start, end;
+    record_t *r = &rp->records[0];
 
-    if (!cpu_has_clflush()) {
-        // can't test clflushopt if it isn't supported
-        return;
+    // This is debug logic - these should point to the next entry on the next page
+    // (with wrapping)
+
+    for (unsigned index = 0; index < RECORDS_PER_PAGE; index++) {
+        do {
+            fprintf(stderr, "%s: record %p points to %p\n", __PRETTY_FUNCTION__, r, r->s.next);
+            r = r->s.next;
+        } while (r != &rp->records[0]);
+
+        double time = test_cache_noflush_nofence(rp);
+        fprintf(stderr, "%s: time to walk list: %f\n", __PRETTY_FUNCTION__, time);
     }
 
-    // TODO: finish this (I've just started doing so)
-
-    // This weaves the offset cache blocks of the given memory into a linked list
-    init_cache_test_memory(pagecount, memory); 
-
-    for (unsigned index = 0; index < runs; index++) {
-        for (unsigned index2 = 0; index2 < RECORDS_PER_PAGE ; index2++) {
-            r = rp[index2].records[0].s.next;
-            while (r != &rp[index2].records[0]) {
-                /* stick the calls to the various stubs in here. */
-            }
-        }
-    }
-
-
-}
-
-
-
-static unsigned long test_cache_noflush_sfence_every_update(record_page_t *rp)
-{
-    record_t *r = rp->records[0].s.next;
-    unsigned long start, end, time;
-    unsigned count = 0;
-
-    time = 0;
-
-    while (r != &rp->records[0]) {
-        start = _rdtsc();
-        r->s.counter++;
-        r = r->s.next;
-        _mm_sfence();
-        end = _rdtsc();
-        time += end - start;
-        count++;
-    }
-
-    // report the amount of CPU time
-    return time;
-
-}
-
-static unsigned long test_cache_noflush_sfence_every_2_updates(record_page_t *rp)
-{
-    record_t *r = rp->records[0].s.next;
-    unsigned long start, end, time;
-    unsigned count = 0;
-
-    time = 0;
-
-    while (r != &rp->records[0]) {
-        start = _rdtsc();
-        r->s.counter++;
-        r = r->s.next;
-        end = _rdtsc();
-        time += (end - start);
-        count++;
-        if (r == &rp->records[0]) {
-            start = _rdtsc();
-            _mm_sfence();
-            end = _rdtsc();
-            time += end - start;
-            break;
-        }
-        start = _rdtsc();
-        r->s.counter++;
-        r = r->s.next;
-        _mm_sfence();
-        end = _rdtsc();
-        time += end - start;
-        count++;
-    }
-
-    // report the amount of CPU time
-    return time;
-
-}
-
-static unsigned long test_cache_noflush_sfence_every_3_updates(record_page_t *rp)
-{
-    record_t *r = rp->records[0].s.next;
-    unsigned long start, end, time;
-    unsigned count = 0;
-
-    time = 0;
-
-    while (r != &rp->records[0]) {
-        start = _rdtsc();
-        r->s.counter++;
-        r = r->s.next; // note this assumes there is an even number of  
-        end = _rdtsc();
-        time += end - start;
-        count++;
-        if (r == &rp->records[0]) {
-            start = _rdtsc();
-            _mm_sfence();
-            end = _rdtsc();
-            time += end - start;
-            break;
-        }
-        start = _rdtsc();
-        r->s.counter++;
-        r = r->s.next; // note this assumes there is an even number of  
-        end = _rdtsc();
-        time += end - start;
-        count++;
-        if (r == &rp->records[0]) {
-            start = _rdtsc();
-            _mm_sfence();
-            end = _rdtsc();
-            time += end - start;
-            break;
-        }
-        start = _rdtsc();
-        r->s.counter++;
-        r = r->s.next;
-        _mm_sfence();
-        end = _rdtsc();
-        time += end - start;
-        count++;
-    }
-
-    // report the amount of CPU time
-    return time;
 
 }
 
@@ -1506,6 +1461,7 @@ cache_test_t cache_tests[] = {
     // (cache_test_t)test_cache_behavior_4,
     // (cache_test_t)test_cache_behavior_5,
     (cache_test_t)test_cache_behavior_6,
+    (cache_test_t)test_cache_behavior_7,
     NULL,
 };
 
@@ -1579,7 +1535,8 @@ int main(int argc, char **argv)
 	printf("HLE: %s\n", cpu_has_hle() ? "Yes" : "No");
 	printf("CLFLUSHOPT: %s\n", cpu_has_clflushopt() ? "Yes" : "No");
 	printf("CLWB: %s\n", cpu_has_clwb() ? "Yes" : "No");
-	printf("CLFLUSH cache line: 0x%x\n", clsize);
+	printf("Cache line size (bytes): 0x%x\n", clsize);
+    assert(clsize == sizeof(record_t)); // sanity check - if this is wrong, the code needs to be fixed
     printf("Ticks per second: 0x%d\n", cpu_frequency());
 
     // (void) cache_test();
