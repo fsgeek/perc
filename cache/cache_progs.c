@@ -1584,6 +1584,9 @@ int main(int argc, char **argv)
 
         if (NULL != daxmem) {
             char *zero = NULL;
+            unsigned start, end;
+            double time;
+
 
             if (0 > unlink(daxmem)) {
                 fprintf(stderr, "%s: unable to unlink %s (%d %s)\n", __PRETTY_FUNCTION__, daxmem, errno, strerror(errno));
@@ -1595,9 +1598,22 @@ int main(int argc, char **argv)
             zero = malloc(PAGE_SIZE);
             assert(NULL != zero);
             memset(zero, 0, PAGE_SIZE);
+
+            time = 0.0;
             for (unsigned index2 = 0; index2 < samples[index]; index2++) {
+                start = _rdtsc();
                 write(memfd, zero, PAGE_SIZE);
+                end = _rdtsc();
+                time += end - start;
             }
+            fprintf(stderr, "%s: write ticks for %dKB blocks is %f\n", __PRETTY_FUNCTION__, 4 * samples[index], time);
+
+            time = 0.0;
+            start = _rdtsc();
+            fsync(memfd);
+            end = _rdtsc();
+            time = end - start;
+            fprintf(stderr, "%s: fsync ticks for %dKB blocks is %f\n", __PRETTY_FUNCTION__, 4 * samples[index], time);
         }
         test_cache_behavior(samples[index], memfd);
         close(memfd);
