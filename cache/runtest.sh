@@ -5,7 +5,8 @@
 
 # First, start by writing out the relevant system information
 #
-LOG_FILE="./perc-test.log"
+timestamp=`date '+%Y_%m_%d__%H_%M_%S'`;
+LOG_FILE="./perc-test-"$timestamp".log"
 
 date > $LOG_FILE
 echo "uname -a" >> $LOG_FILE
@@ -31,8 +32,8 @@ target=`pwd`/"fsgeek-test.dat"
 echo "./perc_progs -d" $target >> $LOG_FILE
 ./perc_progs -d $target >> $LOG_FILE 2>&1
 if [ -d "/mnt/pmem0p1" ]; then
-    echo "./perc_progs -d /mnt/pmem0p1/fsgeek-test.dat" >> $LOG_FILE
-    ./perc_progs -d /mnt/pmem0p1/fsgeek-test.dat >> $LOG_FILE
+    echo "./perc_progs -d /mnt/pmem0p1/fsgeek-test.dat" >> $LOG_FILE 
+    ./perc_progs -d /mnt/pmem0p1/fsgeek-test.dat >> $LOG_FILE 2>&1
 fi
 
 
