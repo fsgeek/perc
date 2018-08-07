@@ -7,6 +7,8 @@
 #include <memory.h>
 #include <sys/mman.h>
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <stdint.h>
 #include <assert.h>
 #include <x86intrin.h>
@@ -140,7 +142,7 @@ static void init_cache_test_memory_different_set(const unsigned pagecount, void 
         for (unsigned index2 = 0; index2 < pagecount; index2++) {
             unsigned offset = (index2 + 1) % pagecount;
             r->s.next = &recpages[offset].records[(index1 + offset) % RECORDS_PER_PAGE];
-            fprintf(stderr, "%s: %p -> %p\n", __PRETTY_FUNCTION__, r, r->s.next);
+            // fprintf(stderr, "%s: %p -> %p\n", __PRETTY_FUNCTION__, r, r->s.next);
             r = r->s.next;
         }
     }
@@ -437,6 +439,7 @@ static void test_cache_behavior_7(const unsigned pagecount, const unsigned runs,
     record_page_t *rp = (record_page_t *)memory;
     record_t *r = &rp->records[0];
 
+#if 0
     // This is debug logic - these should point to the next entry on the next page
     // (with wrapping)
 
@@ -449,7 +452,7 @@ static void test_cache_behavior_7(const unsigned pagecount, const unsigned runs,
         double time = test_cache_noflush_nofence(rp);
         fprintf(stderr, "%s: time to walk list: %f\n", __PRETTY_FUNCTION__, time);
     }
-
+#endif // 0
 
 }
 
@@ -1465,7 +1468,7 @@ cache_test_t cache_tests[] = {
     NULL,
 };
 
-void test_cache_behavior(const unsigned pagecount)
+void test_cache_behavior(const unsigned pagecount, int fd)
 {
     const unsigned runs = 100;
     const size_t pagesize = sysconf(_SC_PAGESIZE);
@@ -1473,14 +1476,25 @@ void test_cache_behavior(const unsigned pagecount)
     unsigned start, end;
     double time;
     record_t *r = NULL;
+    int mmflags = MAP_PRIVATE;
 
     assert(PAGE_SIZE == pagesize);
 
+    if (-1 == fd) {
+        mmflags |= MAP_ANONYMOUS;
+    }
+
     // we must create new mappings each time or we could be seeing caching artifacts
     for (unsigned index = 0; NULL != cache_tests[index]; index++) {
-        void *memory = mmap(NULL, pagecount * pagesize, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+        void *memory = mmap(NULL, pagecount * pagesize, PROT_READ | PROT_WRITE, mmflags, fd, 0);
 
         assert(NULL != memory);
+
+        if (MAP_FAILED == memory) {
+            fprintf(stderr, "%s: mmap failed fd = %d, errno = %d (%s)\n", __PRETTY_FUNCTION__, fd, errno, strerror(errno));
+            return;
+        }
+
         cache_tests[index](pagecount, runs, memory);
         if (munmap(memory, pagecount * pagesize) < 0) {
             perror("munmap");
@@ -1488,19 +1502,22 @@ void test_cache_behavior(const unsigned pagecount)
         }
         memory = NULL;
     }
-   
+  
 }
+
 /// end experimental code
 
 const char *USAGE = "\
 usage:             \n\
 \t%s [options]     \n\
 options:           \n\
+\t-d    Direct Access Memory file to use\n\
 \t-h    Show this help message.\n\
 ";
 
 // options information
 static struct option gLongOptions[] = {
+    {"daxmem", required_argument, NULL, 'd'},
     {"help",    no_argument, NULL, 'h'},
     {NULL, 0, NULL, 0} // marks end of the array
 };
@@ -1511,20 +1528,26 @@ int main(int argc, char **argv)
     int clsize = 0;
     unsigned long long timestamp1, timestamp2;
     cpu_cache_data_t *cd;
+    char *daxmem = NULL;
     static const unsigned samples[] = {4, 6, 8, 12, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536};
 
     setbuf(stdout, NULL); // disable buffering
 
-    while (-1 != (option_char = getopt_long(argc, argv, "h", gLongOptions, NULL))) {
+    while (-1 != (option_char = getopt_long(argc, argv, "d:h", gLongOptions, NULL))) {
         switch(option_char) {
             default:
                 fprintf(stderr, "Unknown option -%c\n", option_char);
+            case 'd':
+                daxmem = strdup(optarg);
+                break;
             case 'h': // help
                 printf(USAGE, argv[0]);
                 exit(1);
                 break;
         }
     }
+
+    fprintf(stderr, "Using %s\n", daxmem);
 
     printf("Starting\n");
     cpu_init();
@@ -1557,7 +1580,28 @@ int main(int argc, char **argv)
     }
 
     for (unsigned index = 0; index < sizeof(samples)/sizeof(samples[0]); index++) {
-        test_cache_behavior(samples[index]);
+        int memfd = -1;
+
+        if (NULL != daxmem) {
+            char *zero = NULL;
+
+            if (0 > unlink(daxmem)) {
+                fprintf(stderr, "%s: unable to unlink %s (%d %s)\n", __PRETTY_FUNCTION__, daxmem, errno, strerror(errno));
+            }
+            memfd = open(daxmem, O_CREAT | O_RDWR, 0644);
+            if (0 > memfd) {
+                fprintf(stderr, "%s: unable to create %s (%d %s)\n", __PRETTY_FUNCTION__, daxmem, errno, strerror(errno));
+            }
+            zero = malloc(PAGE_SIZE);
+            assert(NULL != zero);
+            memset(zero, 0, PAGE_SIZE);
+            for (unsigned index2 = 0; index2 < samples[index]; index2++) {
+                write(memfd, zero, PAGE_SIZE);
+            }
+        }
+        test_cache_behavior(samples[index], memfd);
+        close(memfd);
+        memfd = -1;
     }
 
 #if 0
