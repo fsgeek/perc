@@ -1587,7 +1587,7 @@ int main(int argc, char **argv)
             unsigned start, end;
             double time;
 
-
+            fprintf(stderr, "%s: using %s as backing file\n", __PRETTY_FUNCTION__, daxmem);
             if (0 > unlink(daxmem)) {
                 fprintf(stderr, "%s: unable to unlink %s (%d %s)\n", __PRETTY_FUNCTION__, daxmem, errno, strerror(errno));
             }

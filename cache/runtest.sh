@@ -24,6 +24,12 @@ echo "./perc_progs" >> $LOG_FILE
 ./perc_progs >> $LOG_FILE 2>&1
 echo "./perc_progs -d /tmp/fsgeek-test.dat" >> $LOG_FILE
 ./perc_progs -d /tmp/fsgeek-test.dat >> $LOG_FILE 2>&1
+#echo "./perc_progs -d" `pwd`" /fsgeek-test.dat" >> $LOG_FILE
+#.perc_progs -d (`whoami`)/fsgeek-test.dat >> $LOG_FILE 2>&1
+#pwd=`pwd`
+target=`pwd`/"fsgeek-test.dat"
+echo "./perc_progs -d" $target >> $LOG_FILE
+./perc_progs -d $target >> $LOG_FILE 2>&1
 if [ -d "/mnt/pmem0p1" ]; then
     echo "./perc_progs -d /mnt/pmem0p1/fsgeek-test.dat" >> $LOG_FILE
     ./perc_progs -d /mnt/pmem0p1/fsgeek-test.dat >> $LOG_FILE
