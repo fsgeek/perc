@@ -6,7 +6,8 @@
 # First, start by writing out the relevant system information
 #
 timestamp=`date '+%Y_%m_%d__%H_%M_%S'`;
-LOG_FILE="./perc-test-"$timestamp".log"
+hostname=`hostname`
+LOG_FILE="./perc-test-"$hostname"-"$timestamp".log"
 
 date > $LOG_FILE
 echo "git log -1" >> $LOG_FILE
