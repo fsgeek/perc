@@ -18,7 +18,7 @@
 #include "cache.h"
 #include "cpu.h"
 
-
+static FILE *logfile;
 
 /// This is experimental code that I'll move elsewhere at some point
 typedef union {
@@ -1511,14 +1511,16 @@ const char *USAGE = "\
 usage:             \n\
 \t%s [options]     \n\
 options:           \n\
-\t-d    Direct Access Memory file to use\n\
+\t-d    Direct Access Memory file to use.\n\
 \t-h    Show this help message.\n\
+\t-l    Write output to the specified log file.\n\
 ";
 
 // options information
 static struct option gLongOptions[] = {
-    {"daxmem", required_argument, NULL, 'd'},
+    {"daxmem",  required_argument, NULL, 'd'},
     {"help",    no_argument, NULL, 'h'},
+    {"log",     required_argument, NULL, 'l'},
     {NULL, 0, NULL, 0} // marks end of the array
 };
 
@@ -1529,11 +1531,12 @@ int main(int argc, char **argv)
     unsigned long long timestamp1, timestamp2;
     cpu_cache_data_t *cd;
     char *daxmem = NULL;
+    char *logfname = NULL;
     static const unsigned samples[] = {4, 6, 8, 12, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536};
 
-    setbuf(stdout, NULL); // disable buffering
+    logfile = stderr;
 
-    while (-1 != (option_char = getopt_long(argc, argv, "d:h", gLongOptions, NULL))) {
+    while (-1 != (option_char = getopt_long(argc, argv, "d:hl:", gLongOptions, NULL))) {
         switch(option_char) {
             default:
                 fprintf(stderr, "Unknown option -%c\n", option_char);
@@ -1544,39 +1547,59 @@ int main(int argc, char **argv)
                 printf(USAGE, argv[0]);
                 exit(1);
                 break;
+            case 'l': // logfile
+                logfname = strdup(optarg);
+                break;
         }
     }
 
-    fprintf(stderr, "Using %s\n", daxmem);
+    if (NULL != logfname) {
+        logfile = fopen(logfname, "w");
+        if (NULL == logfname) {
+            fprintf(stderr, "%s: Unable to open logfile %s (errno %d, %s)\n", __PRETTY_FUNCTION__, logfname, errno, strerror(errno));
+            exit(EXIT_FAILURE);
+        }
+        fclose(logfile);
+        logfile = NULL;
 
-    printf("Starting\n");
+        logfile = freopen(logfname, "a+", stdout);
+        assert(logfile == stdout);
+        setbuf(stdout, NULL);
+        logfile = freopen(logfname, "a+", stderr);
+        assert(logfile == stderr);
+        setbuf(stderr, NULL);
+    }
+
+    if (NULL != daxmem) {
+        fprintf(stderr, "%s: Using %s to back memory\n", __PRETTY_FUNCTION__, daxmem);
+    }
+
     cpu_init();
     timestamp1 = cpu_rdtsc();
   	clsize = cpu_cacheline_size();
 
-	printf("RTM: %s\n", cpu_has_rtm() ? "Yes" : "No");
-	printf("HLE: %s\n", cpu_has_hle() ? "Yes" : "No");
-	printf("CLFLUSHOPT: %s\n", cpu_has_clflushopt() ? "Yes" : "No");
-	printf("CLWB: %s\n", cpu_has_clwb() ? "Yes" : "No");
-	printf("Cache line size (bytes): 0x%x\n", clsize);
+	printf("%s: RTM: %s\n", __PRETTY_FUNCTION__, cpu_has_rtm() ? "Yes" : "No");
+	printf("%s: HLE: %s\n", __PRETTY_FUNCTION__, cpu_has_hle() ? "Yes" : "No");
+	printf("%s: CLFLUSHOPT: %s\n", __PRETTY_FUNCTION__, cpu_has_clflushopt() ? "Yes" : "No");
+	printf("%s: CLWB: %s\n", __PRETTY_FUNCTION__, cpu_has_clwb() ? "Yes" : "No");
+	printf("%s: Cache line size (bytes): 0x%x\n", __PRETTY_FUNCTION__, clsize);
     assert(clsize == sizeof(record_t)); // sanity check - if this is wrong, the code needs to be fixed
-    printf("Ticks per second: 0x%d\n", cpu_frequency());
+    // printf("%s: Ticks per second: 0x%d\n", __PRETTY_FUNCTION__, cpu_frequency()); // <- this seems to be useless
 
     // (void) cache_test();
     timestamp2 = cpu_rdtsc();
-    printf("elapsed time is %llu\n", timestamp2 - timestamp1);
-    printf("Finished\n");
-
+    printf("%s: Preamble elapsed time is %llu\n", __PRETTY_FUNCTION__, timestamp2 - timestamp1);
 
     for (unsigned index = 0; ; index++) {
         cd = cpu_get_cache_info(index);
         if (NULL == cd) {
             break;
         }
-        
+
+        // TODO: add more data dump logic here?
+
         cpu_free_cache_info(cd);
         cd = NULL;
-        printf("index is %u\n", index);
     }
 
     for (unsigned index = 0; index < sizeof(samples)/sizeof(samples[0]); index++) {
