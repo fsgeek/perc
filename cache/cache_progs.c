@@ -1458,11 +1458,11 @@ static void test_cache_behavior_1(const unsigned pagecount, const unsigned runs,
 typedef void (*cache_test_t)(const unsigned pagecount, const unsigned runs, const void *memory);
 
 cache_test_t cache_tests[] = {
-    // (cache_test_t)test_cache_behavior_1,
-    // (cache_test_t)test_cache_behavior_2,
-    // (cache_test_t)test_cache_behavior_3,
-    // (cache_test_t)test_cache_behavior_4,
-    // (cache_test_t)test_cache_behavior_5,
+    (cache_test_t)test_cache_behavior_1,
+    (cache_test_t)test_cache_behavior_2,
+    (cache_test_t)test_cache_behavior_3,
+    (cache_test_t)test_cache_behavior_4,
+    (cache_test_t)test_cache_behavior_5,
     (cache_test_t)test_cache_behavior_6,
     (cache_test_t)test_cache_behavior_7,
     NULL,
@@ -1494,6 +1494,8 @@ void test_cache_behavior(const unsigned pagecount, int fd)
             fprintf(stderr, "%s: mmap failed fd = %d, errno = %d (%s)\n", __PRETTY_FUNCTION__, fd, errno, strerror(errno));
             return;
         }
+
+        memset(memory, 0, pagecount * pagesize);
 
         cache_tests[index](pagecount, runs, memory);
         if (munmap(memory, pagecount * pagesize) < 0) {
