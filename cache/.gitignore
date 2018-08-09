@@ -3,4 +3,4 @@ Makefile
 Makefile.in
 *.o
 perc_progs
-
+fsgeek-test.dat

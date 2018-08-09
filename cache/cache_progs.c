@@ -59,6 +59,8 @@ static void flush_cache(void)
     memset(buffer, c++, buffer_length);
 }
 
+typedef void (*init_memory)(const unsigned pagecount, void *memory);
+
 static void init_cache_test_memory(const unsigned pagecount, void *memory)
 {
     record_page_t *recpages = (record_page_t *)memory;
@@ -284,6 +286,65 @@ static unsigned long test_cache_noflush_sfence_every_n_updates(record_page_t *rp
 
 }
 
+static unsigned long test_cache_clflush_nofence(record_page_t *rp)
+{
+    record_t *r = rp->records[0].s.next;
+    unsigned long start, end, time;
+    unsigned count = 0;
+
+    time = 0;
+
+    if (!cpu_has_clflush()) {
+        return time;
+    }
+
+    while (r != &rp->records[0]) {
+        start = _rdtsc();
+        r->s.counter++;
+        _mm_clflush(r);
+        r = r->s.next;
+        end = _rdtsc();
+        time += end - start;
+        count++;
+    }
+
+    // report the amount of CPU time
+    return time;
+
+}
+
+static unsigned long test_cache_clflush_sfence_end(record_page_t *rp)
+{
+    record_t *r = rp->records[0].s.next;
+    unsigned long start, end, time;
+    unsigned count = 0;
+
+    time = 0;
+
+    if (!cpu_has_clflush()) {
+        return time;
+    }
+
+
+    while (r != &rp->records[0]) {
+        start = _rdtsc();
+        r->s.counter++;
+        _mm_clflush(r);
+        r = r->s.next;
+        end = _rdtsc();
+        time += end - start;
+        count++;
+    }
+    start = _rdtsc();
+    _mm_sfence();
+    end = _rdtsc();
+    time += (end - start);
+
+    // report the amount of CPU time
+    return time;
+
+}
+
 
 static unsigned long test_cache_clflush_sfence_every_n_updates(record_page_t *rp, unsigned n)
 {
@@ -293,7 +354,9 @@ static unsigned long test_cache_clflush_sfence_every_n_updates(record_page_t *rp
 
     time = 0;
 
-    assert(cpu_has_clflush());
+    if (!cpu_has_clflush()) {
+        return time;
+    }
 
     while (r != &rp->records[0]) {
 
@@ -333,6 +396,65 @@ static unsigned long test_cache_clflush_sfence_every_n_updates(record_page_t *rp
 
 }
 
+static unsigned long test_cache_clflushopt_nofence(record_page_t *rp)
+{
+    record_t *r = rp->records[0].s.next;
+    unsigned long start, end, time;
+    unsigned count = 0;
+
+    time = 0;
+
+    if (!cpu_has_clflushopt()) {
+        return time;
+    }
+
+    while (r != &rp->records[0]) {
+        start = _rdtsc();
+        r->s.counter++;
+        _mm_clflush(r);
+        r = r->s.next;
+        end = _rdtsc();
+        time += end - start;
+        count++;
+    }
+
+    // report the amount of CPU time
+    return time;
+
+}
+
+static unsigned long test_cache_clflushopt_sfence_end(record_page_t *rp)
+{
+    record_t *r = rp->records[0].s.next;
+    unsigned long start, end, time;
+    unsigned count = 0;
+
+    time = 0;
+
+    if (!cpu_has_clflushopt()) {
+        return time;
+    }
+
+    while (r != &rp->records[0]) {
+        start = _rdtsc();
+        r->s.counter++;
+        _mm_clflushopt(r);
+        r = r->s.next;
+        end = _rdtsc();
+        time += end - start;
+        count++;
+    }
+    start = _rdtsc();
+    _mm_sfence();
+    end = _rdtsc();
+    time += (end - start);
+
+    // report the amount of CPU time
+    return time;
+
+}
+
+
 static unsigned long test_cache_clflushopt_sfence_every_n_updates(record_page_t *rp, unsigned n)
 {
     record_t *r = rp->records[0].s.next;
@@ -341,7 +463,9 @@ static unsigned long test_cache_clflushopt_sfence_every_n_updates(record_page_t 
 
     time = 0;
 
-    assert (cpu_has_clflushopt());
+    if (!cpu_has_clflushopt()) {
+        return time;
+    }
 
     while (r != &rp->records[0]) {
 
@@ -366,7 +490,7 @@ static unsigned long test_cache_clflushopt_sfence_every_n_updates(record_page_t 
         // update counter
         count++;
 
-        // is it time to flush?
+        // is it time to fence?
 
         if (0 == (count % n)) {
             start = _rdtsc();
@@ -381,6 +505,66 @@ static unsigned long test_cache_clflushopt_sfence_every_n_updates(record_page_t 
 
 }
 
+static unsigned long test_cache_clwb_nofence(record_page_t *rp)
+{
+    record_t *r = rp->records[0].s.next;
+    unsigned long start, end, time;
+    unsigned count = 0;
+
+    time = 0;
+
+    if (!cpu_has_clwb()) {
+        return time;
+    }
+
+
+    while (r != &rp->records[0]) {
+        start = _rdtsc();
+        r->s.counter++;
+        _mm_clwb(r);
+        r = r->s.next;
+        end = _rdtsc();
+        time += end - start;
+        count++;
+    }
+
+    // report the amount of CPU time
+    return time;
+
+}
+
+static unsigned long test_cache_clwb_sfence_end(record_page_t *rp)
+{
+    record_t *r = rp->records[0].s.next;
+    unsigned long start, end, time;
+    unsigned count = 0;
+
+    time = 0;
+
+    if (!cpu_has_clwb()) {
+        return time;
+    }
+
+    while (r != &rp->records[0]) {
+        start = _rdtsc();
+        r->s.counter++;
+        _mm_clwb(r);
+        r = r->s.next;
+        end = _rdtsc();
+        time += end - start;
+        count++;
+    }
+    start = _rdtsc();
+    _mm_sfence();
+    end = _rdtsc();
+    time += (end - start);
+
+    // report the amount of CPU time
+    return time;
+
+}
+
+
 static unsigned long test_cache_clwb_sfence_every_n_updates(record_page_t *rp, unsigned n)
 {
     record_t *r = rp->records[0].s.next;
@@ -389,7 +573,9 @@ static unsigned long test_cache_clwb_sfence_every_n_updates(record_page_t *rp, u
 
     time = 0;
 
-    assert(cpu_has_clwb());
+    if (!cpu_has_clwb()) {
+        return time;
+    }
 
     while (r != &rp->records[0]) {
 
@@ -428,6 +614,52 @@ static unsigned long test_cache_clwb_sfence_every_n_updates(record_page_t *rp, u
     return time;
 
 }
+
+static struct {
+    const char *name;
+    unsigned long (*test)(record_page_t *rp);
+} tests[] = {
+    {"noflush, nofence", test_cache_noflush_nofence},
+    {"noflush, sfence end", test_cache_noflush_sfence_end},
+    {"clflush, nofence", test_cache_clflush_nofence},
+    {"clflush, sfence end", test_cache_clflush_sfence_end},
+    {"clflushopt, nofence", test_cache_clflushopt_nofence},
+    {"clflushopt, sfence end", test_cache_clflushopt_sfence_end},
+    {"clwb, nofence", test_cache_clwb_nofence},
+    {"clwb, sfence end", test_cache_clwb_sfence_end},
+    {NULL, NULL},
+};
+
+static struct {
+    const char *name;
+    unsigned long (*test)(record_page_t *rp, unsigned frequency);
+} freq_tests[] = {
+    {"noflush, sfence periodic 1", test_cache_noflush_sfence_every_n_updates},
+    {"clflush, sfence periodic", test_cache_clflush_sfence_every_n_updates},
+    {"clflushopt, sfence periodic", test_cache_clflushopt_sfence_every_n_updates},
+    {"clwb, sfence periodic", test_cache_clwb_sfence_every_n_updates},
+};
+
+static void test_cache_behavior_8(const unsigned pagecount, const unsigned runs, void *memory)
+{
+    unsigned t = 0;
+    unsigned long time_same, time_different;
+
+    fprintf(stderr, "%s(%u, %u, 0x%p)\n", __PRETTY_FUNCTION__, pagecount, runs, memory);
+
+    while (tests[t].name && tests[t].test) {
+        time_same = time_different = 0;
+        for (unsigned run = 0; run < runs; run++) {
+            init_cache_test_memory_same_set(pagecount, memory);
+            time_same += tests[t].test((record_page_t *)memory);
+            init_cache_test_memory_different_set(pagecount, memory);
+            time_different += tests[t].test((record_page_t *)memory);
+        }
+        // this format is intended to be a simple json/python style output emission.
+        fprintf(stderr, "{'%s': (('runs', %u), ('time same cache set', %lu), ('time different cache set', %lu)) }, \n", __PRETTY_FUNCTION__, runs, time_same, time_different);
+    }
+}
+
 
 static void test_cache_behavior_7(const unsigned pagecount, const unsigned runs, void *memory)
 {
