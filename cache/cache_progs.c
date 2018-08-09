@@ -645,7 +645,36 @@ static void test_cache_behavior_8(const unsigned pagecount, const unsigned runs,
     unsigned t = 0;
     unsigned long time_same, time_different;
 
-    fprintf(stderr, "%s(%u, %u, 0x%p)\n", __PRETTY_FUNCTION__, pagecount, runs, memory);
+    // fprintf(stderr, "%s(%u, %u, 0x%p)\n", __PRETTY_FUNCTION__, pagecount, runs, memory);
+    fprintf(stderr, "\"%s runs %u pages %u\": {", __PRETTY_FUNCTION__, runs, pagecount);
+    while (tests[t].name && tests[t].test) {
+        time_same = time_different = 0;
+        for (unsigned run = 0; run < runs; run++) {
+            init_cache_test_memory_same_set(pagecount, memory);
+            time_same += tests[t].test((record_page_t *)memory);
+            init_cache_test_memory_different_set(pagecount, memory);
+            time_different += tests[t].test((record_page_t *)memory);
+        }
+        if ((time_same > 0) || (time_different > 0)) {
+            // this format is intended to be a simple json/python style output emission.
+            if (t > 0) {
+                fprintf(stderr, ",\n");
+            }
+            fprintf(stderr, "\"%s\" : ", tests[t].name);
+            fprintf(stderr, "{ \"time same cache set\": %lu, \"time different cache set\": %lu}", time_same, time_different);
+        }
+        t++;
+    }
+    fprintf(stderr, " },\n");
+
+}
+
+static void test_cache_behavior_9(const unsigned pagecount, const unsigned runs, void *memory)
+{
+    unsigned t = 0;
+    unsigned long time_same, time_different;
+
+    // fprintf(stderr, "%s(%u, %u, 0x%p)\n", __PRETTY_FUNCTION__, pagecount, runs, memory);
 
     while (tests[t].name && tests[t].test) {
         time_same = time_different = 0;
@@ -655,9 +684,14 @@ static void test_cache_behavior_8(const unsigned pagecount, const unsigned runs,
             init_cache_test_memory_different_set(pagecount, memory);
             time_different += tests[t].test((record_page_t *)memory);
         }
-        // this format is intended to be a simple json/python style output emission.
-        fprintf(stderr, "{'%s': (('runs', %u), ('time same cache set', %lu), ('time different cache set', %lu)) }, \n", __PRETTY_FUNCTION__, runs, time_same, time_different);
+        if ((time_same > 0) || (time_different > 0)) {
+            // this format is intended to be a simple json/python style output emission.
+            fprintf(stderr, "{\"%s\": ((\"test\", \"%s\"), (\"page count\", %u), (\"runs\", %u), (\"time same cache set\", %lu), (\"time different cache set\", %lu)) }, \n", 
+                    __PRETTY_FUNCTION__, tests[t].name, pagecount, runs, time_same, time_different);
+        }
+        t++;
     }
+
 }
 
 
@@ -1690,13 +1724,14 @@ static void test_cache_behavior_1(const unsigned pagecount, const unsigned runs,
 typedef void (*cache_test_t)(const unsigned pagecount, const unsigned runs, const void *memory);
 
 cache_test_t cache_tests[] = {
-    (cache_test_t)test_cache_behavior_1,
-    (cache_test_t)test_cache_behavior_2,
-    (cache_test_t)test_cache_behavior_3,
-    (cache_test_t)test_cache_behavior_4,
-    (cache_test_t)test_cache_behavior_5,
-    (cache_test_t)test_cache_behavior_6,
-    (cache_test_t)test_cache_behavior_7,
+    // (cache_test_t)test_cache_behavior_1,
+    // (cache_test_t)test_cache_behavior_2,
+    // (cache_test_t)test_cache_behavior_3,
+    // (cache_test_t)test_cache_behavior_4,
+    // (cache_test_t)test_cache_behavior_5,
+    // (cache_test_t)test_cache_behavior_6,
+    // (cache_test_t)test_cache_behavior_7,
+    (cache_test_t)test_cache_behavior_8,
     NULL,
 };
 
@@ -1766,7 +1801,7 @@ int main(int argc, char **argv)
     cpu_cache_data_t *cd;
     char *daxmem = NULL;
     char *logfname = NULL;
-    static const unsigned samples[] = {4, 6, 8, 12, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536};
+    static const unsigned samples[] = {4, 6, 8, 12, 16, 32, 64, 128, 256, 512, 1024, /* 2048, 4096, 8192, 16384, 32768, 65536 */};
 
     logfile = stderr;
 
@@ -1774,7 +1809,6 @@ int main(int argc, char **argv)
         switch(option_char) {
             default:
                 fprintf(stderr, "Unknown option -%c\n", option_char);
-            case 'd':
                 daxmem = strdup(optarg);
                 break;
             case 'h': // help
@@ -1804,26 +1838,34 @@ int main(int argc, char **argv)
         setbuf(stderr, NULL);
     }
 
-    if (NULL != daxmem) {
-        fprintf(stderr, "%s: Using %s to back memory\n", __PRETTY_FUNCTION__, daxmem);
-    }
-
     cpu_init();
     timestamp1 = cpu_rdtsc();
   	clsize = cpu_cacheline_size();
 
+    fprintf(stderr, "{ \"system description\": {\n");
+    if (NULL != daxmem) {
+        fprintf(stderr, "\"file backing memory: \"%s,\n", daxmem);
+    }
+    fprintf(stderr, "\"RTM\" : %d,\n", cpu_has_rtm() ? 1 : 0);
+    fprintf(stderr, "\"HLE\" : %d,\n", cpu_has_hle() ? 1 : 0);
+    fprintf(stderr, "\"CLFLUSHOPT\": %d,\n", cpu_has_clflushopt() ? 1 : 0);
+    fprintf(stderr, "\"CLWB\": %d,\n", cpu_has_clwb() ? 1 : 0);
+    fprintf(stderr, "\"cache line size\": %d,\n", clsize);
+#if 0
 	printf("%s: RTM: %s\n", __PRETTY_FUNCTION__, cpu_has_rtm() ? "Yes" : "No");
 	printf("%s: HLE: %s\n", __PRETTY_FUNCTION__, cpu_has_hle() ? "Yes" : "No");
 	printf("%s: CLFLUSHOPT: %s\n", __PRETTY_FUNCTION__, cpu_has_clflushopt() ? "Yes" : "No");
 	printf("%s: CLWB: %s\n", __PRETTY_FUNCTION__, cpu_has_clwb() ? "Yes" : "No");
 	printf("%s: Cache line size (bytes): 0x%x\n", __PRETTY_FUNCTION__, clsize);
+#endif // 0
     assert(clsize == sizeof(record_t)); // sanity check - if this is wrong, the code needs to be fixed
     // printf("%s: Ticks per second: 0x%d\n", __PRETTY_FUNCTION__, cpu_frequency()); // <- this seems to be useless
 
     // (void) cache_test();
     timestamp2 = cpu_rdtsc();
-    printf("%s: Preamble elapsed time is %llu\n", __PRETTY_FUNCTION__, timestamp2 - timestamp1);
+    // printf("%s: Preamble elapsed time is %llu\n", __PRETTY_FUNCTION__, timestamp2 - timestamp1);
 
+    fprintf(stderr, "\"cache info\": \"");
     for (unsigned index = 0; ; index++) {
         cd = cpu_get_cache_info(index);
         if (NULL == cd) {
@@ -1835,6 +1877,7 @@ int main(int argc, char **argv)
         cpu_free_cache_info(cd);
         cd = NULL;
     }
+    fprintf(stderr, "\"},\n");
 
     for (unsigned index = 0; index < sizeof(samples)/sizeof(samples[0]); index++) {
         int memfd = -1;
@@ -1844,13 +1887,12 @@ int main(int argc, char **argv)
             unsigned start, end;
             double time;
 
-            fprintf(stderr, "%s: using %s as backing file\n", __PRETTY_FUNCTION__, daxmem);
-            if (0 > unlink(daxmem)) {
-                fprintf(stderr, "%s: unable to unlink %s (%d %s)\n", __PRETTY_FUNCTION__, daxmem, errno, strerror(errno));
-            }
+            fprintf(stderr, "{\"backing file\": \"%s\"},", daxmem);
+            (void) unlink(daxmem);
             memfd = open(daxmem, O_CREAT | O_RDWR, 0644);
             if (0 > memfd) {
                 fprintf(stderr, "%s: unable to create %s (%d %s)\n", __PRETTY_FUNCTION__, daxmem, errno, strerror(errno));
+                exit(EXIT_FAILURE);
             }
             zero = malloc(PAGE_SIZE);
             assert(NULL != zero);
@@ -1863,19 +1905,24 @@ int main(int argc, char **argv)
                 end = _rdtsc();
                 time += end - start;
             }
-            fprintf(stderr, "%s: write ticks for %dKB blocks is %f\n", __PRETTY_FUNCTION__, 4 * samples[index], time);
+            fprintf(stderr, "{\"write ticks for %dKB blocks\": %f},\n", 4 * samples[index], time);
+            // fprintf(stderr, "%s: write ticks for %dKB blocks is %f\n", __PRETTY_FUNCTION__, 4 * samples[index], time);
 
             time = 0.0;
             start = _rdtsc();
             fsync(memfd);
             end = _rdtsc();
             time = end - start;
-            fprintf(stderr, "%s: fsync ticks for %dKB blocks is %f\n", __PRETTY_FUNCTION__, 4 * samples[index], time);
+            // fprintf(stderr, "%s: fsync ticks for %dKB blocks is %f\n", __PRETTY_FUNCTION__, 4 * samples[index], time);
+            fprintf(stderr, "{\"fsync ticks for %dKB blocks\": %f},\n", 4 * samples[index], time);
         }
         test_cache_behavior(samples[index], memfd);
         close(memfd);
         memfd = -1;
     }
+
+    // so we have a dummy line to ensure we don't end with a comma.  Probably should put a time counter here.
+    fprintf(stderr, "\"comment\": \"done\"}\n");
 
 #if 0
     _mm_sfence();
