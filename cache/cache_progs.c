@@ -1721,6 +1721,29 @@ static void test_cache_behavior_1(const unsigned pagecount, const unsigned runs,
 
 }
 
+static void test_nontemporal_behavior(const unsigned pagecount, const unsigned runs, void *memory)
+{
+    size_t size = PAGE_SIZE * pagecount;
+    __m256i *data = (__m256i *)memory; 
+    __m256i fill;
+    unsigned start, end;
+    unsigned long long time = 0;
+
+    fprintf(stderr, "\"%s runs %u pages %u\": {", __PRETTY_FUNCTION__, runs, pagecount);
+    for (unsigned run = 0; run < runs; run++) {
+        for (unsigned index = 0; index < size / sizeof(__m256i); index++) {
+            memset(&fill, index, sizeof(fill));
+            start = _rdtsc();
+            _mm256_stream_si256(&data[index], fill);
+            end = _rdtsc();
+            time += end - start;
+        }
+    }
+    fprintf(stderr, "\"non-temporal move\":");
+    fprintf(stderr, "{\"size\": %zu, \"time\": %lu}\n", size, time);
+    fprintf(stderr, " },\n");
+}
+
 typedef void (*cache_test_t)(const unsigned pagecount, const unsigned runs, const void *memory);
 
 cache_test_t cache_tests[] = {
@@ -1732,6 +1755,7 @@ cache_test_t cache_tests[] = {
     // (cache_test_t)test_cache_behavior_6,
     // (cache_test_t)test_cache_behavior_7,
     (cache_test_t)test_cache_behavior_8,
+    (cache_test_t)test_nontemporal_behavior, 
     NULL,
 };
 
@@ -1851,6 +1875,12 @@ int main(int argc, char **argv)
     fprintf(stderr, "\"CLFLUSHOPT\": %d,\n", cpu_has_clflushopt() ? 1 : 0);
     fprintf(stderr, "\"CLWB\": %d,\n", cpu_has_clwb() ? 1 : 0);
     fprintf(stderr, "\"cache line size\": %d,\n", clsize);
+    for (unsigned index = 0; index < 6; index++) {
+        unsigned int size = __cacheSize(index);
+        if (size > 0) {
+            fprintf(stderr, "\"L%u cache size (KB)\": %u,\n", index, size);
+        }
+    }
 #if 0
 	printf("%s: RTM: %s\n", __PRETTY_FUNCTION__, cpu_has_rtm() ? "Yes" : "No");
 	printf("%s: HLE: %s\n", __PRETTY_FUNCTION__, cpu_has_hle() ? "Yes" : "No");
@@ -1873,11 +1903,11 @@ int main(int argc, char **argv)
         }
 
         // TODO: add more data dump logic here?
-
         cpu_free_cache_info(cd);
         cd = NULL;
     }
     fprintf(stderr, "\"},\n");
+ 
 
     for (unsigned index = 0; index < sizeof(samples)/sizeof(samples[0]); index++) {
         int memfd = -1;
