@@ -1838,14 +1838,15 @@ int main(int argc, char **argv)
         switch(option_char) {
             default:
                 fprintf(stderr, "Unknown option -%c\n", option_char);
-                daxmem = strdup(optarg);
-                break;
             case 'h': // help
                 printf(USAGE, argv[0]);
                 exit(1);
                 break;
             case 'l': // logfile
                 logfname = strdup(optarg);
+                break;
+            case 'd': // file to map (presumably dax)
+                daxmem = strdup(optarg);
                 break;
         }
     }
@@ -1873,7 +1874,7 @@ int main(int argc, char **argv)
 
     fprintf(stderr, "{ \"system description\": {\n");
     if (NULL != daxmem) {
-        fprintf(stderr, "\"file backing memory: \"%s,\n", daxmem);
+        fprintf(stderr, "\"file backing memory\": \"%s\",\n", daxmem);
     }
     fprintf(stderr, "\"RTM\" : %d,\n", cpu_has_rtm() ? 1 : 0);
     fprintf(stderr, "\"HLE\" : %d,\n", cpu_has_hle() ? 1 : 0);
@@ -1900,7 +1901,7 @@ int main(int argc, char **argv)
     timestamp2 = cpu_rdtsc();
     // printf("%s: Preamble elapsed time is %llu\n", __PRETTY_FUNCTION__, timestamp2 - timestamp1);
 
-    fprintf(stderr, "\"cache info\": \"");
+    fprintf(stderr, "\"cache info\": \" ");
     for (unsigned index = 0; ; index++) {
         cd = cpu_get_cache_info(index);
         if (NULL == cd) {
@@ -1912,7 +1913,10 @@ int main(int argc, char **argv)
         cd = NULL;
     }
     fprintf(stderr, "\"},\n");
- 
+
+    if (NULL != daxmem) {
+        fprintf(stderr, "\"backing file test\": {\n");
+    }
 
     for (unsigned index = 0; index < sizeof(samples)/sizeof(samples[0]); index++) {
         int memfd = -1;
@@ -1921,8 +1925,9 @@ int main(int argc, char **argv)
             char *zero = NULL;
             unsigned start, end;
             double time;
+            const unsigned runs = 10;
 
-            fprintf(stderr, "{\"backing file\": \"%s\"},", daxmem);
+            fprintf(stderr, "\t\"size %dKB\": {\n", 4 * samples[index]);
             (void) unlink(daxmem);
             memfd = open(daxmem, O_CREAT | O_RDWR, 0644);
             if (0 > memfd) {
@@ -1933,28 +1938,40 @@ int main(int argc, char **argv)
             assert(NULL != zero);
             memset(zero, 0, PAGE_SIZE);
 
-            time = 0.0;
-            for (unsigned index2 = 0; index2 < samples[index]; index2++) {
-                start = _rdtsc();
-                write(memfd, zero, PAGE_SIZE);
-                end = _rdtsc();
-                time += end - start;
+            fprintf(stderr, "\t\t\"write time test\": [");
+            for (unsigned run = 0; run < runs; run++) {
+                time = 0.0;
+                for (unsigned index2 = 0; index2 < samples[index]; index2++) {
+                    start = _rdtsc();
+                    write(memfd, zero, PAGE_SIZE);
+                    end = _rdtsc();
+                    time += end - start;
+                }
+                fprintf(stderr, "%f%s", time, run + 1 < runs ? ", ": "],\n");
             }
-            fprintf(stderr, "{\"write ticks for %dKB blocks\": %f},\n", 4 * samples[index], time);
-            // fprintf(stderr, "%s: write ticks for %dKB blocks is %f\n", __PRETTY_FUNCTION__, 4 * samples[index], time);
+            fprintf(stderr, "\t\t\"fsync time test\": [");
+            for (unsigned run = 0; run < runs; run++) {
+                time = 0.0;
+                start = _rdtsc();
+                fsync(memfd);
+                end = _rdtsc();
+                time = end - start;
 
-            time = 0.0;
-            start = _rdtsc();
-            fsync(memfd);
-            end = _rdtsc();
-            time = end - start;
-            // fprintf(stderr, "%s: fsync ticks for %dKB blocks is %f\n", __PRETTY_FUNCTION__, 4 * samples[index], time);
-            fprintf(stderr, "{\"fsync ticks for %dKB blocks\": %f},\n", 4 * samples[index], time);
+                fprintf(stderr, "%f%s", time, run + 1 < runs ? ", " : "],\n");
+                // fprintf(stderr, "%s: fsync ticks for %dKB blocks is %f\n", __PRETTY_FUNCTION__, 4 * samples[index], time);
+            }
+            fprintf(stderr, "\t\t\"backing file\": \"%s\"}%c\n", daxmem, index + 1 == sizeof(samples)/sizeof(samples[0]) ? ' ' : ',');
+
         }
-        test_cache_behavior(samples[index], memfd);
+        // test_cache_behavior(samples[index], memfd);
         close(memfd);
         memfd = -1;
     }
+
+    if (NULL != daxmem) {
+        fprintf(stderr, "\n\t},\n");
+    }
+
 
     // so we have a dummy line to ensure we don't end with a comma.  Probably should put a time counter here.
     fprintf(stderr, "\"comment\": \"done\"}\n");
