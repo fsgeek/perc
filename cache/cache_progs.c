@@ -18,6 +18,11 @@
 #include "cache.h"
 #include "cpu.h"
 
+// This is here to quiet the IDE complaining this isn't defined.
+#if !defined(MAP_ANONYMOUS)
+#define MAP_ANONYMOUS (0x20)
+#endif
+
 static FILE *logfile;
 
 /// This is experimental code that I'll move elsewhere at some point
