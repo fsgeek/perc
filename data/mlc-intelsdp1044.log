@@ -1,0 +1,68 @@
+[root@intelsdp1044 mlcv3_5_src]# ./mlc
+Intel(R) Memory Latency Checker - v3.5
+Measuring idle latencies (in ns)...
+		Numa node
+Numa node	     0	     1	
+       0	  82.4	 137.9	
+       1	 136.3	  81.7	
+
+Measuring Peak Injection Memory Bandwidths for the system
+Bandwidths are in MB/sec (1 MB/sec = 1,000,000 Bytes/sec)
+Using all the threads from each core if Hyper-threading is enabled
+Using traffic with the following read-write ratios
+ALL Reads        :	214079.8	
+3:1 Reads-Writes :	203424.0	
+2:1 Reads-Writes :	202752.8	
+1:1 Reads-Writes :	196475.8	
+Stream-triad like:	179104.7	
+
+Measuring Memory Bandwidths between nodes within system 
+Bandwidths are in MB/sec (1 MB/sec = 1,000,000 Bytes/sec)
+Using all the threads from each core if Hyper-threading is enabled
+Using Read-only traffic type
+		Numa node
+Numa node	     0	     1	
+       0	107127.7	34357.1	
+       1	34356.8	106924.7	
+
+Measuring Loaded Latencies for the system
+Using all the threads from each core if Hyper-threading is enabled
+Using Read-only traffic type
+Inject	Latency	Bandwidth
+Delay	(ns)	MB/sec
+==========================
+ 00000	243.01	 214065.2
+ 00002	242.86	 213955.6
+ 00008	242.90	 213907.2
+ 00015	240.51	 213602.0
+ 00050	236.39	 213135.6
+ 00100	231.74	 212822.7
+ 00200	122.33	 163703.3
+ 00300	102.39	 112200.0
+ 00400	 96.39	  85110.0
+ 00500	 93.80	  68586.0
+ 00700	 91.89	  49512.6
+ 01000	 88.62	  35061.2
+ 01300	 86.51	  27215.6
+ 01700	 84.29	  21042.4
+ 02500	 82.64	  14593.5
+ 03500	 82.21	  10661.2
+ 05000	 82.10	   7704.9
+ 09000	 81.99	   4632.7
+ 20000	 81.97	   2515.3
+
+Measuring cache-to-cache transfer latency (in ns)...
+Local Socket L2->L2 HIT  latency	49.7
+Local Socket L2->L2 HITM latency	49.8
+Remote Socket L2->L2 HITM latency (data address homed in writer socket)
+			Reader Numa Node
+Writer Numa Node     0	     1	
+            0	     -	 111.6	
+            1	 111.6	     -	
+Remote Socket L2->L2 HITM latency (data address homed in reader socket)
+			Reader Numa Node
+Writer Numa Node     0	     1	
+            0	     -	 185.2	
+            1	 185.6	     -	
+[root@intelsdp1044 mlcv3_5_src]# 
+
