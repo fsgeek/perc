@@ -8,7 +8,6 @@
 timestamp=`date '+%Y_%m_%d__%H_%M_%S'`;
 hostname=`hostname`
 LOG_FILE="./perc-test-"$hostname"-"$timestamp".log"
-
 date > $LOG_FILE
 echo "git log -1" >> $LOG_FILE
 git log -1 >> $LOG_FILE
@@ -24,6 +23,9 @@ echo "lshw -quiet" >> $LOG_FILE
 sudo lshw -quiet >> $LOG_FILE
 echo "lsb_release -a" >> $LOG_FILE
 lsb_release -a >> $LOG_FILE
+echo "mount" >> $LOG_FILE
+mount >> $LOG_FILE
+echo "****** TEST RESULTS *****" >> $LOG_FILE
 echo "./perc_progs" >> $LOG_FILE
 ./perc_progs >> $LOG_FILE 2>&1
 echo "./perc_progs -d /tmp/fsgeek-test.dat" >> $LOG_FILE

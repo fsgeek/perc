@@ -1752,13 +1752,13 @@ static void test_nontemporal_behavior(const unsigned pagecount, const unsigned r
 typedef void (*cache_test_t)(const unsigned pagecount, const unsigned runs, const void *memory);
 
 cache_test_t cache_tests[] = {
-    // (cache_test_t)test_cache_behavior_1,
-    // (cache_test_t)test_cache_behavior_2,
-    // (cache_test_t)test_cache_behavior_3,
-    // (cache_test_t)test_cache_behavior_4,
-    // (cache_test_t)test_cache_behavior_5,
-    // (cache_test_t)test_cache_behavior_6,
-    // (cache_test_t)test_cache_behavior_7,
+    (cache_test_t)test_cache_behavior_1,
+    (cache_test_t)test_cache_behavior_2,
+    (cache_test_t)test_cache_behavior_3,
+    (cache_test_t)test_cache_behavior_4,
+    (cache_test_t)test_cache_behavior_5,
+    (cache_test_t)test_cache_behavior_6,
+    (cache_test_t)test_cache_behavior_7,
     (cache_test_t)test_cache_behavior_8,
     (cache_test_t)test_nontemporal_behavior, 
     NULL,
