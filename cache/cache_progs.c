@@ -53,7 +53,8 @@ typedef struct {
 C_ASSERT(PAGE_SIZE == sizeof(record_page_t));
 
 #define LOG_RESULTS(pages, runs, time, description) \
-printf("%3.3d, %4d, %14.2f, %24.24s, %s\n", pages, runs, time, __PRETTY_FUNCTION__, description)
+printf("{\"%s\" : \"runs\" : %d, \"pages\":  %d, \"time\": %f, \"description\": %s },\n", __PRETTY_FUNCTION__, runs, pages, time, description);;
+// printf("%3.3d, %4d, %14.2f, %24.24s, %s\n", pages, runs, time, __PRETTY_FUNCTION__, description)
 
 static void flush_cache(void)
 {
@@ -149,7 +150,7 @@ static void init_cache_test_memory_different_set(const unsigned pagecount, void 
         for (unsigned index2 = 0; index2 < pagecount; index2++) {
             unsigned offset = (index2 + 1) % pagecount;
             r->s.next = &recpages[offset].records[(index1 + offset) % RECORDS_PER_PAGE];
-            // fprintf(stderr, "%s: %p -> %p\n", __PRETTY_FUNCTION__, r, r->s.next);
+            // printf( "%s: %p -> %p\n", __PRETTY_FUNCTION__, r, r->s.next);
             r = r->s.next;
         }
     }
@@ -650,8 +651,8 @@ static void test_cache_behavior_8(const unsigned pagecount, const unsigned runs,
     unsigned t = 0;
     unsigned long time_same, time_different;
 
-    // fprintf(stderr, "%s(%u, %u, 0x%p)\n", __PRETTY_FUNCTION__, pagecount, runs, memory);
-    fprintf(stderr, "\"%s runs %u pages %u\": {", __PRETTY_FUNCTION__, runs, pagecount);
+    // printf( "%s(%u, %u, 0x%p)\n", __PRETTY_FUNCTION__, pagecount, runs, memory);
+    printf( "\"%s runs %u pages %u\": {", __PRETTY_FUNCTION__, runs, pagecount);
     while (tests[t].name && tests[t].test) {
         time_same = time_different = 0;
         for (unsigned run = 0; run < runs; run++) {
@@ -663,14 +664,14 @@ static void test_cache_behavior_8(const unsigned pagecount, const unsigned runs,
         if ((time_same > 0) || (time_different > 0)) {
             // this format is intended to be a simple json/python style output emission.
             if (t > 0) {
-                fprintf(stderr, ",\n");
+                printf( ",\n");
             }
-            fprintf(stderr, "\"%s\" : ", tests[t].name);
-            fprintf(stderr, "{ \"time same cache set\": %lu, \"time different cache set\": %lu}", time_same, time_different);
+            printf( "\"%s\" : ", tests[t].name);
+            printf( "{ \"time same cache set\": %lu, \"time different cache set\": %lu}", time_same, time_different);
         }
         t++;
     }
-    fprintf(stderr, " },\n");
+    printf( " },\n");
 
 }
 
@@ -679,7 +680,7 @@ static void test_cache_behavior_9(const unsigned pagecount, const unsigned runs,
     unsigned t = 0;
     unsigned long time_same, time_different;
 
-    // fprintf(stderr, "%s(%u, %u, 0x%p)\n", __PRETTY_FUNCTION__, pagecount, runs, memory);
+    // printf( "%s(%u, %u, 0x%p)\n", __PRETTY_FUNCTION__, pagecount, runs, memory);
 
     while (tests[t].name && tests[t].test) {
         time_same = time_different = 0;
@@ -691,7 +692,7 @@ static void test_cache_behavior_9(const unsigned pagecount, const unsigned runs,
         }
         if ((time_same > 0) || (time_different > 0)) {
             // this format is intended to be a simple json/python style output emission.
-            fprintf(stderr, "{\"%s\": ((\"test\", \"%s\"), (\"page count\", %u), (\"runs\", %u), (\"time same cache set\", %lu), (\"time different cache set\", %lu)) }, \n", 
+            printf( "{\"%s\": ((\"test\", \"%s\"), (\"page count\", %u), (\"runs\", %u), (\"time same cache set\", %lu), (\"time different cache set\", %lu)) }, \n", 
                     __PRETTY_FUNCTION__, tests[t].name, pagecount, runs, time_same, time_different);
         }
         t++;
@@ -716,12 +717,12 @@ static void test_cache_behavior_7(const unsigned pagecount, const unsigned runs,
 
     for (unsigned index = 0; index < RECORDS_PER_PAGE; index++) {
         do {
-            fprintf(stderr, "%s: record %p points to %p\n", __PRETTY_FUNCTION__, r, r->s.next);
+            printf( "%s: record %p points to %p\n", __PRETTY_FUNCTION__, r, r->s.next);
             r = r->s.next;
         } while (r != &rp->records[0]);
 
         double time = test_cache_noflush_nofence(rp);
-        fprintf(stderr, "%s: time to walk list: %f\n", __PRETTY_FUNCTION__, time);
+        printf( "%s: time to walk list: %f\n", __PRETTY_FUNCTION__, time);
     }
 #endif // 0
 
@@ -740,6 +741,7 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
     record_t *r0 = r0_start;
     double time = 0.0;
     unsigned start, end;
+    unsigned run;
  
     if (12 != pagecount) {
         // only need to test this one case.
@@ -749,447 +751,481 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
     init_cache_test_memory(pagecount, memory);
     (void) runs;
 
-    flush_cache();
-    // prime the cache
-    start = _rdtsc();
-    r0 = r0->s.next;
-    r0 = r0->s.next;
-    r0 = r0->s.next;
-    r0 = r0->s.next;
-    r0 = r0->s.next;
-    r0 = r0->s.next;
-    r0 = r0->s.next;
-    r0 = r0->s.next;
-    r0 = r0_start;
-    end = _rdtsc();
+    time = 0.0;
+    for (run = 0; run < runs; run++) {
+        flush_cache();
+        // prime the cache
+        start = _rdtsc();
+        r0 = r0->s.next;
+        r0 = r0->s.next;
+        r0 = r0->s.next;
+        r0 = r0->s.next;
+        r0 = r0->s.next;
+        r0 = r0->s.next;
+        r0 = r0->s.next;
+        r0 = r0->s.next;
+        r0 = r0_start;
+        end = _rdtsc();
+        time += (double)(end - start);
+    }
 
-    time = ((double) end - start);
-
-    fprintf(stderr, "%s: priming step took %f ticks\n", __PRETTY_FUNCTION__, time);
+    LOG_RESULTS(pagecount, runs, time, "run list (cold cache)");
+    // printf( "%s: priming step took %f ticks\n", __PRETTY_FUNCTION__, time);
 
     // now re-run it
-    r0 = r0_start;
-    start = _rdtsc();
-    r0->s.counter++; // 1
-    _mm_clflush(r0);
-    r0 = r0->s.next; 
-    r0->s.counter++; // 2
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 3
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 4
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 5
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 6
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 7
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 8
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 9
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 10
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 11
-    _mm_clflush(r0);
-    _mm_sfence();
-    end = _rdtsc();
-
-    time = ((double) end - start);
-
-    fprintf(stderr, "%s: first run sequence took %f ticks\n", __PRETTY_FUNCTION__, time);
-
-    start = _rdtsc();
-    _mm_clflush(r0);
-    end = _rdtsc();
-
-    time = ((double) end - start);
-
-    fprintf(stderr, "%s: clflush took %f ticks for clean cache line flush\n", __PRETTY_FUNCTION__, time);
-
-    r0 = r0_start;
-    start = _rdtsc();
-    r0->s.counter++; // 1
-    _mm_clflush(r0);
-    r0 = r0->s.next; 
-    r0->s.counter++; // 2
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 3
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 4
-    _mm_clflush(r0);
-    _mm_sfence();
-    end = _rdtsc();
-
-    time = ((double) end - start);
-
-    fprintf(stderr, "%s: clflush took %f ticks for 4 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
-
-    r0 = r0_start;
-    start = _rdtsc();
-    r0->s.counter++; // 1
-    _mm_clflush(r0);
-    _mm_sfence();
-    r0 = r0->s.next; 
-    r0->s.counter++; // 2
-    _mm_clflush(r0);
-    _mm_sfence();
-    r0 = r0->s.next;
-    r0->s.counter++; // 3
-    _mm_clflush(r0);
-    _mm_sfence();
-    r0 = r0->s.next;
-    r0->s.counter++; // 4
-    _mm_clflush(r0);
-    _mm_sfence();
-    end = _rdtsc();
-
-    time = ((double) end - start);
-
-    fprintf(stderr, "%s: clflush took %f ticks for 4 writes on same cache line with clflush and fence\n", __PRETTY_FUNCTION__, time);
+    time = 0.0;
+    for (run = 0; run < runs; run++) {
+        r0 = r0_start;
+        start = _rdtsc();
+        r0->s.counter++; // 1
+        _mm_clflush(r0);
+        r0 = r0->s.next; 
+        r0->s.counter++; // 2
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 3
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 4
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 5
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 6
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 7
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 8
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 9
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 10
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 11
+        _mm_clflush(r0);
+        _mm_sfence();
+        end = _rdtsc();
+        time += (double)(end - start);
+    }
+    LOG_RESULTS(pagecount, runs, time, "run list (warm cache)");
+    //printf( "%s: first run sequence took %f ticks\n", __PRETTY_FUNCTION__, time);
 
 
-    r0 = r0_start;
-    start = _rdtsc();
-    r0->s.counter++; // 1
-    _mm_clflush(r0);
-    r0 = r0->s.next; 
-    r0->s.counter++; // 2
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 3
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 4
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 5
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 6
-    _mm_clflush(r0);
-    _mm_sfence();
-    end = _rdtsc();
+    time = 0.0;
+    for (run = 0; run < runs; run++) {
+        start = _rdtsc();
+        _mm_clflush(r0);
+        end = _rdtsc();
+        time += (double)(end - start);
+    }
+    LOG_RESULTS(pagecount, runs, time, "clean cache line flush");
+    // printf( "%s: clflush took %f ticks for clean cache line flush\n", __PRETTY_FUNCTION__, time);
 
-    time = ((double) end - start);
+    time = 0.0;
+    for (run = 0; run < runs; run++) {
+        r0 = r0_start;
+        start = _rdtsc();
+        r0->s.counter++; // 1
+        _mm_clflush(r0);
+        r0 = r0->s.next; 
+        r0->s.counter++; // 2
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 3
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 4
+        _mm_clflush(r0);
+        _mm_sfence();
+        end = _rdtsc();
 
-    fprintf(stderr, "%s: clflush took %f ticks for 6 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+        time += (double)(end - start);
+    }
+    LOG_RESULTS(pagecount, runs, time, "clflush (final sfence) ticks for 4 writes on same cache line");
+    // printf( "%s: clflush took %f ticks for 4 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
 
-    r0 = r0_start;
-    start = _rdtsc();
-    r0->s.counter++; // 1
-    _mm_clflush(r0);
-    r0 = r0->s.next; 
-    r0->s.counter++; // 2
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 3
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 4
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 5
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 6
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 7
-    _mm_clflush(r0);
-    _mm_sfence();
-    end = _rdtsc();
+    time = 0.0;
+    for (run = 0; run < runs; run++) {
+        r0 = r0_start;
+        start = _rdtsc();
+        r0->s.counter++; // 1
+        _mm_clflush(r0);
+        _mm_sfence();
+        r0 = r0->s.next; 
+        r0->s.counter++; // 2
+        _mm_clflush(r0);
+        _mm_sfence();
+        r0 = r0->s.next;
+        r0->s.counter++; // 3
+        _mm_clflush(r0);
+        _mm_sfence();
+        r0 = r0->s.next;
+        r0->s.counter++; // 4
+        _mm_clflush(r0);
+        _mm_sfence();
+        end = _rdtsc();
 
-    time = ((double) end - start);
-
-    fprintf(stderr, "%s: clflush took %f ticks for 7 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
-
-
-    r0 = r0_start;
-    start = _rdtsc();
-    r0->s.counter++; // 1
-    _mm_clflush(r0);
-    r0 = r0->s.next; 
-    r0->s.counter++; // 2
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 3
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 4
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 5
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 6
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 7
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 8
-    _mm_clflush(r0);
-    _mm_sfence();
-    end = _rdtsc();
-
-    time = ((double) end - start);
-
-    fprintf(stderr, "%s: clflush took %f ticks for 8 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+        time += (double) (end - start);
+    }
+    LOG_RESULTS(pagecount, runs, time, "clflush+sfence ticks for 4 writes on same cache line");
+    // printf( "%s: clflush took %f ticks for 4 writes on same cache line with clflush and fence\n", __PRETTY_FUNCTION__, time);
 
 
-    r0 = r0_start;
-    start = _rdtsc();
-    r0->s.counter++; // 1
-    _mm_clflush(r0);
-    r0 = r0->s.next; 
-    r0->s.counter++; // 2
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 3
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 4
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 5
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 6
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 7
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 8
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 9
-    _mm_clflush(r0);
-    _mm_sfence();
-    end = _rdtsc();
+    time = 0.0;
+    for (run = 0; run < runs; run++) {
+        r0 = r0_start;
+        start = _rdtsc();
+        r0->s.counter++; // 1
+        _mm_clflush(r0);
+        r0 = r0->s.next; 
+        r0->s.counter++; // 2
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 3
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 4
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 5
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 6
+        _mm_clflush(r0);
+        _mm_sfence();
+        end = _rdtsc();
 
-    time = ((double) end - start);
+        time += (double)(end - start);
+    }
+    LOG_RESULTS(pagecount, runs, time, "clflush (final sfence) ticks for 6 writes on same cache line");
+    // printf( "%s: clflush took %f ticks for 6 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
 
-    fprintf(stderr, "%s: clflush took %f ticks for 9 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+    for (run = 0; run < runs; run++) {
+        r0 = r0_start;
+        start = _rdtsc();
+        r0->s.counter++; // 1
+        _mm_clflush(r0);
+        r0 = r0->s.next; 
+        r0->s.counter++; // 2
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 3
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 4
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 5
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 6
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 7
+        _mm_clflush(r0);
+        _mm_sfence();
+        end = _rdtsc();
 
-    r0 = r0_start;
-    start = _rdtsc();
-    r0->s.counter++; // 1
-    _mm_clflush(r0);
-    r0 = r0->s.next; 
-    r0->s.counter++; // 2
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 3
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 4
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 5
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 6
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 7
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 8
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 9
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 10
-    _mm_clflush(r0);
-    _mm_sfence();
-    end = _rdtsc();
+        time += (double)(end - start);
+    }
+    LOG_RESULTS(pagecount, runs, time, "clflush (final sfence) ticks for 7 writes on same cache line");
+    // printf( "%s: clflush took %f ticks for 7 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
 
-    time = ((double) end - start);
+    time = 0.0;
+    for (run = 0; run < runs; run++) {
+        r0 = r0_start;
+        start = _rdtsc();
+        r0->s.counter++; // 1
+        _mm_clflush(r0);
+        r0 = r0->s.next; 
+        r0->s.counter++; // 2
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 3
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 4
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 5
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 6
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 7
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 8
+        _mm_clflush(r0);
+        _mm_sfence();
+        end = _rdtsc();
 
-    fprintf(stderr, "%s: clflush took %f ticks for 10 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+        time += (double)(end - start);
+    }
+    LOG_RESULTS(pagecount, runs, time, "clflush (final sfence) ticks for 8 writes on same cache line");
+    // printf( "%s: clflush took %f ticks for 8 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
 
-    r0 = r0_start;
-    start = _rdtsc();
-    r0->s.counter++; // 1
-    _mm_clflush(r0);
-    r0 = r0->s.next; 
-    r0->s.counter++; // 2
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 3
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 4
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 5
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 6
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 7
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 8
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 9
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 10
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 11
-    _mm_clflush(r0);
-    _mm_sfence();
-    end = _rdtsc();
 
-    time = ((double) end - start);
+    time = 0.0;
+    for (run = 0; run < runs; run++) {
+        r0 = r0_start;
+        start = _rdtsc();
+        r0->s.counter++; // 1
+        _mm_clflush(r0);
+        r0 = r0->s.next; 
+        r0->s.counter++; // 2
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 3
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 4
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 5
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 6
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 7
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 8
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 9
+        _mm_clflush(r0);
+        _mm_sfence();
+        end = _rdtsc();
 
-    fprintf(stderr, "%s: clflush took %f ticks for 11 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+        time += (double)(end - start);
+    }
+    LOG_RESULTS(pagecount, runs, time, "clflush (final sfence) ticks for 9 writes on same cache line");
+    // printf( "%s: clflush took %f ticks for 9 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
 
-    r0 = r0_start;
-    start = _rdtsc();
-    r0->s.counter++; // 1
-    _mm_clflush(r0);
-    r0 = r0->s.next; 
-    r0->s.counter++; // 2
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 3
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 4
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 5
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 6
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 7
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 8
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 9
-    _mm_clflush(r0);
-    r0 = r0->s.next; 
-    r0->s.counter++; // 10
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 11
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 12
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 13
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 14
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 15
-    _mm_clflush(r0);
-    r0 = r0->s.next;
-    r0->s.counter++; // 16
-    _mm_clflush(r0);
-    _mm_sfence();
-    end = _rdtsc();
+    time = 0.0;
+    for (run = 0; run < runs; run++) {
+        r0 = r0_start;
+        start = _rdtsc();
+        r0->s.counter++; // 1
+        _mm_clflush(r0);
+        r0 = r0->s.next; 
+        r0->s.counter++; // 2
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 3
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 4
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 5
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 6
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 7
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 8
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 9
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 10
+        _mm_clflush(r0);
+        _mm_sfence();
+        end = _rdtsc();
 
-    time = ((double) end - start);
+        time += (double)(end - start);
+    }
+    LOG_RESULTS(pagecount, runs, time, "clflush (final sfence) ticks for 101 writes on same cache line");
+    // printf( "%s: clflush took %f ticks for 10 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
 
-    fprintf(stderr, "%s: clflush took %f ticks for 16 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+    for (run = 0; run < runs; run++) {
+        r0 = r0_start;
+        start = _rdtsc();
+        r0->s.counter++; // 1
+        _mm_clflush(r0);
+        r0 = r0->s.next; 
+        r0->s.counter++; // 2
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 3
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 4
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 5
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 6
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 7
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 8
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 9
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 10
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 11
+        _mm_clflush(r0);
+        _mm_sfence();
+        end = _rdtsc();
+        time += (double)(end - start);
+    }
+    LOG_RESULTS(pagecount, runs, time, "clflush (fina sfence) ticks for 11 writes on same cache line");
+    // printf( "%s: clflush took %f ticks for 11 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
 
-    r0 = r0_start;
-    start = _rdtsc();
-    r0->s.counter++; // 1
-    _mm_clflush(r0);
-    _mm_sfence();
-    r0 = r0->s.next; 
-    r0->s.counter++; // 2
-    _mm_clflush(r0);
-    _mm_sfence();
-    r0 = r0->s.next;
-    r0->s.counter++; // 3
-    _mm_clflush(r0);
-    _mm_sfence();
-    r0 = r0->s.next;
-    r0->s.counter++; // 4
-    _mm_clflush(r0);
-    _mm_sfence();
-    r0 = r0->s.next;
-    r0->s.counter++; // 5
-    _mm_clflush(r0);
-    _mm_sfence();
-    r0 = r0->s.next;
-    r0->s.counter++; // 6
-    _mm_clflush(r0);
-    _mm_sfence();
-    r0 = r0->s.next;
-    r0->s.counter++; // 7
-    _mm_clflush(r0);
-    _mm_sfence();
-    r0 = r0->s.next;
-    r0->s.counter++; // 8
-    _mm_clflush(r0);
-    _mm_sfence();
-    r0 = r0->s.next;
-    r0->s.counter++; // 9
-    _mm_clflush(r0);
-    _mm_sfence();
-    r0 = r0->s.next; 
-    r0->s.counter++; // 10
-    _mm_clflush(r0);
-    _mm_sfence();
-    r0 = r0->s.next;
-    r0->s.counter++; // 11
-    _mm_clflush(r0);
-    _mm_sfence();
-    r0 = r0->s.next;
-    r0->s.counter++; // 12
-    _mm_clflush(r0);
-    _mm_sfence();
-    r0 = r0->s.next;
-    r0->s.counter++; // 13
-    _mm_clflush(r0);
-    _mm_sfence();
-    r0 = r0->s.next;
-    r0->s.counter++; // 14
-    _mm_clflush(r0);
-    _mm_sfence();
-    r0 = r0->s.next;
-    r0->s.counter++; // 15
-    _mm_clflush(r0);
-    _mm_sfence();
-    r0 = r0->s.next;
-    r0->s.counter++; // 16
-    _mm_clflush(r0);
-    _mm_sfence();
-    end = _rdtsc();
+    time = 0.0;
+    for (run = 0; run < runs; run++) {
+        r0 = r0_start;
+        start = _rdtsc();
+        r0->s.counter++; // 1
+        _mm_clflush(r0);
+        r0 = r0->s.next; 
+        r0->s.counter++; // 2
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 3
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 4
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 5
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 6
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 7
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 8
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 9
+        _mm_clflush(r0);
+        r0 = r0->s.next; 
+        r0->s.counter++; // 10
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 11
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 12
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 13
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 14
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 15
+        _mm_clflush(r0);
+        r0 = r0->s.next;
+        r0->s.counter++; // 16
+        _mm_clflush(r0);
+        _mm_sfence();
+        end = _rdtsc();
 
-    time = ((double) end - start);
+        time += (double)(end - start);
+    }
+    LOG_RESULTS(pagecount, runs, time, "clflush (final sfence) ticks for 16 writes on same cache line");
+    // printf( "%s: clflush took %f ticks for 16 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
 
-    fprintf(stderr, "%s: clflush took %f ticks for 16 writes on same cache line with clflush + fence\n", __PRETTY_FUNCTION__, time);
+    time = 0.0;
+    for (run = 0; run < runs; run++) {
+        r0 = r0_start;
+        start = _rdtsc();
+        r0->s.counter++; // 1
+        _mm_clflush(r0);
+        _mm_sfence();
+        r0 = r0->s.next; 
+        r0->s.counter++; // 2
+        _mm_clflush(r0);
+        _mm_sfence();
+        r0 = r0->s.next;
+        r0->s.counter++; // 3
+        _mm_clflush(r0);
+        _mm_sfence();
+        r0 = r0->s.next;
+        r0->s.counter++; // 4
+        _mm_clflush(r0);
+        _mm_sfence();
+        r0 = r0->s.next;
+        r0->s.counter++; // 5
+        _mm_clflush(r0);
+        _mm_sfence();
+        r0 = r0->s.next;
+        r0->s.counter++; // 6
+        _mm_clflush(r0);
+        _mm_sfence();
+        r0 = r0->s.next;
+        r0->s.counter++; // 7
+        _mm_clflush(r0);
+        _mm_sfence();
+        r0 = r0->s.next;
+        r0->s.counter++; // 8
+        _mm_clflush(r0);
+        _mm_sfence();
+        r0 = r0->s.next;
+        r0->s.counter++; // 9
+        _mm_clflush(r0);
+        _mm_sfence();
+        r0 = r0->s.next; 
+        r0->s.counter++; // 10
+        _mm_clflush(r0);
+        _mm_sfence();
+        r0 = r0->s.next;
+        r0->s.counter++; // 11
+        _mm_clflush(r0);
+        _mm_sfence();
+        r0 = r0->s.next;
+        r0->s.counter++; // 12
+        _mm_clflush(r0);
+        _mm_sfence();
+        r0 = r0->s.next;
+        r0->s.counter++; // 13
+        _mm_clflush(r0);
+        _mm_sfence();
+        r0 = r0->s.next;
+        r0->s.counter++; // 14
+        _mm_clflush(r0);
+        _mm_sfence();
+        r0 = r0->s.next;
+        r0->s.counter++; // 15
+        _mm_clflush(r0);
+        _mm_sfence();
+        r0 = r0->s.next;
+        r0->s.counter++; // 16
+        _mm_clflush(r0);
+        _mm_sfence();
+        end = _rdtsc();
+
+        time += (double)(end - start);
+    }
+    LOG_RESULTS(pagecount, runs, time, "clflush+sfence ticks for 16 writes on same cache line");
+    // printf( "%s: clflush took %f ticks for 16 writes on same cache line with clflush + fence\n", __PRETTY_FUNCTION__, time);
 
 
 }
@@ -1218,7 +1254,7 @@ static void test_cache_behavior_5(const unsigned pagecount, const unsigned runs,
         return;
     }
 
-    fprintf(stderr, "starting %s\n", __FUNCTION__);
+    printf( "starting %s\n", __FUNCTION__);
 
     //
     // Build a list of starting addresses.  Staggering is my attempt to foil the prefetcher
@@ -1231,20 +1267,12 @@ static void test_cache_behavior_5(const unsigned pagecount, const unsigned runs,
         char committed = 0;
 
         time = 0.0;
-        // fprintf(stderr, "starting to test run %u\n", run);
+        // printf( "starting to test run %u\n", run);
         while (1) {
             record_t *r0_start = &recpages[0].records[0];
             record_t *r0 = r0_start;
             record_t *r1_start = &recpages[0].records[run];
             record_t *r1 = r1_start;
-
-            // fprintf(stderr, "testing stride 0x%x\n", run);
-#if 0
-            do {
-                fprintf(stderr, "0x%p points to 0x%p\n", r0, r0->s.next);
-                r0 = r0->s.next;
-            } while (r0 != r0_start);
-#endif // 0
 
             // prime the cache
             r0 = r0->s.next;
@@ -1284,76 +1312,37 @@ static void test_cache_behavior_5(const unsigned pagecount, const unsigned runs,
             }
             end = _rdtsc();
             time = ((double)end - start);
-            fprintf(stderr, "transaction time was %f\n", time);
+            LOG_RESULTS(pagecount, runs, time, "transaction time");
+            // printf( "transaction time was %f\n", time);
             r0 = r0_start;
             start = _rdtsc();
             r0->s.counter++;
             end = _rdtsc();
             time = ((double)end - start);
-            fprintf(stderr, "load time was %f\n", time);
+            LOG_RESULTS(pagecount, runs, time, "load time");
+            // printf( "load time was %f\n", time);
             if (1 != committed) {
 
                 if(0x8 == (0x8 & status)) {
                     retries++;
                     if (retries > 100) {
                         time /= (double) retries;
-                        fprintf(stderr, "multiple aborts on line 0x%x\n", run);
+                        printf("{\"%s\" : \"run\" : %d, \"pages\":  %d, \"address\": 0x%p, \"description\": %s },\n", __PRETTY_FUNCTION__, run, pagecount, r0, "multiple aborts on cache line");;
+                        // printf( "multiple aborts on line 0x%x\n", run);
                         break;
                     }
                     continue;
                 }
-                fprintf(stderr, "abort on line 0x%x (status 0x%x)\n", run, status);
+                printf( "abort on line 0x%x (status 0x%x)\n", run, status);
+                printf("{\"%s\" : \"status\" : %d, \"run\":  %d, \"address\": 0x%p, \"description\": %s },\n", __PRETTY_FUNCTION__, status, run, r0, "abort on cache line");;
             }
 
-            // fprintf(stderr, "run 0x%x does not conflict\n", run);
+            // printf( "run 0x%x does not conflict\n", run);
 
             break;
         }
     }
 
-#if 0
-        unsigned retries = 0;
-        unsigned original_count = record_array[0]->s.counter;
-        char committed = 0;
-
-
-
-
-
-        while (retries++ < 10) {
-            committed = 0;
-            r = record_array[0];
-            r2 = record_array[index];
-            xresult = ~0;
-            flush_cache();
-            if (_XBEGIN_STARTED ==_xbegin()) {
-                do {
-                    r->s.counter++;
-                    r = r->s.next;
-                } while(r != record_array[0]);
-                r2->s.counter++;
-                _xend();
-                if (original_count == record_array[0]->s.counter) {
-                    asm("movl %%eax, %0;" : "=r" (xresult): );
-                    if (0x2 & xresult) continue;
-                }
-                else {
-                    committed = 1;
-                }
-                break;
-            }
-        }
-
-        if (1 == committed) {
-            LOG_RESULTS(pagecount, xresult, (double)index, "Appears to be same associative set");
-            hits++;
-        }
-        else {
-            LOG_RESULTS(pagecount, xresult, (double)index, "Appears to be a different associative set");
-        }
-    }
-    LOG_RESULTS(pagecount, hits, 0.0, "Hitcount (in runs)");
-#endif // 0
 }
 
 static void test_cache_behavior_4(const unsigned pagecount, const unsigned runs, void *memory)
@@ -1734,7 +1723,7 @@ static void test_nontemporal_behavior(const unsigned pagecount, const unsigned r
     unsigned start, end;
     unsigned long long time = 0;
 
-    fprintf(stderr, "\"%s runs %u pages %u\": {", __PRETTY_FUNCTION__, runs, pagecount);
+    printf( "\"%s runs %u pages %u\": {", __PRETTY_FUNCTION__, runs, pagecount);
     for (unsigned run = 0; run < runs; run++) {
         for (unsigned index = 0; index < size / sizeof(__m256i); index++) {
             memset(&fill, index, sizeof(fill));
@@ -1744,18 +1733,18 @@ static void test_nontemporal_behavior(const unsigned pagecount, const unsigned r
             time += end - start;
         }
     }
-    fprintf(stderr, "\"non-temporal move\":");
-    fprintf(stderr, "{\"size\": %zu, \"time\": %lu}\n", size, time);
-    fprintf(stderr, " },\n");
+    printf( "\"non-temporal move\":");
+    printf( "{\"size\": %zu, \"time\": %lu}\n", size, time);
+    printf( " },\n");
 }
 
 typedef void (*cache_test_t)(const unsigned pagecount, const unsigned runs, const void *memory);
 
 cache_test_t cache_tests[] = {
     (cache_test_t)test_cache_behavior_1,
-    (cache_test_t)test_cache_behavior_2,
+    // (cache_test_t)test_cache_behavior_2,
     (cache_test_t)test_cache_behavior_3,
-    (cache_test_t)test_cache_behavior_4,
+    // (cache_test_t)test_cache_behavior_4,
     (cache_test_t)test_cache_behavior_5,
     (cache_test_t)test_cache_behavior_6,
     (cache_test_t)test_cache_behavior_7,
@@ -1787,7 +1776,7 @@ void test_cache_behavior(const unsigned pagecount, int fd)
         assert(NULL != memory);
 
         if (MAP_FAILED == memory) {
-            fprintf(stderr, "%s: mmap failed fd = %d, errno = %d (%s)\n", __PRETTY_FUNCTION__, fd, errno, strerror(errno));
+            printf( "%s: mmap failed fd = %d, errno = %d (%s)\n", __PRETTY_FUNCTION__, fd, errno, strerror(errno));
             return;
         }
 
@@ -1826,7 +1815,8 @@ int main(int argc, char **argv)
 {
     int option_char = '\0';
     int clsize = 0;
-    unsigned long long timestamp1, timestamp2;
+    unsigned long long timestamp1;
+    // unsigned long long timestamp2;
     cpu_cache_data_t *cd;
     char *daxmem = NULL;
     char *logfname = NULL;
@@ -1837,7 +1827,7 @@ int main(int argc, char **argv)
     while (-1 != (option_char = getopt_long(argc, argv, "d:hl:", gLongOptions, NULL))) {
         switch(option_char) {
             default:
-                fprintf(stderr, "Unknown option -%c\n", option_char);
+                printf( "Unknown option -%c\n", option_char);
             case 'h': // help
                 printf(USAGE, argv[0]);
                 exit(1);
@@ -1854,7 +1844,7 @@ int main(int argc, char **argv)
     if (NULL != logfname) {
         logfile = fopen(logfname, "w");
         if (NULL == logfname) {
-            fprintf(stderr, "%s: Unable to open logfile %s (errno %d, %s)\n", __PRETTY_FUNCTION__, logfname, errno, strerror(errno));
+            printf( "%s: Unable to open logfile %s (errno %d, %s)\n", __PRETTY_FUNCTION__, logfname, errno, strerror(errno));
             exit(EXIT_FAILURE);
         }
         fclose(logfile);
@@ -1872,36 +1862,30 @@ int main(int argc, char **argv)
     timestamp1 = cpu_rdtsc();
   	clsize = cpu_cacheline_size();
 
-    fprintf(stderr, "{ \"system description\": {\n");
+    printf( "{ \"system description\": {\n");
     if (NULL != daxmem) {
-        fprintf(stderr, "\"file backing memory\": \"%s\",\n", daxmem);
+        printf( "\"file backing memory\": \"%s\",\n", daxmem);
     }
-    fprintf(stderr, "\"RTM\" : %d,\n", cpu_has_rtm() ? 1 : 0);
-    fprintf(stderr, "\"HLE\" : %d,\n", cpu_has_hle() ? 1 : 0);
-    fprintf(stderr, "\"CLFLUSHOPT\": %d,\n", cpu_has_clflushopt() ? 1 : 0);
-    fprintf(stderr, "\"CLWB\": %d,\n", cpu_has_clwb() ? 1 : 0);
-    fprintf(stderr, "\"cache line size\": %d,\n", clsize);
+    printf( "\"RTM\" : %d,\n", cpu_has_rtm() ? 1 : 0);
+    printf( "\"HLE\" : %d,\n", cpu_has_hle() ? 1 : 0);
+    printf( "\"CLFLUSHOPT\": %d,\n", cpu_has_clflushopt() ? 1 : 0);
+    printf( "\"CLWB\": %d,\n", cpu_has_clwb() ? 1 : 0);
+    printf( "\"cache line size\": %d,\n", clsize);
     for (unsigned index = 0; index < 6; index++) {
         unsigned int size = __cacheSize(index);
         if (size > 0) {
-            fprintf(stderr, "\"L%u cache size (KB)\": %u,\n", index, size);
+            printf( "\"L%u cache size (KB)\": %u,\n", index, size);
         }
     }
-#if 0
-	printf("%s: RTM: %s\n", __PRETTY_FUNCTION__, cpu_has_rtm() ? "Yes" : "No");
-	printf("%s: HLE: %s\n", __PRETTY_FUNCTION__, cpu_has_hle() ? "Yes" : "No");
-	printf("%s: CLFLUSHOPT: %s\n", __PRETTY_FUNCTION__, cpu_has_clflushopt() ? "Yes" : "No");
-	printf("%s: CLWB: %s\n", __PRETTY_FUNCTION__, cpu_has_clwb() ? "Yes" : "No");
-	printf("%s: Cache line size (bytes): 0x%x\n", __PRETTY_FUNCTION__, clsize);
-#endif // 0
+
     assert(clsize == sizeof(record_t)); // sanity check - if this is wrong, the code needs to be fixed
     // printf("%s: Ticks per second: 0x%d\n", __PRETTY_FUNCTION__, cpu_frequency()); // <- this seems to be useless
 
     // (void) cache_test();
-    timestamp2 = cpu_rdtsc();
+    // timestamp2 = cpu_rdtsc();
     // printf("%s: Preamble elapsed time is %llu\n", __PRETTY_FUNCTION__, timestamp2 - timestamp1);
 
-    fprintf(stderr, "\"cache info\": \" ");
+    printf( "\"cache info\": \" ");
     for (unsigned index = 0; ; index++) {
         cd = cpu_get_cache_info(index);
         if (NULL == cd) {
@@ -1912,10 +1896,10 @@ int main(int argc, char **argv)
         cpu_free_cache_info(cd);
         cd = NULL;
     }
-    fprintf(stderr, "\"},\n");
+    printf( "\"},\n");
 
     if (NULL != daxmem) {
-        fprintf(stderr, "\"backing file test\": {\n");
+        printf( "\"backing file test\": {\n");
     }
 
     for (unsigned index = 0; index < sizeof(samples)/sizeof(samples[0]); index++) {
@@ -1927,18 +1911,18 @@ int main(int argc, char **argv)
             double time;
             const unsigned runs = 10;
 
-            fprintf(stderr, "\t\"size %dKB\": {\n", 4 * samples[index]);
+            printf( "\t\"size %dKB\": {\n", 4 * samples[index]);
             (void) unlink(daxmem);
             memfd = open(daxmem, O_CREAT | O_RDWR, 0644);
             if (0 > memfd) {
-                fprintf(stderr, "%s: unable to create %s (%d %s)\n", __PRETTY_FUNCTION__, daxmem, errno, strerror(errno));
+                printf( "%s: unable to create %s (%d %s)\n", __PRETTY_FUNCTION__, daxmem, errno, strerror(errno));
                 exit(EXIT_FAILURE);
             }
             zero = malloc(PAGE_SIZE);
             assert(NULL != zero);
             memset(zero, 0, PAGE_SIZE);
 
-            fprintf(stderr, "\t\t\"write time test\": [");
+            printf( "\t\t\"write time test\": [");
             for (unsigned run = 0; run < runs; run++) {
                 time = 0.0;
                 for (unsigned index2 = 0; index2 < samples[index]; index2++) {
@@ -1947,9 +1931,9 @@ int main(int argc, char **argv)
                     end = _rdtsc();
                     time += end - start;
                 }
-                fprintf(stderr, "%f%s", time, run + 1 < runs ? ", ": "],\n");
+                printf( "%f%s", time, run + 1 < runs ? ", ": "],\n");
             }
-            fprintf(stderr, "\t\t\"fsync time test\": [");
+            printf( "\t\t\"fsync time test\": [");
             for (unsigned run = 0; run < runs; run++) {
                 time = 0.0;
                 start = _rdtsc();
@@ -1957,24 +1941,24 @@ int main(int argc, char **argv)
                 end = _rdtsc();
                 time = end - start;
 
-                fprintf(stderr, "%f%s", time, run + 1 < runs ? ", " : "],\n");
-                // fprintf(stderr, "%s: fsync ticks for %dKB blocks is %f\n", __PRETTY_FUNCTION__, 4 * samples[index], time);
+                printf( "%f%s", time, run + 1 < runs ? ", " : "],\n");
+                // printf( "%s: fsync ticks for %dKB blocks is %f\n", __PRETTY_FUNCTION__, 4 * samples[index], time);
             }
-            fprintf(stderr, "\t\t\"backing file\": \"%s\"}%c\n", daxmem, index + 1 == sizeof(samples)/sizeof(samples[0]) ? ' ' : ',');
+            printf( "\t\t\"backing file\": \"%s\"}%c\n", daxmem, index + 1 == sizeof(samples)/sizeof(samples[0]) ? ' ' : ',');
 
         }
-        // test_cache_behavior(samples[index], memfd);
+        test_cache_behavior(samples[index], memfd);
         close(memfd);
         memfd = -1;
     }
 
     if (NULL != daxmem) {
-        fprintf(stderr, "\n\t},\n");
+        printf( "\n\t},\n");
     }
 
 
     // so we have a dummy line to ensure we don't end with a comma.  Probably should put a time counter here.
-    fprintf(stderr, "\"comment\": \"done\"}\n");
+    printf( "\"comment\": \"done\"}\n");
 
 #if 0
     _mm_sfence();
