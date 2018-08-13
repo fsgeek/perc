@@ -25,6 +25,10 @@ echo "lsb_release -a" >> $LOG_FILE
 lsb_release -a >> $LOG_FILE
 echo "mount" >> $LOG_FILE
 mount >> $LOG_FILE
+if [ -f "/usr/bin/ndctl" ]; then
+    echo "ndctl list --namespaces  --human" >> $LOG_FILE 2>&1
+    ndctl list --namespaces  --human >> $LOG_FILE 2>&1
+fi
 echo "****** TEST RESULTS *****" >> $LOG_FILE
 echo "./perc_progs" >> $LOG_FILE
 ./perc_progs >> $LOG_FILE 2>&1
