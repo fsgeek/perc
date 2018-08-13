@@ -1,4 +1,4 @@
-#define _GNU_SOURCE
+// #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
@@ -20,7 +20,7 @@
 #include <pthread.h>
 #include "cache.h"
 #include "cpu.h"
-#include "jWrite.h"
+#include "setprocessor.h"
 
 // This is here to quiet the IDE complaining this isn't defined.
 #if !defined(MAP_ANONYMOUS)
@@ -1876,9 +1876,10 @@ int main(int argc, char **argv)
 
     setbuf(stdout, NULL);
     
-    CPU_ZERO(&cpuset);
-    CPU_SET(processor, &cpuset);
-    status = pthread_setaffinity_np(pthread_self(), sizeof(cpu_set_t), &cpuset);
+    // CPU_ZERO(&cpuset);
+    // CPU_SET(processor, &cpuset);
+    // status = pthread_setaffinity_np(pthread_self(), sizeof(cpu_set_t), &cpuset);
+    status = setprocessor(processor);
     if (0 != status) {
         printf("pthread_setaffinty_np failed (%d): %s\n", status, strerror(status));
         exit(EXIT_FAILURE);

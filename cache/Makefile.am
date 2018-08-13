@@ -12,9 +12,10 @@ TESTS = $(cache_progs)
 perc_progs_SOURCES  = cache_progs.c
 perc_progs_SOURCES += cache.c
 perc_progs_SOURCES += cpu.c
+perc_progs_SOURCES += setprocessor.c
 
-
-# LDADD  = -lrt
+LDADD = -lpthread
+# LDADD += -lrt
 # LDADD += -ldl
 
 CLEANFILES = *~
