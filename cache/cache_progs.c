@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
@@ -8,6 +9,7 @@
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/sysinfo.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <assert.h>
@@ -15,8 +17,10 @@
 #include <xmmintrin.h>
 #include <emmintrin.h>
 #include <float.h>
+#include <pthread.h>
 #include "cache.h"
 #include "cpu.h"
+#include "jWrite.h"
 
 // This is here to quiet the IDE complaining this isn't defined.
 #if !defined(MAP_ANONYMOUS)
@@ -53,7 +57,7 @@ typedef struct {
 C_ASSERT(PAGE_SIZE == sizeof(record_page_t));
 
 #define LOG_RESULTS(pages, runs, time, description) \
-printf("{\"%s\" : \"runs\" : %d, \"pages\":  %d, \"time\": %f, \"description\": %s },\n", __PRETTY_FUNCTION__, runs, pages, time, description);;
+printf("\"%s\" : {\"runs\" : %d, \"pages\":  %d, \"time\": %f, \"description\": \"%s\"},\n", __PRETTY_FUNCTION__, runs, pages, time, description);;
 // printf("%3.3d, %4d, %14.2f, %24.24s, %s\n", pages, runs, time, __PRETTY_FUNCTION__, description)
 
 static void flush_cache(void)
@@ -652,7 +656,7 @@ static void test_cache_behavior_8(const unsigned pagecount, const unsigned runs,
     unsigned long time_same, time_different;
 
     // printf( "%s(%u, %u, 0x%p)\n", __PRETTY_FUNCTION__, pagecount, runs, memory);
-    printf( "\"%s runs %u pages %u\": {", __PRETTY_FUNCTION__, runs, pagecount);
+    printf( "\"%s\": {\"runs\": %u, \"pages\": %u,\"results\": {\n", __PRETTY_FUNCTION__, runs, pagecount);
     while (tests[t].name && tests[t].test) {
         time_same = time_different = 0;
         for (unsigned run = 0; run < runs; run++) {
@@ -662,16 +666,18 @@ static void test_cache_behavior_8(const unsigned pagecount, const unsigned runs,
             time_different += tests[t].test((record_page_t *)memory);
         }
         if ((time_same > 0) || (time_different > 0)) {
-            // this format is intended to be a simple json/python style output emission.
             if (t > 0) {
                 printf( ",\n");
             }
+            printf("\"%s\": {\"same cache set\": %lu, \"different cache set\": %lu}", tests[t].name, time_same, time_different);
+#if 0
             printf( "\"%s\" : ", tests[t].name);
             printf( "{ \"time same cache set\": %lu, \"time different cache set\": %lu}", time_same, time_different);
+#endif // 0
         }
         t++;
     }
-    printf( " },\n");
+    printf( " \t}\n},\n");
 
 }
 
@@ -1254,7 +1260,7 @@ static void test_cache_behavior_5(const unsigned pagecount, const unsigned runs,
         return;
     }
 
-    printf( "starting %s\n", __FUNCTION__);
+    // printf( "starting %s\n", __FUNCTION__);
 
     //
     // Build a list of starting addresses.  Staggering is my attempt to foil the prefetcher
@@ -1327,14 +1333,14 @@ static void test_cache_behavior_5(const unsigned pagecount, const unsigned runs,
                     retries++;
                     if (retries > 100) {
                         time /= (double) retries;
-                        printf("{\"%s\" : \"run\" : %d, \"pages\":  %d, \"address\": 0x%p, \"description\": %s },\n", __PRETTY_FUNCTION__, run, pagecount, r0, "multiple aborts on cache line");;
+                        printf("\"%s\" : {\"run\" : %d, \"pages\":  %d, \"address\": \"%p\", \"description\": \"%s\" },\n", __PRETTY_FUNCTION__, run, pagecount, r0, "multiple aborts on cache line");;
                         // printf( "multiple aborts on line 0x%x\n", run);
                         break;
                     }
                     continue;
                 }
-                printf( "abort on line 0x%x (status 0x%x)\n", run, status);
-                printf("{\"%s\" : \"status\" : %d, \"run\":  %d, \"address\": 0x%p, \"description\": %s },\n", __PRETTY_FUNCTION__, status, run, r0, "abort on cache line");;
+                // printf( "abort on line 0x%x (status 0x%x)\n", run, status);
+                printf("\"%s\" : \"status\" : %d, \"run\":  %d, \"address\": \"0x%p\", \"description\": \"%s\",\n", __PRETTY_FUNCTION__, status, run, r0, "abort on cache line");;
             }
 
             // printf( "run 0x%x does not conflict\n", run);
@@ -1723,7 +1729,7 @@ static void test_nontemporal_behavior(const unsigned pagecount, const unsigned r
     unsigned start, end;
     unsigned long long time = 0;
 
-    printf( "\"%s runs %u pages %u\": {", __PRETTY_FUNCTION__, runs, pagecount);
+    // printf( "\"%s runs %u pages %u\": {", __PRETTY_FUNCTION__, runs, pagecount);
     for (unsigned run = 0; run < runs; run++) {
         for (unsigned index = 0; index < size / sizeof(__m256i); index++) {
             memset(&fill, index, sizeof(fill));
@@ -1733,9 +1739,15 @@ static void test_nontemporal_behavior(const unsigned pagecount, const unsigned r
             time += end - start;
         }
     }
-    printf( "\"non-temporal move\":");
-    printf( "{\"size\": %zu, \"time\": %lu}\n", size, time);
-    printf( " },\n");
+
+    printf("\"%s\": {\"description\": \"non-temporal move\", \"runs\": %u, \"pages\": %u, \"size\": %zu, \"time\": %lu},\n", 
+            __PRETTY_FUNCTION__, runs, pagecount, size, time);
+    //   "test_nontemporal_behavior runs 100 pages 4": {"non-temporal move":{"size": 16384, "time": 1423280}
+    // "test_cache_behavior_1" : {"runs" : 1, "pages":  6, "time": 1056.000000, "description": "initialize first record of each page"},
+
+    // printf( "\"non-temporal move\":");
+    // printf( "{\"size\": %zu, \"time\": %lu}\n", size, time);
+    // printf( " },\n");
 }
 
 typedef void (*cache_test_t)(const unsigned pagecount, const unsigned runs, const void *memory);
@@ -1798,15 +1810,17 @@ const char *USAGE = "\
 usage:             \n\
 \t%s [options]     \n\
 options:           \n\
-\t-d    Direct Access Memory file to use.\n\
+\t-d    Direct Access Memory file to use. [default=DRAM]\n\
 \t-h    Show this help message.\n\
-\t-l    Write output to the specified log file.\n\
+\t-l    Write output to the specified log file. [default=stdout]\n\
+\t-p    Logical processor to use. [default=2]\n\
 ";
 
 // options information
 static struct option gLongOptions[] = {
     {"daxmem",  required_argument, NULL, 'd'},
     {"help",    no_argument, NULL, 'h'},
+    {"processor",     required_argument, NULL, 'p'},
     {"log",     required_argument, NULL, 'l'},
     {NULL, 0, NULL, 0} // marks end of the array
 };
@@ -1821,16 +1835,20 @@ int main(int argc, char **argv)
     char *daxmem = NULL;
     char *logfname = NULL;
     static const unsigned samples[] = {4, 6, 8, 12, 16, 32, 64, 128, 256, 512, 1024, /* 2048, 4096, 8192, 16384, 32768, 65536 */};
+    unsigned processor = 2;
+    cpu_set_t cpuset;
+    pthread_t self = pthread_self();
+    int status;
 
     logfile = stderr;
 
-    while (-1 != (option_char = getopt_long(argc, argv, "d:hl:", gLongOptions, NULL))) {
+    while (-1 != (option_char = getopt_long(argc, argv, "d:hl:p:", gLongOptions, NULL))) {
         switch(option_char) {
             default:
                 printf( "Unknown option -%c\n", option_char);
             case 'h': // help
                 printf(USAGE, argv[0]);
-                exit(1);
+                exit(EXIT_FAILURE);
                 break;
             case 'l': // logfile
                 logfname = strdup(optarg);
@@ -1838,7 +1856,32 @@ int main(int argc, char **argv)
             case 'd': // file to map (presumably dax)
                 daxmem = strdup(optarg);
                 break;
+            case 'p': { // CPU to use
+                    int cpu = atoi(optarg);
+                    if (cpu < 0) {
+                        printf("processor number (%d) must be >= 0\n", cpu);
+                        printf(USAGE, argv[0]);
+                        exit(EXIT_FAILURE);
+                    }
+                    if (cpu >= get_nprocs()) {
+                        printf("processor number (%d) must be < %d\n", cpu, get_nprocs());
+                        printf(USAGE, argv[0]);
+                        exit(EXIT_FAILURE);
+                    }
+                    processor = (unsigned)cpu;
+                }
+                break;
         }
+    }
+
+    setbuf(stdout, NULL);
+    
+    CPU_ZERO(&cpuset);
+    CPU_SET(processor, &cpuset);
+    status = pthread_setaffinity_np(pthread_self(), sizeof(cpu_set_t), &cpuset);
+    if (0 != status) {
+        printf("pthread_setaffinty_np failed (%d): %s\n", status, strerror(status));
+        exit(EXIT_FAILURE);
     }
 
     if (NULL != logfname) {
@@ -1852,7 +1895,6 @@ int main(int argc, char **argv)
 
         logfile = freopen(logfname, "a+", stdout);
         assert(logfile == stdout);
-        setbuf(stdout, NULL);
         logfile = freopen(logfname, "a+", stderr);
         assert(logfile == stderr);
         setbuf(stderr, NULL);
@@ -1863,6 +1905,7 @@ int main(int argc, char **argv)
   	clsize = cpu_cacheline_size();
 
     printf( "{ \"system description\": {\n");
+    printf( "\"processor\": %u,\n", processor);
     if (NULL != daxmem) {
         printf( "\"file backing memory\": \"%s\",\n", daxmem);
     }
