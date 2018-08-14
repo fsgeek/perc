@@ -644,16 +644,52 @@ static struct {
     const char *name;
     unsigned long (*test)(record_page_t *rp, unsigned frequency);
 } freq_tests[] = {
-    {"noflush, sfence periodic 1", test_cache_noflush_sfence_every_n_updates},
+    {"noflush, sfence periodic", test_cache_noflush_sfence_every_n_updates},
     {"clflush, sfence periodic", test_cache_clflush_sfence_every_n_updates},
     {"clflushopt, sfence periodic", test_cache_clflushopt_sfence_every_n_updates},
     {"clwb, sfence periodic", test_cache_clwb_sfence_every_n_updates},
+    {NULL, NULL},
 };
+
+static const unsigned test_frequencies[] = {
+    1, 2, 3, 4, 5, 6, 7, 8, 16, 32, 64, 128,
+};
+
+static void test_cache_behavior_9(const unsigned pagecount, const unsigned runs, void *memory)
+{
+    unsigned t = 0;
+    unsigned long long time_same, time_different;
+    unsigned frequency = 0;
+
+    printf( "\"%s\": {\"runs\": %u, \"pages\": %u,\"results\": {\n", __PRETTY_FUNCTION__, runs, pagecount);
+    while (tests[t].name && freq_tests[t].test) {
+        for (unsigned findex = 0; findex < (sizeof(test_frequencies) / sizeof(unsigned)); findex++) {
+            time_same = time_different = 0;
+            frequency = test_frequencies[findex];
+            for (unsigned run = 0; run < runs; run++) {
+                init_cache_test_memory_same_set(pagecount, memory);
+                time_same += freq_tests[t].test((record_page_t *)memory, frequency);
+                init_cache_test_memory_different_set(pagecount, memory);
+                time_different += freq_tests[t].test((record_page_t *)memory, frequency);
+            }
+            if ((time_same > 0) || (time_different > 0)) {
+                if ((t > 0) || (findex>0)) {
+                    printf( ",\n");
+                }
+                printf("\"%s\": {\"frequency\": %u, \"same cache set\": %lu, \"different cache set\": %lu}", 
+                        freq_tests[t].name, frequency, time_same, time_different);
+            }
+        }
+        t++;
+    }
+    printf( " \t}\n},\n");
+
+}
 
 static void test_cache_behavior_8(const unsigned pagecount, const unsigned runs, void *memory)
 {
     unsigned t = 0;
-    unsigned long time_same, time_different;
+    unsigned long long time_same, time_different;
 
     // printf( "%s(%u, %u, 0x%p)\n", __PRETTY_FUNCTION__, pagecount, runs, memory);
     printf( "\"%s\": {\"runs\": %u, \"pages\": %u,\"results\": {\n", __PRETTY_FUNCTION__, runs, pagecount);
@@ -670,10 +706,6 @@ static void test_cache_behavior_8(const unsigned pagecount, const unsigned runs,
                 printf( ",\n");
             }
             printf("\"%s\": {\"same cache set\": %lu, \"different cache set\": %lu}", tests[t].name, time_same, time_different);
-#if 0
-            printf( "\"%s\" : ", tests[t].name);
-            printf( "{ \"time same cache set\": %lu, \"time different cache set\": %lu}", time_same, time_different);
-#endif // 0
         }
         t++;
     }
@@ -681,6 +713,7 @@ static void test_cache_behavior_8(const unsigned pagecount, const unsigned runs,
 
 }
 
+#if 0
 static void test_cache_behavior_9(const unsigned pagecount, const unsigned runs, void *memory)
 {
     unsigned t = 0;
@@ -705,7 +738,7 @@ static void test_cache_behavior_9(const unsigned pagecount, const unsigned runs,
     }
 
 }
-
+#endif // 0
 
 static void test_cache_behavior_7(const unsigned pagecount, const unsigned runs, void *memory)
 {
@@ -1761,6 +1794,7 @@ cache_test_t cache_tests[] = {
     (cache_test_t)test_cache_behavior_6,
     (cache_test_t)test_cache_behavior_7,
     (cache_test_t)test_cache_behavior_8,
+    (cache_test_t)test_cache_behavior_9,
     (cache_test_t)test_nontemporal_behavior, 
     NULL,
 };
