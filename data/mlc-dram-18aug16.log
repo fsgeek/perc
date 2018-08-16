@@ -1,0 +1,408 @@
+Intel(R) Memory Latency Checker - v3.5
+Command line parameters: --loaded_latency -t2 -R -m16777214 
+
+Using buffer size of 100.000MB/thread for reads and an additional 100.000MB/thread for writes
+
+Measuring Loaded Latencies for the system
+Using all the threads from each core if Hyper-threading is enabled
+Using Read-only traffic type
+Inject	Latency	Bandwidth
+Delay	(ns)	MB/sec
+==========================
+ 00000	139.74	 128977.5
+ 00002	139.86	 128856.1
+ 00008	139.83	 128839.8
+ 00015	137.15	 127692.9
+ 00050	121.39	 119302.3
+ 00100	101.05	  81167.6
+ 00200	 92.35	  53485.4
+ 00300	 90.78	  38830.9
+ 00400	 89.35	  30276.5
+ 00500	 86.73	  24700.2
+ 00700	 84.84	  18214.4
+ 01000	 82.84	  13182.2
+ 01300	 82.39	  10389.1
+ 01700	 81.96	   8169.8
+ 02500	 80.82	   5842.1
+ 03500	 78.75	   4431.3
+ 05000	 76.36	   3377.1
+ 09000	 74.48	   2273.3
+ 20000	 72.81	   1516.5
+Intel(R) Memory Latency Checker - v3.5
+Command line parameters: --loaded_latency -t2 -R -m281474959933440 
+
+Using buffer size of 100.000MB/thread for reads and an additional 100.000MB/thread for writes
+
+Measuring Loaded Latencies for the system
+Using all the threads from each core if Hyper-threading is enabled
+Using Read-only traffic type
+Inject	Latency	Bandwidth
+Delay	(ns)	MB/sec
+==========================
+ 00000	121.93	 202199.3
+ 00002	122.20	 202190.6
+ 00008	122.03	 202074.3
+ 00015	120.03	 200356.0
+ 00050	111.78	 187354.4
+ 00100	 97.64	 114160.8
+ 00200	 91.39	  76848.8
+ 00300	 89.78	  55830.9
+ 00400	 88.82	  43398.7
+ 00500	 86.30	  35542.0
+ 00700	 84.05	  26110.6
+ 01000	 82.67	  18864.3
+ 01300	 82.20	  14816.0
+ 01700	 81.69	  11590.5
+ 02500	 79.68	   8198.5
+ 03500	 77.04	   6138.4
+ 05000	 74.83	   4582.3
+ 09000	 73.58	   2946.9
+ 20000	 71.69	   1830.0
+Intel(R) Memory Latency Checker - v3.5
+Command line parameters: --loaded_latency -t2 -W2 -m16777214 
+
+Using buffer size of 100.000MB/thread for reads and an additional 100.000MB/thread for writes
+
+Measuring Loaded Latencies for the system
+Using all the threads from each core if Hyper-threading is enabled
+Inject	Latency	Bandwidth
+Delay	(ns)	MB/sec
+==========================
+ 00000	199.36	 151454.4
+ 00002	199.32	 151290.3
+ 00008	199.70	 151262.0
+ 00015	205.59	 152015.6
+ 00050	187.26	 142830.3
+ 00100	161.95	 120962.6
+ 00200	114.34	  82031.3
+ 00300	 98.02	  58339.0
+ 00400	 92.03	  45028.1
+ 00500	 88.82	  36709.7
+ 00700	 87.31	  26879.4
+ 01000	 85.42	  19319.4
+ 01300	 83.47	  15153.8
+ 01700	 81.10	  11852.0
+ 02500	 78.92	   8376.9
+ 03500	 77.22	   6251.9
+ 05000	 75.82	   4650.4
+ 09000	 74.64	   2977.9
+ 20000	 72.97	   1833.0
+Intel(R) Memory Latency Checker - v3.5
+Command line parameters: --loaded_latency -t2 -W2 -m281474959933440 
+
+Using buffer size of 100.000MB/thread for reads and an additional 100.000MB/thread for writes
+
+Measuring Loaded Latencies for the system
+Using all the threads from each core if Hyper-threading is enabled
+Inject	Latency	Bandwidth
+Delay	(ns)	MB/sec
+==========================
+ 00000	168.21	 189873.2
+ 00002	168.20	 189884.9
+ 00008	167.92	 189812.3
+ 00015	169.52	 190817.6
+ 00050	163.87	 186703.2
+ 00100	144.33	 174163.9
+ 00200	108.52	 118476.2
+ 00300	 95.61	  84562.3
+ 00400	 91.03	  65399.7
+ 00500	 88.81	  53359.1
+ 00700	 87.33	  39132.5
+ 01000	 84.92	  28113.3
+ 01300	 82.94	  22001.0
+ 01700	 80.88	  17148.9
+ 02500	 78.97	  12026.8
+ 03500	 77.55	   8872.5
+ 05000	 76.17	   6492.7
+ 09000	 74.70	   4009.2
+ 20000	 72.58	   2304.2
+Intel(R) Memory Latency Checker - v3.5
+Command line parameters: --loaded_latency -t2 -W3 -m16777214 
+
+Using buffer size of 100.000MB/thread for reads and an additional 100.000MB/thread for writes
+
+Measuring Loaded Latencies for the system
+Using all the threads from each core if Hyper-threading is enabled
+Inject	Latency	Bandwidth
+Delay	(ns)	MB/sec
+==========================
+ 00000	187.18	 149043.7
+ 00002	187.23	 148883.8
+ 00008	187.55	 148899.8
+ 00015	187.60	 148940.1
+ 00050	171.60	 145458.8
+ 00100	162.33	 136416.7
+ 00200	155.12	 124381.3
+ 00300	134.57	 112882.4
+ 00400	126.69	  98769.8
+ 00500	108.01	  84916.5
+ 00700	 99.03	  65072.7
+ 01000	 92.44	  47648.5
+ 01300	 90.48	  37491.1
+ 01700	 89.26	  29269.4
+ 02500	 87.24	  20466.2
+ 03500	 84.17	  15010.7
+ 05000	 81.79	  10825.3
+ 09000	 79.33	   6428.6
+ 20000	 76.46	   3379.9
+Intel(R) Memory Latency Checker - v3.5
+Command line parameters: --loaded_latency -t2 -W3 -m281474959933440 
+
+Using buffer size of 100.000MB/thread for reads and an additional 100.000MB/thread for writes
+
+Measuring Loaded Latencies for the system
+Using all the threads from each core if Hyper-threading is enabled
+Inject	Latency	Bandwidth
+Delay	(ns)	MB/sec
+==========================
+ 00000	163.81	 194655.5
+ 00002	163.91	 194716.5
+ 00008	163.92	 194744.6
+ 00015	163.90	 194786.8
+ 00050	161.70	 190195.5
+ 00100	147.45	 181115.1
+ 00200	135.77	 174413.4
+ 00300	127.51	 161678.3
+ 00400	111.37	 141663.7
+ 00500	103.13	 122129.1
+ 00700	 96.14	  94098.2
+ 01000	 91.62	  68938.0
+ 01300	 90.25	  54426.0
+ 01700	 89.06	  42540.9
+ 02500	 86.36	  29755.3
+ 03500	 83.28	  21790.3
+ 05000	 80.96	  15650.9
+ 09000	 78.21	   9158.1
+ 20000	 74.99	   4632.1
+Intel(R) Memory Latency Checker - v3.5
+Command line parameters: --loaded_latency -t2 -W5 -m16777214 
+
+Using buffer size of 100.000MB/thread for reads and an additional 100.000MB/thread for writes
+
+Measuring Loaded Latencies for the system
+Using all the threads from each core if Hyper-threading is enabled
+Inject	Latency	Bandwidth
+Delay	(ns)	MB/sec
+==========================
+ 00000	204.73	 158973.1
+ 00002	204.76	 159184.6
+ 00008	204.83	 159214.7
+ 00015	204.99	 159204.5
+ 00050	206.14	 158258.2
+ 00100	195.41	 131794.0
+ 00200	143.79	 106554.7
+ 00300	109.71	  77600.4
+ 00400	 98.22	  59835.2
+ 00500	 92.85	  48725.4
+ 00700	 89.30	  35609.0
+ 01000	 87.28	  25493.3
+ 01300	 86.64	  19923.4
+ 01700	 85.18	  15502.7
+ 02500	 82.46	  10864.2
+ 03500	 80.57	   8025.3
+ 05000	 78.35	   5891.8
+ 09000	 76.53	   3663.4
+ 20000	 74.55	   2133.1
+Intel(R) Memory Latency Checker - v3.5
+Command line parameters: --loaded_latency -t2 -W5 -m281474959933440 
+
+Using buffer size of 100.000MB/thread for reads and an additional 100.000MB/thread for writes
+
+Measuring Loaded Latencies for the system
+Using all the threads from each core if Hyper-threading is enabled
+Inject	Latency	Bandwidth
+Delay	(ns)	MB/sec
+==========================
+ 00000	210.20	 185821.9
+ 00002	210.62	 185810.0
+ 00008	209.98	 185826.8
+ 00015	210.36	 185864.1
+ 00050	209.29	 186045.3
+ 00100	193.25	 182868.0
+ 00200	135.90	 157421.0
+ 00300	107.33	 114974.1
+ 00400	 97.34	  88674.9
+ 00500	 92.44	  72139.4
+ 00700	 89.19	  52637.2
+ 01000	 87.37	  37599.1
+ 01300	 86.34	  29290.4
+ 01700	 84.63	  22719.6
+ 02500	 82.00	  15804.5
+ 03500	 79.80	  11569.9
+ 05000	 77.74	   8378.9
+ 09000	 75.90	   5053.6
+ 20000	 73.74	   2765.0
+Intel(R) Memory Latency Checker - v3.5
+Command line parameters: --loaded_latency -t2 -W7 -m16777214 
+
+Using buffer size of 100.000MB/thread for reads and an additional 100.000MB/thread for writes
+
+Measuring Loaded Latencies for the system
+Using all the threads from each core if Hyper-threading is enabled
+Inject	Latency	Bandwidth
+Delay	(ns)	MB/sec
+==========================
+ 00000	136.48	 105838.5
+ 00002	136.69	 105831.3
+ 00008	137.03	 106209.3
+ 00015	137.32	 106705.3
+ 00050	135.84	 107775.9
+ 00100	128.44	 105429.3
+ 00200	107.40	  76893.8
+ 00300	 95.21	  56768.9
+ 00400	 90.28	  44538.0
+ 00500	 85.74	  36476.5
+ 00700	 87.95	  26766.0
+ 01000	 86.28	  19273.7
+ 01300	 84.90	  15124.0
+ 01700	 82.87	  11823.5
+ 02500	 80.28	   8358.6
+ 03500	 77.12	   6250.4
+ 05000	 74.56	   4663.7
+ 09000	 72.76	   2999.9
+ 20000	 71.31	   1853.6
+Intel(R) Memory Latency Checker - v3.5
+Command line parameters: --loaded_latency -t2 -W7 -m281474959933440 
+
+Using buffer size of 100.000MB/thread for reads and an additional 100.000MB/thread for writes
+
+Measuring Loaded Latencies for the system
+Using all the threads from each core if Hyper-threading is enabled
+Inject	Latency	Bandwidth
+Delay	(ns)	MB/sec
+==========================
+ 00000	127.37	 150418.9
+ 00002	127.81	 150462.1
+ 00008	127.91	 150986.9
+ 00015	127.07	 151776.1
+ 00050	122.75	 156997.8
+ 00100	116.58	 157122.4
+ 00200	 99.80	 110563.2
+ 00300	 92.88	  81837.2
+ 00400	 89.24	  64318.1
+ 00500	 86.11	  52769.9
+ 00700	 87.67	  38759.9
+ 01000	 86.36	  27901.7
+ 01300	 84.22	  21888.6
+ 01700	 82.41	  17080.7
+ 02500	 79.93	  11981.0
+ 03500	 77.68	   8812.1
+ 05000	 75.41	   6491.5
+ 09000	 73.91	   4015.9
+ 20000	 72.40	   2305.4
+Intel(R) Memory Latency Checker - v3.5
+Command line parameters: --loaded_latency -t2 -W8 -m16777214 
+
+Using buffer size of 100.000MB/thread for reads and an additional 100.000MB/thread for writes
+
+Measuring Loaded Latencies for the system
+Using all the threads from each core if Hyper-threading is enabled
+Inject	Latency	Bandwidth
+Delay	(ns)	MB/sec
+==========================
+ 00000	127.44	  86050.8
+ 00002	127.95	  85515.0
+ 00008	128.39	  86759.3
+ 00015	128.92	  89533.9
+ 00050	129.34	  94280.7
+ 00100	127.18	  90239.1
+ 00200	 95.47	  55525.0
+ 00300	 89.42	  39228.5
+ 00400	 86.69	  30354.3
+ 00500	 83.30	  24856.3
+ 00700	 85.52	  18243.2
+ 01000	 82.50	  13174.1
+ 01300	 79.54	  10405.6
+ 01700	 76.95	   8212.3
+ 02500	 74.77	   5902.5
+ 03500	 73.32	   4489.7
+ 05000	 72.87	   3416.3
+ 09000	 71.37	   2310.6
+ 20000	 70.38	   1546.7
+Intel(R) Memory Latency Checker - v3.5
+Command line parameters: --loaded_latency -t2 -W8 -m281474959933440 
+
+Using buffer size of 100.000MB/thread for reads and an additional 100.000MB/thread for writes
+
+Measuring Loaded Latencies for the system
+Using all the threads from each core if Hyper-threading is enabled
+Inject	Latency	Bandwidth
+Delay	(ns)	MB/sec
+==========================
+ 00000	116.85	 122565.9
+ 00002	116.75	 121787.5
+ 00008	117.45	 123411.6
+ 00015	119.15	 127464.1
+ 00050	120.55	 134105.1
+ 00100	116.51	 129755.6
+ 00200	 92.88	  80281.0
+ 00300	 89.00	  56804.8
+ 00400	 86.99	  43982.4
+ 00500	 83.71	  36054.6
+ 00700	 85.02	  26461.3
+ 01000	 81.93	  19056.9
+ 01300	 79.64	  14990.4
+ 01700	 77.16	  11748.4
+ 02500	 75.06	   8334.6
+ 03500	 73.80	   6234.0
+ 05000	 72.60	   4650.9
+ 09000	 71.63	   2996.3
+ 20000	 70.49	   1856.6
+Intel(R) Memory Latency Checker - v3.5
+Command line parameters: --loaded_latency -t2 -W10 -m16777214 
+
+Using buffer size of 100.000MB/thread for reads and an additional 100.000MB/thread for writes
+
+Measuring Loaded Latencies for the system
+Using all the threads from each core if Hyper-threading is enabled
+Inject	Latency	Bandwidth
+Delay	(ns)	MB/sec
+==========================
+ 00000	151.31	 110025.2
+ 00002	151.42	 110004.8
+ 00008	151.93	 110347.4
+ 00015	152.96	 111078.3
+ 00050	155.24	 114109.5
+ 00100	145.36	 112474.0
+ 00200	115.95	  81712.9
+ 00300	 95.77	  58393.0
+ 00400	 90.60	  45144.9
+ 00500	 85.14	  36807.6
+ 00700	 88.13	  26905.6
+ 01000	 86.77	  19337.0
+ 01300	 85.56	  15154.4
+ 01700	 83.38	  11841.9
+ 02500	 80.54	   8366.1
+ 03500	 77.51	   6251.7
+ 05000	 74.90	   4662.1
+ 09000	 73.04	   2997.1
+ 20000	 71.55	   1850.5
+Intel(R) Memory Latency Checker - v3.5
+Command line parameters: --loaded_latency -t2 -W10 -m281474959933440 
+
+Using buffer size of 100.000MB/thread for reads and an additional 100.000MB/thread for writes
+
+Measuring Loaded Latencies for the system
+Using all the threads from each core if Hyper-threading is enabled
+Inject	Latency	Bandwidth
+Delay	(ns)	MB/sec
+==========================
+ 00000	130.17	 156570.0
+ 00002	130.49	 156565.5
+ 00008	130.52	 157011.0
+ 00015	130.65	 158073.4
+ 00050	132.22	 162238.6
+ 00100	129.93	 161091.4
+ 00200	105.00	 117155.5
+ 00300	 93.35	  84081.0
+ 00400	 89.76	  65124.4
+ 00500	 85.75	  53139.3
+ 00700	 88.02	  38847.5
+ 01000	 86.57	  27980.8
+ 01300	 84.87	  21915.5
+ 01700	 82.74	  17084.1
+ 02500	 80.11	  11982.0
+ 03500	 77.35	   8859.1
+ 05000	 74.66	   6500.6
+ 09000	 72.67	   4031.0
+ 20000	 71.06	   2323.1
