@@ -698,8 +698,8 @@ static void test_cache_behavior_8(const unsigned pagecount, const unsigned runs,
     unsigned t = 0;
     unsigned long long time_same, time_different;
 
-    // printf( "%s(%u, %u, 0x%p)\n", __PRETTY_FUNCTION__, pagecount, runs, memory);
-    printf( "\"%s\": {\"runs\": %u, \"pages\": %u,\"results\": {\n", __PRETTY_FUNCTION__, runs, pagecount);
+    printf("\t\t\"%s\":{\n", __PRETTY_FUNCTION__);
+
     while (tests[t].name && tests[t].test) {
         time_same = time_different = 0;
         for (unsigned run = 0; run < runs; run++) {
@@ -709,14 +709,13 @@ static void test_cache_behavior_8(const unsigned pagecount, const unsigned runs,
             time_different += tests[t].test((record_page_t *)memory);
         }
         if ((time_same > 0) || (time_different > 0)) {
-            if (t > 0) {
-                printf( ",\n");
-            }
-            printf("\"%s\": {\"same cache set\": %lu, \"different cache set\": %lu}", tests[t].name, time_same, time_different);
+            printf("\t\t\t\"%s\": {\"same cache set\": %lu, \"different cache set\": %lu},", tests[t].name, time_same, time_different);
         }
         t++;
     }
-    printf( " \t}\n},\n");
+    printf("\n\t\t\t\"pagecount\": %u,", pagecount);
+    printf("\n\t\t\t\"runs\": %u", runs);
+    printf("\n\t\t\t}\n\t\t},\n");
 
 }
 
