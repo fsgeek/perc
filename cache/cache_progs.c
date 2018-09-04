@@ -58,8 +58,10 @@ typedef struct {
 C_ASSERT(PAGE_SIZE == sizeof(record_page_t));
 
 #define LOG_RESULTS(pages, runs, time, description) \
-printf("\"%s\" : {\"runs\" : %d, \"pages\":  %d, \"time\": %f, \"description\": \"%s\"},\n", __PRETTY_FUNCTION__, runs, pages, time, description);;
+printf("\t\t\t\"%s\": { \"pagecount\": %d, \"runs\": %u, \"time\": %f},\n", description, pages, runs, time);
+// printf("\"%s\" : {\"runs\" : %d, \"pages\":  %d, \"time\": %f, \"description\": \"%s\"},\n", __PRETTY_FUNCTION__, runs, pages, time, description);;
 // printf("%3.3d, %4d, %14.2f, %24.24s, %s\n", pages, runs, time, __PRETTY_FUNCTION__, description)
+
 
 
 static void flush_cache(void)
@@ -1431,6 +1433,8 @@ static void test_cache_behavior_2(const unsigned pagecount, const unsigned runs,
     double min_time, max_time;
     unsigned min_index, max_index;
 
+    printf("\t\t\"%s\":{\n", __PRETTY_FUNCTION__);
+
     //
     // Build a list of starting addresses.  Staggering is my attempt to foil the prefetcher
     //
@@ -1446,7 +1450,6 @@ static void test_cache_behavior_2(const unsigned pagecount, const unsigned runs,
     // link all the blocks together in a linear fashion
     time = 0.0;
     for (unsigned run = 0; run < runs; run ++) {
-#if 1
         flush_cache();
         for (unsigned index = 0; index < RECORDS_PER_PAGE; index++) {
             start = cpu_rdtsc();
@@ -1460,20 +1463,6 @@ static void test_cache_behavior_2(const unsigned pagecount, const unsigned runs,
             end = cpu_rdtsc();
             time += ((double)(end - start));
         }
-#else
-        start = cpu_rdtsc();
-        for (unsigned index = 0; index < RECORDS_PER_PAGE; index++) {
-            r = ((record_t *)memory) + index;
-            for (unsigned index2 = 0; index2 < pagecount; index2++) {
-                record_t *n;
-                n = r->s.next = (void *)(((uintptr_t)memory) + (((index2 + 1) % pagecount) <<12));
-                r->s.counter = 0;
-                r = n;
-            }
-        }
-        end = cpu_rdtsc();
-        time += ((double)(end-start));
-#endif 
     }
     time /= runs;
     LOG_RESULTS(pagecount, runs, time, "initialize all blocks");
@@ -1588,7 +1577,7 @@ static void test_cache_behavior_2(const unsigned pagecount, const unsigned runs,
     max_time = 0;
     min_index = max_index = 0;
 
-    for (unsigned index = 1; index < RECORDS_PER_PAGE; index++) {
+    for (unsigned index = 0; index < RECORDS_PER_PAGE; index++) {
         char buffer[128];
         unsigned modcount = 0;
 
@@ -1623,12 +1612,10 @@ static void test_cache_behavior_2(const unsigned pagecount, const unsigned runs,
 
         snprintf(buffer, sizeof(buffer), "run stride %u", index);
         LOG_RESULTS(pagecount, runs, time, buffer);
-
-        if (RECORDS_PER_PAGE - 1 == index) {
-            snprintf(buffer, sizeof(buffer), "run min %f (%u) max %f (%u)", min_time, min_index, max_time, max_index);
-            LOG_RESULTS(pagecount, runs, max_time, buffer);
-        }
     }
+
+    printf("\t\t\t\"summary\": { \"min\": { \"time\": %f, \"stride\": %u }, \"max\": { \"time\": %f, \"stride\": %u } }\n\t\t\t}\n\t\t},\n", 
+            min_time, min_index, max_time, max_index);
 
 }
 
@@ -1823,19 +1810,19 @@ typedef void (*cache_test_t)(const unsigned pagecount, const unsigned runs, cons
 
 cache_test_t cache_tests[] = {
     (cache_test_t)test_cache_behavior_1,
-    // (cache_test_t)test_cache_behavior_2,
-    // (cache_test_t)test_cache_behavior_3,
-    // (cache_test_t)test_cache_behavior_4,
-    // (cache_test_t)test_cache_behavior_5,
-    // (cache_test_t)test_cache_behavior_6,
-    // (cache_test_t)test_cache_behavior_7,
-    // (cache_test_t)test_cache_behavior_8,
-    // (cache_test_t)test_cache_behavior_9,
-    // (cache_test_t)test_nontemporal_behavior, 
+    (cache_test_t)test_cache_behavior_2,
+    (cache_test_t)test_cache_behavior_3,
+    (cache_test_t)test_cache_behavior_4,
+    (cache_test_t)test_cache_behavior_5,
+    (cache_test_t)test_cache_behavior_6,
+    (cache_test_t)test_cache_behavior_7,
+    (cache_test_t)test_cache_behavior_8,
+    (cache_test_t)test_cache_behavior_9,
+    (cache_test_t)test_nontemporal_behavior, 
     NULL,
 };
 
-void test_cache_behavior(const unsigned pagecount, int fd)
+void test_cache_behavior(unsigned specific_test, const unsigned pagecount, int fd)
 {
     const unsigned runs = 100;
     const size_t pagesize = sysconf(_SC_PAGESIZE);
@@ -1853,6 +1840,11 @@ void test_cache_behavior(const unsigned pagecount, int fd)
 
     // we must create new mappings each time or we could be seeing caching artifacts
     for (unsigned index = 0; NULL != cache_tests[index]; index++) {
+
+        // ok, not efficient, but it is easy to implement - single test choice option
+        if ((index != (unsigned) ~0) && (index != specific_test)) {
+            continue;
+        }
         void *memory = mmap(NULL, pagecount * pagesize, PROT_READ | PROT_WRITE, mmflags, fd, 0);
 
         assert(NULL != memory);
@@ -1864,7 +1856,7 @@ void test_cache_behavior(const unsigned pagecount, int fd)
 
         memset(memory, 0, pagecount * pagesize);
 
-        if (index > 0) {
+        if ((((unsigned)~0) == specific_test) && (index > 0)) {
             printf(",\n");
         }
         cache_tests[index](pagecount, runs, memory);
@@ -1887,6 +1879,8 @@ options:           \n\
 \t-h    Show this help message.\n\
 \t-l    Write output to the specified log file. [default=stdout]\n\
 \t-p    Logical processor to use. [default=2]\n\
+\t-t    Specific test to run (default is all)\n\
+\t-s    Specific sample to use (default is all)\n\
 ";
 
 // options information
@@ -1895,7 +1889,9 @@ static struct option gLongOptions[] = {
     {"help",    no_argument, NULL, 'h'},
     {"processor",     required_argument, NULL, 'p'},
     {"log",     required_argument, NULL, 'l'},
-    {"runs",    required_argument, NULL, 'r'}, 
+    {"runs",    required_argument, NULL, 'r'},
+    {"test",    required_argument, NULL, 't'},
+    {"sample",  required_argument, NULL, 's'},
     {NULL, 0, NULL, 0} // marks end of the array
 };
 
@@ -1914,10 +1910,12 @@ int main(int argc, char **argv)
     pthread_t self = pthread_self();
     int status;
     unsigned runs = 10;
+    unsigned test = (unsigned) ~0;
+    unsigned sample = (unsigned) ~0;
 
     logfile = stderr;
 
-    while (-1 != (option_char = getopt_long(argc, argv, "r:d:hl:p:", gLongOptions, NULL))) {
+    while (-1 != (option_char = getopt_long(argc, argv, "s:t:r:d:hl:p:", gLongOptions, NULL))) {
         switch(option_char) {
             default:
                 printf( "Unknown option -%c\n", option_char);
@@ -1939,6 +1937,7 @@ int main(int argc, char **argv)
                     exit(EXIT_FAILURE);
                 }
                 runs = (unsigned) r;
+                break;
             }
             case 'p': { // CPU to use
                     int cpu = atoi(optarg);
@@ -1955,6 +1954,28 @@ int main(int argc, char **argv)
                     processor = (unsigned)cpu;
                 }
                 break;
+            case 's': { // specific sample to use
+                int s = atoi(optarg);
+                unsigned max_sample = sizeof(samples) / sizeof(unsigned);
+                if ((s < 1) || (s > max_sample)) {
+                    printf("sample number must be between 1 and %u\n", max_sample);
+                    printf(USAGE, argv[0]);
+                    exit(EXIT_FAILURE);
+                }
+                sample = (unsigned)s - 1;
+                break;
+            }
+            case 't': { // specific test to use
+                int t = atoi(optarg);
+                unsigned max_test = sizeof(cache_tests) / sizeof(cache_test_t);
+                if ((t < 1) || (t >= max_test)) {
+                    printf("test number must be between 1 and %u\n", max_test-1);
+                    printf(USAGE, argv[0]);
+                    exit(EXIT_FAILURE);
+                }
+                test = (unsigned)t-1;
+                break;
+            }
         }
     }
 
@@ -2036,6 +2057,11 @@ int main(int argc, char **argv)
     for (unsigned index = 0; index < sizeof(samples)/sizeof(samples[0]); index++) {
         int memfd = -1;
 
+        // only process the requested sample size
+        if (((unsigned)~0 != sample)  && (index != sample)) {
+            continue;
+        }
+
         if (NULL != daxmem) {
             char *zero = NULL;
             unsigned start, end;
@@ -2075,7 +2101,7 @@ int main(int argc, char **argv)
                 // printf( "%s: fsync ticks for %dKB blocks is %f\n", __PRETTY_FUNCTION__, 4 * samples[index], time);
             }
         }
-        test_cache_behavior(samples[index], memfd);
+        test_cache_behavior(test, samples[index], memfd);
         if (NULL != daxmem) {
         }
         close(memfd);
