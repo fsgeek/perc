@@ -62,6 +62,9 @@ printf("\t\t\t\"%s\": { \"pagecount\": %d, \"runs\": %u, \"time\": %f},\n", desc
 // printf("\"%s\" : {\"runs\" : %d, \"pages\":  %d, \"time\": %f, \"description\": \"%s\"},\n", __PRETTY_FUNCTION__, runs, pages, time, description);;
 // printf("%3.3d, %4d, %14.2f, %24.24s, %s\n", pages, runs, time, __PRETTY_FUNCTION__, description)
 
+#define LOG_TIME(time, description) \
+printf("\t\t\t\"%s\": {\"time\": %f},\n", description, time);
+
 
 
 static void flush_cache(void)
@@ -792,7 +795,8 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
     }
 
     init_cache_test_memory(pagecount, memory);
-    (void) runs;
+
+    printf("\t\t\"%s\":{\n", __PRETTY_FUNCTION__);
 
     time = 0.0;
     for (run = 0; run < runs; run++) {
@@ -812,7 +816,7 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
         time += (double)(end - start);
     }
 
-    LOG_RESULTS(pagecount, runs, time, "run list (cold cache)");
+    printf("\t\t\t\"%s in ticks\": %f,\n", "run list (cold cache)", time);
     // printf( "%s: priming step took %f ticks\n", __PRETTY_FUNCTION__, time);
 
     // now re-run it
@@ -856,8 +860,7 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
         end = _rdtsc();
         time += (double)(end - start);
     }
-    LOG_RESULTS(pagecount, runs, time, "run list (warm cache)");
-    //printf( "%s: first run sequence took %f ticks\n", __PRETTY_FUNCTION__, time);
+    printf("\t\t\t\"%s in ticks\": %f,\n", "run list (warm cache)", time);
 
 
     time = 0.0;
@@ -867,8 +870,7 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
         end = _rdtsc();
         time += (double)(end - start);
     }
-    LOG_RESULTS(pagecount, runs, time, "clean cache line flush");
-    // printf( "%s: clflush took %f ticks for clean cache line flush\n", __PRETTY_FUNCTION__, time);
+    printf("\t\t\t\"%s in ticks\": %f,\n", "clean cache line flush", time);
 
     time = 0.0;
     for (run = 0; run < runs; run++) {
@@ -890,8 +892,7 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
 
         time += (double)(end - start);
     }
-    LOG_RESULTS(pagecount, runs, time, "clflush (final sfence) ticks for 4 writes on same cache line");
-    // printf( "%s: clflush took %f ticks for 4 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+    printf("\t\t\t\"%s in ticks\": %f,\n", "clflush (final sfence) four writes on same cache line", time);
 
     time = 0.0;
     for (run = 0; run < runs; run++) {
@@ -916,7 +917,7 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
 
         time += (double) (end - start);
     }
-    LOG_RESULTS(pagecount, runs, time, "clflush+sfence ticks for 4 writes on same cache line");
+    printf("\t\t\t\"%s in ticks\": %f,\n", "clflush+sfence ticks for 4 writes on same cache line", time);
     // printf( "%s: clflush took %f ticks for 4 writes on same cache line with clflush and fence\n", __PRETTY_FUNCTION__, time);
 
 
@@ -946,8 +947,7 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
 
         time += (double)(end - start);
     }
-    LOG_RESULTS(pagecount, runs, time, "clflush (final sfence) ticks for 6 writes on same cache line");
-    // printf( "%s: clflush took %f ticks for 6 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+    printf("\t\t\t\"%s in ticks\": %f,\n", "clflush (final sfence) 6 writes on same cache line", time);
 
     for (run = 0; run < runs; run++) {
         r0 = r0_start;
@@ -977,8 +977,7 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
 
         time += (double)(end - start);
     }
-    LOG_RESULTS(pagecount, runs, time, "clflush (final sfence) ticks for 7 writes on same cache line");
-    // printf( "%s: clflush took %f ticks for 7 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+    printf("\t\t\t\"%s in ticks\": %f,\n", "clflush (final sfence) 7 writes on same cache line", time);
 
     time = 0.0;
     for (run = 0; run < runs; run++) {
@@ -1012,8 +1011,7 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
 
         time += (double)(end - start);
     }
-    LOG_RESULTS(pagecount, runs, time, "clflush (final sfence) ticks for 8 writes on same cache line");
-    // printf( "%s: clflush took %f ticks for 8 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+    printf("\t\t\t\"%s in ticks\": %f,\n", "clflush (final sfence) 8 writes on same cache line", time);
 
 
     time = 0.0;
@@ -1051,8 +1049,7 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
 
         time += (double)(end - start);
     }
-    LOG_RESULTS(pagecount, runs, time, "clflush (final sfence) ticks for 9 writes on same cache line");
-    // printf( "%s: clflush took %f ticks for 9 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+    printf("\t\t\t\"%s in ticks\": %f,\n", "clflush (final sfence) 9 writes on same cache line", time);
 
     time = 0.0;
     for (run = 0; run < runs; run++) {
@@ -1092,8 +1089,7 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
 
         time += (double)(end - start);
     }
-    LOG_RESULTS(pagecount, runs, time, "clflush (final sfence) ticks for 101 writes on same cache line");
-    // printf( "%s: clflush took %f ticks for 10 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+    printf("\t\t\t\"%s in ticks\": %f,\n", "clflush (final sfence) 10 writes on same cache line", time);
 
     for (run = 0; run < runs; run++) {
         r0 = r0_start;
@@ -1134,8 +1130,7 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
         end = _rdtsc();
         time += (double)(end - start);
     }
-    LOG_RESULTS(pagecount, runs, time, "clflush (fina sfence) ticks for 11 writes on same cache line");
-    // printf( "%s: clflush took %f ticks for 11 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+    printf("\t\t\t\"%s in ticks\": %f,\n", "clflush (final sfence) 11 writes on same cache line", time);
 
     time = 0.0;
     for (run = 0; run < runs; run++) {
@@ -1193,8 +1188,7 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
 
         time += (double)(end - start);
     }
-    LOG_RESULTS(pagecount, runs, time, "clflush (final sfence) ticks for 16 writes on same cache line");
-    // printf( "%s: clflush took %f ticks for 16 writes on same cache line with clflush\n", __PRETTY_FUNCTION__, time);
+    printf("\t\t\t\"%s in ticks\": %f,\n", "clflush (final sfence) 16 writes on same cache line", time);
 
     time = 0.0;
     for (run = 0; run < runs; run++) {
@@ -1267,8 +1261,11 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
 
         time += (double)(end - start);
     }
-    LOG_RESULTS(pagecount, runs, time, "clflush+sfence ticks for 16 writes on same cache line");
-    // printf( "%s: clflush took %f ticks for 16 writes on same cache line with clflush + fence\n", __PRETTY_FUNCTION__, time);
+    printf("\t\t\t\"%s in ticks\": %f,", "clflush+sfence 16 writes on same cache line", time);
+
+    printf("\n\t\t\t\"pagecount\": %u,", pagecount);
+    printf("\n\t\t\t\"runs\": %u", runs);
+    printf("\n\t\t\t}\n\t\t},\n");
 
 
 }
@@ -1276,13 +1273,19 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
 static void test_cache_behavior_5(const unsigned pagecount, const unsigned runs, void *memory)
 {
     static unsigned done = 0;
-    unsigned start, end;
-    double time = 0.0;
     record_t *r, *r2;
     int xresult = 36;
     int hits = 0;
     record_page_t *recpages = (record_page_t *)memory;
-
+    struct perf_timers { // do this to avoid the cache line we're trying to test
+        unsigned long long start;
+        unsigned long long end;
+        unsigned long long time;
+    } *timers = (struct perf_timers *)&recpages[0].records[1];
+    struct perf_timers *ttimer = &timers[0], *optimer = &timers[1];
+    unsigned status;
+    unsigned committed = 0;
+    unsigned aborted = 0;
 
     if (pagecount != 12) {
         // this is our magic number - ignore all others.
@@ -1290,101 +1293,57 @@ static void test_cache_behavior_5(const unsigned pagecount, const unsigned runs,
     }
 
     if (0 == cpu_has_rtm()) { // no RTM, nothing to do
-        if (!done) {
-            LOG_RESULTS(pagecount, 0, 0.0, "No RTM support");
-            done = 1;
-        }
         return;
     }
 
-    // printf( "starting %s\n", __FUNCTION__);
+    printf("\t\t\"%s\":{\n", __PRETTY_FUNCTION__);
+
 
     //
     // Build a list of starting addresses.  Staggering is my attempt to foil the prefetcher
     //
     init_cache_test_memory(pagecount, memory);
-    
-    for (unsigned run = 1; run < RECORDS_PER_PAGE; run++) {
-        unsigned status = 0;
-        unsigned retries = 0;
-        char committed = 0;
+    printf("\t\t\t\"results\": {\n");
+    for (unsigned index = 2; index < pagecount; index++) {
+        ttimer->time = 0;
+        optimer->time = 0;
+        committed = 0;
+        aborted = 0;
 
-        time = 0.0;
-        // printf( "starting to test run %u\n", run);
-        while (1) {
-            record_t *r0_start = &recpages[0].records[0];
-            record_t *r0 = r0_start;
-            record_t *r1_start = &recpages[0].records[run];
-            record_t *r1 = r1_start;
+        for (unsigned run = 0; run < runs; run++) {
+            record_t *r = &recpages[0].records[0];
 
-            // prime the cache
-            r0 = r0->s.next;
-            r0 = r0->s.next;
-            r0 = r0->s.next;
-            r0 = r0->s.next;
-            r0 = r0->s.next;
-            r0 = r0->s.next;
-            r0 = r0->s.next;
-            r0 = r0->s.next;
-            r0 = r0_start;
-
-
-            committed = -1;
-            start = _rdtsc();
+            ttimer->start = _rdtsc();
             status = _xbegin();
             if (_XBEGIN_STARTED == status) {
-                r0->s.counter++; // 1
-                r0 = r0->s.next;
-                r0->s.counter++; // 2
-                r0 = r0->s.next;
-                r0->s.counter++; // 3
-                r0 = r0->s.next;
-                r0->s.counter++; // 4
-                r0 = r0->s.next;
-                r0->s.counter++; // 5
-                r0 = r0->s.next;
-                r0->s.counter++; // 6
-                r0 = r0->s.next;
-                r0->s.counter++; // 7
-                r0 = r0->s.next;
-                r0->s.counter++; // 8
-                r0 = r0->s.next;
-                r0->s.counter++; // 9               
-                _xend();
-                committed = 1;
-            }
-            end = _rdtsc();
-            time = ((double)end - start);
-            LOG_RESULTS(pagecount, runs, time, "transaction time");
-            // printf( "transaction time was %f\n", time);
-            r0 = r0_start;
-            start = _rdtsc();
-            r0->s.counter++;
-            end = _rdtsc();
-            time = ((double)end - start);
-            LOG_RESULTS(pagecount, runs, time, "load time");
-            // printf( "load time was %f\n", time);
-            if (1 != committed) {
-
-                if(0x8 == (0x8 & status)) {
-                    retries++;
-                    if (retries > 100) {
-                        time /= (double) retries;
-                        printf("\"%s\" : {\"run\" : %d, \"pages\":  %d, \"address\": \"%p\", \"description\": \"%s\" },\n", __PRETTY_FUNCTION__, run, pagecount, r0, "multiple aborts on cache line");;
-                        // printf( "multiple aborts on line 0x%x\n", run);
-                        break;
-                    }
-                    continue;
+                optimer->start = _rdtsc();
+                for (unsigned index2 = 0; index2 < index; index2++) {
+                    r->s.counter++;
+                    r = r->s.next;
                 }
-                // printf( "abort on line 0x%x (status 0x%x)\n", run, status);
-                printf("\"%s\" : \"status\" : %d, \"run\":  %d, \"address\": \"0x%p\", \"description\": \"%s\",\n", __PRETTY_FUNCTION__, status, run, r0, "abort on cache line");;
+                _xend();
+                optimer->end = _rdtsc();
+                optimer->time += optimer->end - optimer->start;
+                committed++;
             }
-
-            // printf( "run 0x%x does not conflict\n", run);
-
-            break;
+            else {
+                aborted++;
+            }
+            ttimer->end = _rdtsc();
+            ttimer->time += ttimer->end - ttimer->start;
         }
+        if (index > 2) {
+            printf(",\n");
+        }
+        printf("\t\t\t\t\"transaction length %u\": {\"committed count\": %u, \"aborted count\": %u, \"total time\": %lu, \"op time\": %lu}",
+            index, committed, aborted, ttimer->time, optimer->time);
     }
+
+    // close json
+    printf("\n\t\t\t},");
+    printf("\n\t\t\t\"pagecount\": %u,", pagecount);
+    printf("\n\t\t\t\"runs\": %u", runs);
+    printf("\n\t\t\t}\n\t\t},\n");
 
 }
 
