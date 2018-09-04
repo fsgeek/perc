@@ -1417,7 +1417,7 @@ static void test_cache_behavior_3(const unsigned pagecount, const unsigned runs,
     end = cpu_rdtsc();
     time = ((double)(end - start));
     time /= (double)(1000 * 1000 * 1000);
-    LOG_RESULTS(pagecount, 1, time, "run nop 1 billion times");
+    printf("\t\t\"%s\":{ \"ticks per nop (over 1 billion)\": %f}\n\t},\n", __PRETTY_FUNCTION__, time);
 
     done = 1;
 }
