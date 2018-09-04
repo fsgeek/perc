@@ -18,6 +18,7 @@
 #include <emmintrin.h>
 #include <float.h>
 #include <pthread.h>
+#include <stdarg.h>
 #include "cache.h"
 #include "cpu.h"
 #include "setprocessor.h"
@@ -59,6 +60,7 @@ C_ASSERT(PAGE_SIZE == sizeof(record_page_t));
 #define LOG_RESULTS(pages, runs, time, description) \
 printf("\"%s\" : {\"runs\" : %d, \"pages\":  %d, \"time\": %f, \"description\": \"%s\"},\n", __PRETTY_FUNCTION__, runs, pages, time, description);;
 // printf("%3.3d, %4d, %14.2f, %24.24s, %s\n", pages, runs, time, __PRETTY_FUNCTION__, description)
+
 
 static void flush_cache(void)
 {
@@ -1638,6 +1640,9 @@ static void test_cache_behavior_1(const unsigned pagecount, const unsigned runs,
     assert(NULL != memory);
 
     flush_cache();
+
+    printf("\t\t\"%s\":{\n", __PRETTY_FUNCTION__);
+
     time = 0.0;
     start = cpu_rdtsc();
     r = (record_t *)memory;
@@ -1650,7 +1655,11 @@ static void test_cache_behavior_1(const unsigned pagecount, const unsigned runs,
     // cpu_sfence();
     end = cpu_rdtsc();
     time = ((double)(end - start));
-    LOG_RESULTS(pagecount, 1, time, "initialize first record of each page");
+    printf("\t\t\t\"%s\": {", "initialize first record of each page");
+    printf("\"pagecount\": %d,", pagecount);
+    printf("\"runs\": 1,");
+    printf("\"time\": %f},\n", time);
+    // LOG_RESULTS(pagecount, 1, time, "initialize first record of each page");
 
     flush_cache();
 
@@ -1665,7 +1674,11 @@ static void test_cache_behavior_1(const unsigned pagecount, const unsigned runs,
     }
     end = cpu_rdtsc();
     time = ((double)(end - start)) / (double)runs;
-    LOG_RESULTS(pagecount, runs, time, "walk list");
+    printf("\t\t\t\"%s\": {", "walk list");
+    printf("\"pagecount\": %d,", pagecount);
+    printf("\"runs\": %d,", runs);
+    printf("\"time\": %f},\n", time);
+    // LOG_RESULTS(pagecount, runs, time, "walk list");
 
     flush_cache();
 
@@ -1681,7 +1694,11 @@ static void test_cache_behavior_1(const unsigned pagecount, const unsigned runs,
     }
     end = cpu_rdtsc();
     time = ((double)(end - start)) / (double)runs;
-    LOG_RESULTS(pagecount, runs, time, "walk list + prefetch next entry");
+    printf("\t\t\t\"%s\": {", "walk list + prefetch next entry");
+    printf("\"pagecount\": %d,", pagecount);
+    printf("\"runs\": %d,", runs);
+    printf("\"time\": %f},\n", time);
+    // LOG_RESULTS(pagecount, runs, time, "walk list + prefetch next entry");
     flush_cache();
 
     //
@@ -1699,7 +1716,11 @@ static void test_cache_behavior_1(const unsigned pagecount, const unsigned runs,
     }
     end = cpu_rdtsc();
     time = ((double)(end - start)) / (double)runs;
-    LOG_RESULTS(pagecount, runs, time, "walk list + prefetch next entry + clflush after each write");
+    printf("\t\t\t\"%s\": {", "walk list + prefetch next entry + clflush after each write");
+    printf("\"pagecount\": %d,", pagecount);
+    printf("\"runs\": %d,", runs);
+    printf("\"time\": %f},\n", time);
+    // LOG_RESULTS(pagecount, runs, time, "walk list + prefetch next entry + clflush after each write");
     flush_cache();
 
     //
@@ -1716,7 +1737,12 @@ static void test_cache_behavior_1(const unsigned pagecount, const unsigned runs,
     }
     end = cpu_rdtsc();
     time = ((double)(end - start)) / (double)runs;
-    LOG_RESULTS(pagecount, runs, time, "walk list + clflush after each write");
+    printf("\t\t\t\"%s\": {", "walk list + clflush after each write");
+    printf("\"pagecount\": %d,", pagecount);
+    printf("\"runs\": %d,", runs);
+    printf("\"time\": %f},\n", time);
+    //LOG_RESULTS(pagecount, runs, time, "walk list + clflush after each write");
+
     flush_cache();
 
     //
@@ -1733,7 +1759,11 @@ static void test_cache_behavior_1(const unsigned pagecount, const unsigned runs,
     }
     end = cpu_rdtsc();
     time = ((double)(end - start)) / (double)runs;
-    LOG_RESULTS(pagecount, runs, time, "walk list + sfence after each write");
+    printf("\t\t\t\"%s\": {", "walk list + sfence after each write");
+    printf("\"pagecount\": %d,", pagecount);
+    printf("\"runs\": %d,", runs);
+    printf("\"time\": %f},\n", time);
+    // LOG_RESULTS(pagecount, runs, time, "walk list + sfence after each write");
     flush_cache();
 
     //
@@ -1750,8 +1780,14 @@ static void test_cache_behavior_1(const unsigned pagecount, const unsigned runs,
     }
     end = cpu_rdtsc();
     time = ((double)(end - start)) / (double)runs;
-    LOG_RESULTS(pagecount, runs, time, "walk list + sfence after each run");
-
+    printf("\t\t\t\"%s\": {", "walk list + sfence after each run");
+    printf("\"pagecount\": %d,", pagecount);
+    printf("\"runs\": %d,", runs);
+    printf("\"time\": %f}\n", time);
+    // LOG_RESULTS(pagecount, runs, time, "walk list + sfence after each run");
+    
+    // close json
+    printf("\t\t\t}\n\t\t},\n");
 }
 
 static void test_nontemporal_behavior(const unsigned pagecount, const unsigned runs, void *memory)
@@ -1788,14 +1824,14 @@ typedef void (*cache_test_t)(const unsigned pagecount, const unsigned runs, cons
 cache_test_t cache_tests[] = {
     (cache_test_t)test_cache_behavior_1,
     // (cache_test_t)test_cache_behavior_2,
-    (cache_test_t)test_cache_behavior_3,
+    // (cache_test_t)test_cache_behavior_3,
     // (cache_test_t)test_cache_behavior_4,
-    (cache_test_t)test_cache_behavior_5,
-    (cache_test_t)test_cache_behavior_6,
-    (cache_test_t)test_cache_behavior_7,
-    (cache_test_t)test_cache_behavior_8,
-    (cache_test_t)test_cache_behavior_9,
-    (cache_test_t)test_nontemporal_behavior, 
+    // (cache_test_t)test_cache_behavior_5,
+    // (cache_test_t)test_cache_behavior_6,
+    // (cache_test_t)test_cache_behavior_7,
+    // (cache_test_t)test_cache_behavior_8,
+    // (cache_test_t)test_cache_behavior_9,
+    // (cache_test_t)test_nontemporal_behavior, 
     NULL,
 };
 
@@ -1828,6 +1864,9 @@ void test_cache_behavior(const unsigned pagecount, int fd)
 
         memset(memory, 0, pagecount * pagesize);
 
+        if (index > 0) {
+            printf(",\n");
+        }
         cache_tests[index](pagecount, runs, memory);
         if (munmap(memory, pagecount * pagesize) < 0) {
             perror("munmap");
@@ -1856,6 +1895,7 @@ static struct option gLongOptions[] = {
     {"help",    no_argument, NULL, 'h'},
     {"processor",     required_argument, NULL, 'p'},
     {"log",     required_argument, NULL, 'l'},
+    {"runs",    required_argument, NULL, 'r'}, 
     {NULL, 0, NULL, 0} // marks end of the array
 };
 
@@ -1868,15 +1908,16 @@ int main(int argc, char **argv)
     cpu_cache_data_t *cd;
     char *daxmem = NULL;
     char *logfname = NULL;
-    static const unsigned samples[] = {4, 6, 8, 12, 16, 32, 64, 128, 256, 512, 1024, /* 2048, 4096, 8192, 16384, 32768, 65536 */};
+    static const unsigned samples[] = {4, 6, 8, 12, 16, 32, 64, /* 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536 */};
     unsigned processor = 2;
     cpu_set_t cpuset;
     pthread_t self = pthread_self();
     int status;
+    unsigned runs = 10;
 
     logfile = stderr;
 
-    while (-1 != (option_char = getopt_long(argc, argv, "d:hl:p:", gLongOptions, NULL))) {
+    while (-1 != (option_char = getopt_long(argc, argv, "r:d:hl:p:", gLongOptions, NULL))) {
         switch(option_char) {
             default:
                 printf( "Unknown option -%c\n", option_char);
@@ -1890,6 +1931,15 @@ int main(int argc, char **argv)
             case 'd': // file to map (presumably dax)
                 daxmem = strdup(optarg);
                 break;
+            case 'r': { // number of runs
+                int r = atoi(optarg);
+                if (r < 1 || r > 1000000) {
+                    printf("number of runs must be between 1 and 100000\n");
+                    printf(USAGE, argv[0]);
+                    exit(EXIT_FAILURE);
+                }
+                runs = (unsigned) r;
+            }
             case 'p': { // CPU to use
                     int cpu = atoi(optarg);
                     if (cpu < 0) {
@@ -1979,6 +2029,9 @@ int main(int argc, char **argv)
     if (NULL != daxmem) {
         printf( "\"backing file test\": {\n");
     }
+    else {
+        printf("\"memory test\": {\n");
+    }
 
     for (unsigned index = 0; index < sizeof(samples)/sizeof(samples[0]); index++) {
         int memfd = -1;
@@ -1987,7 +2040,6 @@ int main(int argc, char **argv)
             char *zero = NULL;
             unsigned start, end;
             double time;
-            const unsigned runs = 10;
 
             printf( "\t\"size %dKB\": {\n", 4 * samples[index]);
             (void) unlink(daxmem);
@@ -2022,21 +2074,21 @@ int main(int argc, char **argv)
                 printf( "%f%s", time, run + 1 < runs ? ", " : "],\n");
                 // printf( "%s: fsync ticks for %dKB blocks is %f\n", __PRETTY_FUNCTION__, 4 * samples[index], time);
             }
-            printf( "\t\t\"backing file\": \"%s\"}%c\n", daxmem, index + 1 == sizeof(samples)/sizeof(samples[0]) ? ' ' : ',');
-
         }
         test_cache_behavior(samples[index], memfd);
+        if (NULL != daxmem) {
+        }
         close(memfd);
         memfd = -1;
     }
 
     if (NULL != daxmem) {
-        printf( "\n\t},\n");
+        printf( "\t\"backing file\": \"%s\",\n", daxmem);
     }
-
-
-    // so we have a dummy line to ensure we don't end with a comma.  Probably should put a time counter here.
-    printf( "\"comment\": \"done\"}\n");
+    else {
+        printf("\t\"backing file\": \"anonymous\",\n");
+    }
+    printf("\t\"number of runs\": %d\n\t}\n}\n", runs);
 
 #if 0
     _mm_sfence();
