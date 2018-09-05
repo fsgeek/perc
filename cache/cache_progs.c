@@ -311,10 +311,6 @@ static unsigned long test_cache_clflush_nofence(record_page_t *rp)
 
     time = 0;
 
-    if (!cpu_has_clflush()) {
-        return time;
-    }
-
     while (r != &rp->records[0]) {
         start = _rdtsc();
         r->s.counter++;
@@ -634,27 +630,29 @@ static unsigned long test_cache_clwb_sfence_every_n_updates(record_page_t *rp, u
 
 static struct {
     const char *name;
+    int (*check)(void); // can we run this test
     unsigned long (*test)(record_page_t *rp);
 } tests[] = {
-    {"noflush, nofence", test_cache_noflush_nofence},
-    {"noflush, sfence end", test_cache_noflush_sfence_end},
-    {"clflush, nofence", test_cache_clflush_nofence},
-    {"clflush, sfence end", test_cache_clflush_sfence_end},
-    {"clflushopt, nofence", test_cache_clflushopt_nofence},
-    {"clflushopt, sfence end", test_cache_clflushopt_sfence_end},
-    {"clwb, nofence", test_cache_clwb_nofence},
-    {"clwb, sfence end", test_cache_clwb_sfence_end},
+    {"noflush, nofence", cpu_has_clflush, test_cache_noflush_nofence},
+    {"noflush, sfence end", cpu_has_clflush, test_cache_noflush_sfence_end},
+    {"clflush, nofence", cpu_has_clflush, test_cache_clflush_nofence},
+    {"clflush, sfence end", cpu_has_clflush, test_cache_clflush_sfence_end},
+    {"clflushopt, nofence", cpu_has_clflushopt, test_cache_clflushopt_nofence},
+    {"clflushopt, sfence end", cpu_has_clflushopt, test_cache_clflushopt_sfence_end},
+    {"clwb, nofence", cpu_has_clwb, test_cache_clwb_nofence},
+    {"clwb, sfence end", cpu_has_clwb, test_cache_clwb_sfence_end},
     {NULL, NULL},
 };
 
 static struct {
     const char *name;
-    unsigned long (*test)(record_page_t *rp, unsigned frequency);
+    int (*check)(void); // can we even run this test
+    unsigned long (*test)(record_page_t *rp, unsigned frequency); // test to run
 } freq_tests[] = {
-    {"noflush, sfence periodic", test_cache_noflush_sfence_every_n_updates},
-    {"clflush, sfence periodic", test_cache_clflush_sfence_every_n_updates},
-    {"clflushopt, sfence periodic", test_cache_clflushopt_sfence_every_n_updates},
-    {"clwb, sfence periodic", test_cache_clwb_sfence_every_n_updates},
+    {"noflush, sfence periodic", cpu_has_clflush, test_cache_noflush_sfence_every_n_updates},
+    {"clflush, sfence periodic", cpu_has_clflush, test_cache_clflush_sfence_every_n_updates},
+    {"clflushopt, sfence periodic", cpu_has_clflushopt, test_cache_clflushopt_sfence_every_n_updates},
+    {"clwb, sfence periodic", cpu_has_clflushopt, test_cache_clwb_sfence_every_n_updates},
     {NULL, NULL},
 };
 
@@ -668,8 +666,20 @@ static void test_cache_behavior_9(const unsigned pagecount, const unsigned runs,
     unsigned long long time_same, time_different;
     unsigned frequency = 0;
 
-    printf( "\"%s\": {\"runs\": %u, \"pages\": %u,\"results\": {\n", __PRETTY_FUNCTION__, runs, pagecount);
-    while (tests[t].name && freq_tests[t].test) {
+    printf("\t\t\"%s\":{\n", __PRETTY_FUNCTION__);
+    printf("\t\t\t\"frequency tests\": {\n");
+    while (freq_tests[t].name && freq_tests[t].test) {
+        if (0 != freq_tests[t].check) {
+            if (0 == freq_tests[t].check()) {
+                // cannot run it on this system
+                t++;
+                continue;
+            }
+        }
+        if (t > 0) {
+            printf(",\n");
+        }
+        printf("\t\t\t\t\"%s\": {\n", freq_tests[t].name);
         for (unsigned findex = 0; findex < (sizeof(test_frequencies) / sizeof(unsigned)); findex++) {
             time_same = time_different = 0;
             frequency = test_frequencies[findex];
@@ -680,16 +690,47 @@ static void test_cache_behavior_9(const unsigned pagecount, const unsigned runs,
                 time_different += freq_tests[t].test((record_page_t *)memory, frequency);
             }
             if ((time_same > 0) || (time_different > 0)) {
-                if ((t > 0) || (findex>0)) {
-                    printf( ",\n");
+                if (findex > 0) {
+                    printf(",\n");
                 }
-                printf("\"%s\": {\"frequency\": %u, \"same cache set\": %lu, \"different cache set\": %lu}", 
-                        freq_tests[t].name, frequency, time_same, time_different);
+                // printf("\t\t\t\t\t\"frequency %u\": {\"same cache set\": %lu, \"different cache set\": %lu}", frequency, time_same, time_different);
+                printf("\t\t\t\t\t\"%u\": {\"same cache set\": %lu, \"different cache set\": %lu}", frequency, time_same, time_different);
             }
+        }
+        printf("\n\t\t\t\t}");
+        t++;
+    }
+    printf("\n\t\t\t},\n");
+    printf("\t\t\t\"basic tests\": {\n");
+    t=0;
+    while (tests[t].name && tests[t].test) {
+        if (0 != tests[t].check) {
+            if (0 == tests[t].check()) {
+                // cannot run it on this system
+                t++;
+                continue;
+            }
+        } 
+        time_same = time_different = 0;
+        for (unsigned run = 0; run < runs; run++) {
+            init_cache_test_memory_same_set(pagecount, memory);
+            time_same += tests[t].test((record_page_t *)memory);
+            init_cache_test_memory_different_set(pagecount, memory);
+            time_different += tests[t].test((record_page_t *)memory);
+        }
+        if (t>0) {
+            printf(",\n");
+        }
+        if ((time_same > 0) || (time_different > 0)) {
+            printf("\t\t\t\t\t\"%s\": {\"same cache set\": %lu, \"different cache set\": %lu}", tests[t].name, time_same, time_different);
         }
         t++;
     }
-    printf( " \t}\n},\n");
+    printf("\n\t\t\t\t\t},\n");
+
+    printf("\t\t\t\"pagecount\": %u,\n", pagecount);
+    printf("\t\t\t\"runs\": %u\n", runs);
+    printf("\t\t}\n\t},\n");
 
 }
 
@@ -709,6 +750,9 @@ static void test_cache_behavior_8(const unsigned pagecount, const unsigned runs,
             time_different += tests[t].test((record_page_t *)memory);
         }
         if ((time_same > 0) || (time_different > 0)) {
+            if (t>0) {
+                printf("\n");
+            }
             printf("\t\t\t\"%s\": {\"same cache set\": %lu, \"different cache set\": %lu},", tests[t].name, time_same, time_different);
         }
         t++;
@@ -770,6 +814,7 @@ static void test_cache_behavior_7(const unsigned pagecount, const unsigned runs,
         printf( "%s: time to walk list: %f\n", __PRETTY_FUNCTION__, time);
     }
 #endif // 0
+    printf("\t\t\"%s\":{ \"results\": \"\"}\n\t},\n", __PRETTY_FUNCTION__);
 
 }
 
@@ -788,14 +833,14 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
     unsigned start, end;
     unsigned run;
  
+    printf("\t\t\"%s\":{\n", __PRETTY_FUNCTION__);
     if (12 != pagecount) {
         // only need to test this one case.
+        printf("\t\t\t\"results\": \"\"\n\t\t\t}\n\t\t},\n");
         return;
     }
 
     init_cache_test_memory(pagecount, memory);
-
-    printf("\t\t\"%s\":{\n", __PRETTY_FUNCTION__);
 
     time = 0.0;
     for (run = 0; run < runs; run++) {
@@ -1286,17 +1331,18 @@ static void test_cache_behavior_5(const unsigned pagecount, const unsigned runs,
     unsigned committed = 0;
     unsigned aborted = 0;
 
+    printf("\t\t\"%s\":{\n", __PRETTY_FUNCTION__);
+
     if (pagecount != 12) {
         // this is our magic number - ignore all others.
+        printf("\t\t\t\"results\": \"\"\n\t\t\t}\n\t\t},\n");
         return;
     }
 
     if (0 == cpu_has_rtm()) { // no RTM, nothing to do
+        printf("\t\t\t\"results\": \"\"\n\t\t\t}\n\t\t},\n");
         return;
     }
-
-    printf("\t\t\"%s\":{\n", __PRETTY_FUNCTION__);
-
 
     //
     // Build a list of starting addresses.  Staggering is my attempt to foil the prefetcher
@@ -1354,17 +1400,18 @@ static void test_cache_behavior_4(const unsigned pagecount, const unsigned runs,
     start = cpu_rdtsc();
     end = cpu_rdtsc();
     time = ((double)(end - start));
-    // LOG_RESULTS(pagecount, 1, time, "run nop 1 billion times");
+    printf("\t\t\"%s\":{ \"results\": \"\"}\n\t},\n", __PRETTY_FUNCTION__);
 
 }
 
 static void test_cache_behavior_3(const unsigned pagecount, const unsigned runs, void *memory)
 {
     unsigned start, end;
-    double time = 0.0;
+    static double time = 0.0;
     static int done = 0;
 
     if (done) {
+        printf("\t\t\"%s\":{ \"ticks per nop (over 1 billion)\": %f}\n\t},\n", __PRETTY_FUNCTION__, time);
         return;
     }
 
@@ -1754,11 +1801,8 @@ static void test_nontemporal_behavior(const unsigned pagecount, const unsigned r
         }
     }
 
-    printf("\"%s\": {\"description\": \"non-temporal move\", \"runs\": %u, \"pages\": %u, \"size\": %zu, \"time\": %lu},\n", 
-            __PRETTY_FUNCTION__, runs, pagecount, size, time);
-    //   "test_nontemporal_behavior runs 100 pages 4": {"non-temporal move":{"size": 16384, "time": 1423280}
-    // "test_cache_behavior_1" : {"runs" : 1, "pages":  6, "time": 1056.000000, "description": "initialize first record of each page"},
-
+    printf("\t\t\"%s\": {\"size\": %zu, \"ticks\": %lu}\n\t\t},\n", __PRETTY_FUNCTION__, size, time);
+    
     // printf( "\"non-temporal move\":");
     // printf( "{\"size\": %zu, \"time\": %lu}\n", size, time);
     // printf( " },\n");
@@ -1800,7 +1844,7 @@ void test_cache_behavior(unsigned specific_test, const unsigned pagecount, int f
     for (unsigned index = 0; NULL != cache_tests[index]; index++) {
 
         // ok, not efficient, but it is easy to implement - single test choice option
-        if ((index != (unsigned) ~0) && (index != specific_test)) {
+        if ((specific_test != (unsigned) ~0) && (index != specific_test)) {
             continue;
         }
         void *memory = mmap(NULL, pagecount * pagesize, PROT_READ | PROT_WRITE, mmflags, fd, 0);
