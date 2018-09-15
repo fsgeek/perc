@@ -1,0 +1,48 @@
+%% The following is a directive for TeXShop to indicate the main file
+%%!TEX root = report.tex
+
+\chapter{Abstract}
+
+Memory --- the ability to save and recall information --- is a fundamental
+characteristic of human endeavour and takes many forms.  As we developed
+computing machines, we similarly developed mechanisms by which information
+could be stored for later use.
+
+For modern computers, \textit{drum memory} was the first manifestation of
+magneto-electric data storage and at the time of its introduction was used
+as both working memory as well as longer-term storage.  Drum memory was
+replaced as working memory by \textit{core memory}, which utilized magnetic
+wrapped cores for storing bits of information.  Similarly core memory was
+in turn replaced by \acs{DRAM}.  
+
+Each new class of memory exhibited faster performance but \textit{different} 
+behavior than the previous class.  Drum and core memories were persistent,
+but core memory had a destructive write phase.  \acs{DRAM} memory was not
+persistent and required constant refresh to prevent the contents from
+decaying.
+
+While faster, \acs{DRAM} abandoned persistence of memory and gave rise to the
+separation of \textit{memory} and \textit{storage}.  \acs{DRAM} memories and
+processors became faster at a more rapid rate than storage became faster,
+further increasing the separation.  While \acs{SRAM}
+is faster than \acs{DRAM}, it is much more expensive and only persistent as long as
+power is applied to it.
+
+For decades, researchers have been searching for a new memory technology 
+that is comparable in terms of performance and behavior to DRAM but
+\textit{also} persistent.  This achievement has proven to be elusive yet
+that has not discouraged the research community from considering how
+to exploit persistent byte-addressable non-volatile memory.
+
+This report describes my findings while using the first commercial product
+to offer single level, byte-addressable non-volatile computer memory that behaves much like
+\acs{DRAM} and observes how this behavior might impact development of
+systems that exploit this ``new'' class of memory.
+
+% Consider placing version information if you circulate multiple drafts
+\vfill
+\begin{center}
+\begin{sf}
+\fbox{Revision: \today}
+\end{sf}
+\end{center}
