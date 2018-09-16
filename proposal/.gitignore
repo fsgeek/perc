@@ -1,0 +1,13 @@
+report.pdf
+*.aux
+*.brf
+*.dvi
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.bbl
+*.blg
+*.bcf
+*.lof
+*.xml

@@ -1,0 +1,133 @@
+% Tony Mason (fsgeek@cs.ubc.ca)
+%
+% TEMPLATE for Usenix papers, specifically to meet requirements of USENIX '05
+% originally a template for producing IEEE-format articles using LaTeX.
+%
+% written by Matthew Ward, CS Department, Worcester Polytechnic Institute.
+% adapted by David Beazley for his excellent SWIG paper in Proceedings,  Tcl 96
+% turned into a smartass generic template by De Clarke, with thanks to both 
+% the above pioneers
+%
+% use at your own risk.  Complaints to /dev/null.
+% make it two column with no page numbering, default is 10 point
+
+% Munged by Fred Douglis <douglis@research.att.com> 10/97 to separate
+% the .sty file from the LaTeX source template, so that people can
+% more easily include the .sty file into an existing document.  Also
+% changed to more closely follow the style guidelines as represented
+% by the Word sample file. 
+
+% Note that since 2010, USENIX does not require endnotes. If you want
+% foot of page notes, don't include the endnotes package in the 
+% usepackage command, below.
+
+% This version uses the latex2e styles, not the very ancient 2.09 stuff.
+\documentclass[letterpaper,twocolumn,10pt]{article}
+    \usepackage{usenix,epsfig,endnotes,textcomp}
+    \usepackage{hyperref}
+    
+    % TM - I added these packages to allow highlighting so "to do" items can stand
+    % out and don't get forgotten.
+    \usepackage{xcolor,soul}
+    \usepackage{authblk}
+    \usepackage{balance}
+    
+    \usepackage{upgreek}
+    \usepackage{comment}
+    
+    \usepackage{geometry}
+    
+    \usepackage{tikz}
+    \usetikzlibrary{calc}
+    
+    % GanttHeader setups some parameters for the rest of the diagram
+    % #1 Width of the diagram
+    % #2 Width of the space reserved for task numbers
+    % #3 Width of the space reserved for task names
+    % #4 Number of months in the diagram
+    % In addition to these parameters, the layout of the diagram is influenced
+    % by keys defined below, such as y, which changes the vertical scale
+    \def\GanttHeader#1#2#3#4{%
+     \pgfmathparse{(#1-#2-#3)/#4}
+     \tikzset{y=7mm, task number/.style={left, font=\bfseries},
+         task description/.style={text width=#3,  right, draw=none,
+               font=\sffamily, xshift=#2,
+               minimum height=2em},
+         gantt bar/.style={draw=black, fill=blue!30},
+         help lines/.style={draw=black!30, dashed},
+         x=\pgfmathresult pt
+         }
+      \def\totalmonths{#4}
+      \node (Header) [task description] at (0,0) {\textbf{\large Task Description}};
+      \begin{scope}[shift=($(Header.south east)$)]
+        \foreach \x in {1,...,#4}
+          \node[above] at (\x,0) {\footnotesize\x};
+     \end{scope}
+    }
+    
+    % This macro adds a task to the diagram
+    % #1 Number of the task
+    % #2 Task's name
+    % #3 Starting date of the task (month's number, can be non-integer)
+    % #4 Task's duration in months (can be non-integer)
+    \def\Task#1#2#3#4{%
+    \node[task number] at ($(Header.west) + (0, -#1)$) {#1};
+    \node[task description] at (0,-#1) {#2};
+    \begin{scope}[shift=($(Header.south east)$)]
+      \draw (0,-#1) rectangle +(\totalmonths, 1);
+      \foreach \x in {1,...,\totalmonths}
+        \draw[help lines] (\x,-#1) -- +(0,1);
+      \filldraw[gantt bar] ($(#3, -#1+0.2)$) rectangle +(#4,0.6);
+    \end{scope}
+    }
+    
+    \begin{document}
+    
+    %make title bold and 14 pt font (Latex default is non-bold, 16 pt)
+    \title{PERC: Persistent, Efficient, Recoverable, Consistent \\
+           Research Proficience Evaluation Proposal
+    }
+    % \titlenote{Produces the permission block, and copyright information}
+    % \subtitle{Utilizing Non-volatile Dual Inline Memory Modules}
+    
+    %for single author (just remove % characters)
+    %\author{
+    %{\rm Tony Mason}\qquad
+    %{\rm Jake Wires}\qquad
+    %{\rm Andrew Warfield}\\
+    %{\rm fsgeek@cs.ubc.ca}\qquad
+    %{\rm jtwires@cs.ubc.ca}\qquad
+    %{\rm andy@cs.ubc.ca}\\
+    %Department of Computer Science, University of British Columbia, Vancouver, Canada
+    %} % end author
+    
+    \author{Tony Mason\thanks{fsgeek@cs.ubc.ca}}
+    %\author{Jake Wires\thanks{jtwires@cs.ubc.ca}}
+    %\author{Andrew Warfield\thanks{andy@cs.ubc.ca}}
+    \affil{Department of Computer Science, University of British Columbia}
+    
+    % suppress printing date
+    \date{}
+    
+    \maketitle
+    
+    \begin{abstract}
+        This document is a supplement to my main \textbf{Research Proficiency Evaluation} proposal.  It is unlikely
+        to ``make sense'' outside the context of that document.
+  
+    \end{abstract}
+    
+    \input{supplement}
+    
+    \newpage
+    \balance
+    
+    {\footnotesize \bibliographystyle{acm}
+    \bibliography{nvdimm.bib,phd-app-ref.bib}}
+    
+    
+    % \theendnotes
+    
+    \end{document}
+    
+    
