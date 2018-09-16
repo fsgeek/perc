@@ -60,6 +60,8 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 
+\usepackage{textcomp}
+
 %% The pifont package provides access to the elements in the dingbat font.   
 %% Use \ding{##} for a particular dingbat (see p7 of psnfss2e.pdf)
 %%   Useful:
@@ -164,6 +166,7 @@
 %% The caption package provides support for varying how table and
 %% figure captions are typeset.
 \usepackage[format=hang,indention=-1cm,labelfont={bf},margin=1em]{caption}
+\usepackage[list=true]{subcaption}
 
 %% url: for typesetting URLs and smart(er) hyphenation.
 %% \url{http://...} 
@@ -192,7 +195,7 @@
 
 %% subfig: provides for including subfigures within a figure,
 %% and includes being able to separately reference the subfigures.
-\usepackage{subfig}
+%\usepackage{subfig}
 
 %% ragged2e: provides several new new commands \Centering, \RaggedLeft,
 %% \RaggedRight and \justifying and new environments Center, FlushLeft,
@@ -303,7 +306,7 @@
 %%
 
 \title{PERC: Persistent, Efficient, Recoverable, Consistent}
-\subtitle{Research Proficiency Evaluation Report}
+%\subtitle{Research Proficiency Evaluation Report}
 
 \author{William Anthony Mason}
 %\previousdegree{B. Basket Weaving, University of Illustrious Arts, 1991}
@@ -391,8 +394,8 @@
 %\cleardoublepage	% required by tocloft package
 
 %    8. List of figures (mandatory if thesis has figures)
-%\listoffigures
-%\cleardoublepage	% required by tocloft package
+\listoffigures
+\cleardoublepage	% required by tocloft package
 
 %    9. List of illustrations (mandatory if thesis has illustrations)
 %   10. Lists of symbols, abbreviations or other (optional)
@@ -417,11 +420,11 @@
 
 %    2. Main body
 % Generally recommended to put each chapter into a separate file
-%\include{relatedwork}
-%\include{model}
-%\include{impl}
-%\include{discussion}
-%\include{conclusions}
+\include{relatedwork}
+\include{model}
+\include{impl}
+\include{discussion}
+\include{conclusions}
 
 %    3. Notes
 %    4. Footnotes
@@ -430,7 +433,7 @@
 \include{references}
 \begin{singlespace}
 \raggedright
-\bibliographystyle{abbrvnat}
+\bibliographystyle{IEEEtranN}
 \bibliography{biblio,nvdimm,phd-app-ref,rpe}
 \end{singlespace}
 

@@ -257,13 +257,13 @@
 	{\large \@author}\\[1em]
 	\ifx\@previousdegrees\empty\relax\else\@previousdegrees\vspace{2em}\fi
 
-	{\Large \textsc{a report submitted in partial fulfillment}}\\
-	{\Large \textsc{of the requirements for the degree of}}\\[1em]
+%	{\Large \textsc{a report submitted in partial fulfillment}}\\
+	{\Large \textsc{research proficiency evaluation report}}\\[1em]
 
-	{\large \textbf{\@degreetitle}}\\[1em]
-	{\large in}\\[1em]
-	{\Large \textsc{\MakeTextLowercase{\f@culty}}}\\
-	\ifx\dep@rtment\empty\relax\else(\dep@rtment)\fi
+% 	{\large \textbf{\@degreetitle}}\\[1em]
+%	{\large in}\\[1em]
+%	{\Large \textsc{\MakeTextLowercase{\f@culty}}}\\
+	\ifx\dep@rtment\empty\relax\else\Large{Department of \dep@rtment}\fi
 	\vspace{1em}
 
 	{\large \@institution}\\

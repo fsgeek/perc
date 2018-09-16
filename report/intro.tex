@@ -11,6 +11,7 @@
 \end{epigraph}
 
 
+\section{A Brief History of Memory and Storage}
 \begin{figure}
 \centering
 \caption{Basic Computer Architecture}\label{figure:computer_architecture}
@@ -29,7 +30,7 @@ the 1950s.
 This was not always the case: \emph{drum memory}, which predated core memory,
 was both main memory and storage.  The introduction of core memory created
 this bifurcation, as core memory was faster but more expensive.  Over time, core
-memory was itself replaced with \acs{DRAM}~cite{US3728695A}.  Storage technologies
+memory was itself replaced with \acs{DRAM}~\cite{US3728695A}.  Storage technologies
 moved from paper (punch cards and paper tape, for example) to magnetic media 
 (tapes and disks).
 
@@ -50,11 +51,122 @@ that has come to be known as ``Moore's Law''.~\cite{moore1965cramming}  While mo
 in reference to processor technologies, the trend that Moore observed can also be observed
 in memory technologies, particularly as density has led to increased memory capacities.
 
-Unlike memory, magnetic storage technologies did not benefit from the constant improvements
-in integrated circuits.
+While magnetic storage technologies benefited from some aspects of the improvements in
+integrated circuits, a fundamental characteristic of media was a significant delay in obtaining
+the data --- the \textit{latency} inherent in the physical movement of the equipment imposed
+a fundamental distinction that kept memory and storage separate in how they were handled by
+software using the system.
 
-Magnetic storage technologies did not benefit from the rapid growth that Gordon Moore 
-Modern storage technologies 
+\begin{figure}
+    \centering
+    \caption{Latency Numbers}\label{figure:jeff-dean-numbers}
+    \emph{Source: Jonas B\'oner, https://gist.github.com/jboner/2841832}
+    \includegraphics[width=0.85\textwidth]{figures/jeff-dean-numbers.png}
+\end{figure}
+    
+Around ten years ago, Jeff Dean, a well-known distributed systems expert at Google gave a
+presentation about the challenges of working with distributed systems.~\cite{jeff-dean:cs-295}
+One of the slides in that presentation provided a succinct summary of the amount of time
+to perform common operations within a computer system.  Figure \ref{figure:jeff-dean-numbers}
+provides a graphic representation of the relative difference between these operations.~\cite{jboner:jeff-dean-numbers}
+For the purposes of this work, the important point is to note that the speed of accessing
+main memory at the time was approximately 100 nanoseconds. Reading 1MB of data from a disk
+required \textbf{20 milliseconds}, half of which was the latency of the physical disk drive hardware.
+
+\begin{figure}[b]
+    \centering
+    \caption{NVME Performance}\label{figure:nvme}
+    \subcaptionbox[Bandwidth]{%
+        Bandwidth%
+        \label{figure:nvme:bandwidth}
+    }
+    [%
+    0.45\textwidth
+    ]%
+    {%
+        \includegraphics[width=0.45\textwidth]%
+        {figures/sustained-throughput-100763047-large.jpg}%
+    }%
+    %\hspace{0.1\textwidth} % separation
+    \subcaptionbox[Latency]{%
+        Latency%
+        \label{figure:nvme:latency}
+    }
+    [%
+    0.45\textwidth
+    ]%
+    {%
+        \includegraphics[width=0.45\textwidth]%
+        {figures/seek-times-100763046-large.jpg}%
+    }%
+\end{figure}
+
+
+Since that time, storage has undergone a tremendous shift due to the rapid development
+and deployment of solid-state storage: \textit{persistent memory} that has been used to
+construct devices which mimic the behavior of disk drives. In the span of roughly 10 years,
+the bandwidth of non-volatile memory devices has increased dramatically, which led to the
+introduction of higher-bandwidth interconnects between the storage device and the \acs{CPU}.
+Currently, the highest speed interconnect \acs{NVMe} over \acs{PCIe} has a maximum theoretical
+bandwidth of approximately 32GB/s.
+
+Many of these changes have been driven by the increased density and decreased latency for
+persistent memories. The convergence of this process increasingly appears to be a model
+in which the boundary between \textit{memory} and \textit{storage} overlaps.  While
+pragmatic engineering realities (ergo \textit{cost}) make it likely that slower but cheaper
+storage options will continue to coexist with these new technologies, non-volatile memory
+technologies will be utilized in performance critical areas to improve overall system performance.
+
+Thus, in recent years we have seen \acs{DRAM}-like non-volatile memory solutions appear.  Frequently,
+they have combined DRAM, non-volatile (flash) memory, and some backup power source ---
+typically a large battery --- into providing large capacity, high performance, byte-addressable,
+non-volatile memory, such as shown in Figure \ref{figure:scm}
+
+\begin{figure}
+    \centering
+    \caption{Battery-Backed Hybrid DRAM/Flash Memory}\label{figure:scm}
+    \emph{Source: RTC Magazine, http://archive.rtcmagazine.com/articles/view/102366}
+    \includegraphics[width=0.65\textwidth]{figures/102366-2700_RTC11-PRTW-Viking-Fig1_medium.jpg}
+\end{figure}
+
+This type of ``storage class memory'' is not widely used, given its disadvantages, which include
+cost, the need for external batteries, the lack of standardized support, and the relatively low
+density offered --- often on par with \acs{DRAM}.
+
+At the end of May, 2018 --- \textit{after} the commencement of working on this project, in fact,
+Intel announced availability of their first \textit{byte-addressable} non-volatile memory modules,
+with a form factor that makes them compatible with industry standard \acs{DDR4} 
+memory.~\cite{anandtech:apache_pass}  While Intel has not confirmed the technology behind this
+new memory, there has been considerable independent analysis indicating that the underlying
+technology is \acs{PCM}.~\cite{malventano:2017:3DXPoint}
+
+The ``hands-on'' analysis provided in this report is based upon Intel ``Apache Pass'' \acs{NVDIMM}
+form-factor memory.  While interesting to have actual hardware to use in the evaluation, I have
+tried to focus on insights that are not tied to the specific product.  This seems prudent because
+Intel and Micron recently announced they would be terminating their joint development program 
+next year.~\cite{Intel:3DXPoint:JDP:July:2018}
+
+Commercialization of non-volatile memory technologies for the production of DIMM form factor
+persistent memory devices is an active area.  These technologies include:
+
+\begin{itemize}
+    \item \acs{PCM} --- This is the basis of the Intel/Micron developed 3D XPoint memory and
+    forms the basis of the Intel Apache Pass product (which will use the Optane\textsuperscript{tm} trade name
+    when released.)
+    \item \acs{MRAM} --- STT-MRAM is being used in high capacity enterprise SSD devices from IBM, and is
+    available in a DIMM form factor, but does not yet appear to have achieved high densities though it
+    does show high performance.~\cite{MRAM-info}
+    \item \acs{FRAM} --- Ferroelectric Random Access Memory is commercially utilized non-volatile memory
+    technology that has continues to be an area of active research in improving scalability.~\cite{mikolajick2018ferroelectric}
+    \item \acs{ReRAM} --- Resistive Random Access Memory, the technology based upon the \textit{memristor}, continues
+    to be yet another area of ongoing research.\cite{zhu2017resistive,lastras2018resistive}
+    \item \acs{NRAM} --- Non-volatile Random Access Memory utilizes Carbon Nanotubes for data storage.  These memories
+    are presently in production and in use in specialized environments due to the novel thermal characteristics of Carbon
+    nanotubes.~\cite{gilmer2018nram}
+\end{itemize}
+
+Several of these are already used in specialized environment.  For the most promising, the challenge remains
+commercializing the technology, often through scaling density or achieving economically viable cost/benefit levels.
 
 
 \endinput
