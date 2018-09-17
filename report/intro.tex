@@ -168,6 +168,33 @@ persistent memory devices is an active area.  These technologies include:
 Several of these are already used in specialized environment.  For the most promising, the challenge remains
 commercializing the technology, often through scaling density or achieving economically viable cost/benefit levels.
 
+In fact, it seems likely that several of these technologies will be used in the future for providing memory.  While
+there is some value in evaluating the behavior of specific memory technology, it is somewhat ephemeral given the
+ever-changing nature of the technology industry.
+
+It is more useful to find insights, even from such focused study, that provide a general sense of understanding
+about persistent memory.  To that end, I have considered a number of aspects of the behavior of non-volatile
+memory:
+
+\begin{itemize}
+    \item \textbf{Failure Models} --- For any persistent data structure, it is imperative to understand the failure
+    model of the domain. The challenge in this area is that storage experts are used to thinking of I/O related
+    failure models, while processor behavior experts are used to considering consistency and correctness, but not
+    persistence.
+
+    \item \textbf{Performance} --- storage systems are traditionally high-latency.  There are write amplification
+    issues that must be carefully evaluated.  Memory systems have concerns about cache behavior, the cost of
+    consistency, and issues of memory locality because \acs{NUMA} architectures create unequal costs for accessing
+    specific memory.
+
+    \item \textbf{Consistency} --- persistence amplifies the cost of inconsistent state.  A traditional way to 
+    recover from inconsistent machine state is to restart, which returns to a known-good state.  When memory
+    is persistent, inconsistent states do not automatically resolve when the system restarts.
+
+\end{itemize}
+
+I discuss failure models in Chapter \ref{ch:Model} and insights gleaned from the
+work with \acs{NVM} in Chapter \ref{ch:Discussion}.
 
 \endinput
 

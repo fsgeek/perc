@@ -3,3 +3,54 @@
 
 \chapter{Related Work}
 \label{ch:RelatedWork}
+
+The field of non-volatile memory is one with a long history.  As noted in Chapter \ref{ch:Introduction}, 
+early memories were, in fact, persistent and this led to models in which memory and storage were viewed
+as equivalent storage mechanisms.~\cite{corbato1965introduction}  The introduction of dynamic ram (\acs{DRAM})
+led to the bifurcation in storage technologies between high-speed but ephemeral (``memory'') and low-speed
+but persistent (``media'').~\cite{US3728695A}
+
+Our modern model of storage has evolved as well, from the punch cards of the late 19th century~\cite{truesdell1965development},
+to more modern media based magnetic devices, such as tape (ca. 1935) and other forms of magnetic
+media.~\cite{feynman1992there, hoagland2003history}
+
+The introduction of flash memory~\cite{masuoka1984new} led to flash storage devices.  Progress in this area has led to the
+emergence of solid state disk drives.~\cite{clay1995flash}  \acs{SSD}s today are often the primary storage device of numerous
+computers, despite their higher cost than traditional hard disks, due to their performance characteristics.
+
+The push to make \acs{SSD}s faster has led to a rapid progression of bus technologies that permit exploitation of the 
+increasing bandwidth and decreasing latency of such devices.  The (re)-convergence of storage and memory has been demonstrated 
+and discussed for more than 20 years.\cite{wu1994envy,mogul2009operating,Nalli:2017:APM:3093336.3037730,Nalli:2017:APM:3093337.3037730,
+Nalli:2017:APM:3037697.3037730,kolli2017architecting,joshi2015efficient}  
+The advent of \acs{PCM} was one of those promising
+technologies.~\cite{chen2016review}  The research community has explored this area extensively in the ensuing years in such topics as:
+
+\begin{itemize}
+
+    \item Memory Management:\cite{volos2011mnemosyne,Oukid:2017:MMT:3137628.3137629,yu2017redesign}
+    \item Data Structures:\cite{Friedman:2018:PLQ:3178487.3178490,Memaripour:2017:AIU:3064176.3064215,lee2017wort,sha2018towards,zhang2018simpo,
+kim2018clfb,wang2018persisting,nawab2017dali,lee2018write,oukid2017data,venkataraman2011consistent,chen2015persistent,222591,
+zuo2017write,zuo2018write}
+    \item Multi-threading: \cite{Hsu:2017:NPP:3064176.3064204}
+    \item Programming: \cite{Kolli:2017:LP:3079856.3080229,Kolli:2017:LP:3140659.3080229,marathe2017persistent}
+    \item File Systems:\cite{kannan2018designing,liu2018hmfs}
+    \item Logging:\cite{Cohen:2017:ELN:3152284.3133891,shin2017proteus}
+    \item Crash Consistency:\cite{Pillai:2017:ACC:3141876.3119897,wei2017transactional}
+    \item Address Translation:\cite{Chen:2017:ESP:3123939.3124543,liu2017durable,wang2017hardware}
+    \item Database:\cite{arulraj2017build,Oukid:2014:SHS:2619228.2619236,arulraj2015let}
+    \item Checkpointing: \cite{zhang2017fine,giles2017continuous}
+    \item Key-Value Stores:\cite{huang2018nvht,chen2017udorn,kim2017papyruskv,liu2017librekv,zhou2016nvht,wu2016nvmcached}
+    \item Transations:\cite{marathe2018persistent}
+\end{itemize}
+
+Prior work has been done with a variety of models for simulating the behavior of \acs{NVM}.  Indeed, my
+initial investigation was to determine the viability of investigating some of the considerations described
+in Chapter \ref{ch:Introduction} via simulation.  Ultimately, I was able to gain access to an Intel Apache
+Pass research system for performing this research.
+
+Thus, one key difference between the prior work and the work described in this report is the use of actual
+hardware.  As expected, that hardware does not behave as predicted.  I will discuss this further in Chapters \ref{ch:Results}
+\& \ref{ch:Discussion}. 
+
+\endinput
+
