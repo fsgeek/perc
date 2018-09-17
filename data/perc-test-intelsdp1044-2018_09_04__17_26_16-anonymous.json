@@ -10,6 +10,7 @@
 "L3 cache size (KB)": 33792,
 "cache info": " "},
 "memory test": {
+	"size 16KB": {
 		"test_cache_behavior_1":{
 			"initialize first record of each page": {"pagecount": 4,"runs": 1,"time": 390.000000},
 			"walk list": {"pagecount": 4,"runs": 100,"time": 15.080000},
@@ -185,7 +186,9 @@
 			"pagecount": 4,
 			"runs": 100
 		},
-		"test_nontemporal_behavior": {"size": 16384, "ticks": 980642},
+		"test_nontemporal_behavior": {"size": 16384, "ticks": 980642}
+	},
+	"size 24KB": {
 		"test_cache_behavior_1":{
 			"initialize first record of each page": {"pagecount": 6,"runs": 1,"time": 130.000000},
 			"walk list": {"pagecount": 6,"runs": 100,"time": 39.460000},
@@ -360,7 +363,9 @@
 			"pagecount": 6,
 			"runs": 100
 	},
-		"test_nontemporal_behavior": {"size": 24576, "ticks": 1472460},
+		"test_nontemporal_behavior": {"size": 24576, "ticks": 1472460}
+	}, 
+	"size 32KB": {
 		"test_cache_behavior_1":{
 			"initialize first record of each page": {"pagecount": 8,"runs": 1,"time": 164.000000},
 			"walk list": {"pagecount": 8,"runs": 100,"time": 31.360000},
@@ -535,7 +540,9 @@
 			"pagecount": 8,
 			"runs": 100
 		},
-		"test_nontemporal_behavior": {"size": 32768, "ticks": 5687736},
+		"test_nontemporal_behavior": {"size": 32768, "ticks": 5687736}
+	},
+	"size 48KB": {
 		"test_cache_behavior_1":{
 			"initialize first record of each page": {"pagecount": 12,"runs": 1,"time": 146.000000},
 			"walk list": {"pagecount": 12,"runs": 100,"time": 125.140000},
@@ -740,7 +747,8 @@
 			"runs": 100
 		}
 ,
-		"test_nontemporal_behavior": {"size": 49152, "ticks": 5254406},
+		"test_nontemporal_behavior": {"size": 49152, "ticks": 5254406} },
+		"size 64KB": {
 		"test_cache_behavior_1":{
 			"initialize first record of each page": {"pagecount": 16,"runs": 1,"time": 212.000000},
 			"walk list": {"pagecount": 16,"runs": 100,"time": 197.720000},
@@ -922,7 +930,8 @@
 			"runs": 100
 		}
 ,
-		"test_nontemporal_behavior": {"size": 65536, "ticks": 3943690},
+		"test_nontemporal_behavior": {"size": 65536, "ticks": 3943690}},
+	"size 128KB": {
 		"test_cache_behavior_1":{
 			"initialize first record of each page": {"pagecount": 32,"runs": 1,"time": 402.000000},
 			"walk list": {"pagecount": 32,"runs": 100,"time": 481.260000},
@@ -1106,7 +1115,8 @@
 			"runs": 100
 		}
 ,
-		"test_nontemporal_behavior": {"size": 131072, "ticks": 6500434},
+		"test_nontemporal_behavior": {"size": 131072, "ticks": 6500434}},
+	"size 256KB": {
 		"test_cache_behavior_1":{
 			"initialize first record of each page": {"pagecount": 64,"runs": 1,"time": 650.000000},
 			"walk list": {"pagecount": 64,"runs": 100,"time": 785.660000},
@@ -1290,7 +1300,8 @@
 			"runs": 100
 		}
 ,
-		"test_nontemporal_behavior": {"size": 262144, "ticks": 173223354},
+		"test_nontemporal_behavior": {"size": 262144, "ticks": 173223354}
+	},
 	"backing file": "anonymous",
 	"number of runs": 10
 }

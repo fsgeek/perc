@@ -1,0 +1,5101 @@
+{
+    "backing file test": {
+        "backing file": "/mnt/pmem0p1/fsgeek-test.dat",
+        "number of runs": 10,
+        "size 128KB": {
+            "fsync time test": [
+                509942.0,
+                3754.0,
+                1720.0,
+                1680.0,
+                1680.0,
+                1680.0,
+                1668.0,
+                1682.0,
+                1660.0,
+                1666.0
+            ],
+            "test_cache_behavior_1": {
+                "initialize first record of each page": {
+                    "pagecount": 32,
+                    "runs": 1,
+                    "time": 388.0
+                },
+                "walk list": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 588.48
+                },
+                "walk list + clflush after each write": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 104067.56
+                },
+                "walk list + prefetch next entry": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 461.78
+                },
+                "walk list + prefetch next entry + clflush after each write": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 140293.74
+                },
+                "walk list + sfence after each run": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 377.26
+                },
+                "walk list + sfence after each write": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1692.26
+                }
+            },
+            "test_cache_behavior_2": {
+                "initialize all blocks": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 19843.04
+                },
+                "run eight cache lines with fence at end": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1588.6
+                },
+                "run four cache lines with fence at end": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 2831.96
+                },
+                "run one cache line with fence at end": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 5292.38
+                },
+                "run stride 0": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1277.26
+                },
+                "run stride 1": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1471.82
+                },
+                "run stride 10": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 2889.54
+                },
+                "run stride 11": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 2547.66
+                },
+                "run stride 12": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 3600.14
+                },
+                "run stride 13": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 4249.9
+                },
+                "run stride 14": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 3404.54
+                },
+                "run stride 15": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 3611.98
+                },
+                "run stride 16": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 4978.88
+                },
+                "run stride 17": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 3855.44
+                },
+                "run stride 18": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 3168.06
+                },
+                "run stride 19": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 3239.38
+                },
+                "run stride 2": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 2467.74
+                },
+                "run stride 20": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 5031.08
+                },
+                "run stride 21": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 4009.9
+                },
+                "run stride 22": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 3843.04
+                },
+                "run stride 23": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 4527.28
+                },
+                "run stride 24": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 4907.34
+                },
+                "run stride 25": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 3746.2
+                },
+                "run stride 26": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 3440.42
+                },
+                "run stride 27": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 5174.92
+                },
+                "run stride 28": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 5014.24
+                },
+                "run stride 29": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 4015.46
+                },
+                "run stride 3": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 3114.18
+                },
+                "run stride 30": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 4217.88
+                },
+                "run stride 31": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 5068.9
+                },
+                "run stride 32": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 5373.92
+                },
+                "run stride 33": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 4341.4
+                },
+                "run stride 34": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 4899.0
+                },
+                "run stride 35": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 4153.06
+                },
+                "run stride 36": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 3831.4
+                },
+                "run stride 37": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1264.66
+                },
+                "run stride 38": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1261.84
+                },
+                "run stride 39": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1286.0
+                },
+                "run stride 4": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 3124.66
+                },
+                "run stride 40": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1914.34
+                },
+                "run stride 41": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1839.12
+                },
+                "run stride 42": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1879.7
+                },
+                "run stride 43": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1749.68
+                },
+                "run stride 44": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1826.36
+                },
+                "run stride 45": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1928.48
+                },
+                "run stride 46": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1866.02
+                },
+                "run stride 47": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1847.4
+                },
+                "run stride 48": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1691.48
+                },
+                "run stride 49": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1950.3
+                },
+                "run stride 5": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 2531.5
+                },
+                "run stride 50": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1857.42
+                },
+                "run stride 51": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1921.4
+                },
+                "run stride 52": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1776.68
+                },
+                "run stride 53": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1811.48
+                },
+                "run stride 54": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1874.82
+                },
+                "run stride 55": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1725.76
+                },
+                "run stride 56": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1953.6
+                },
+                "run stride 57": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1931.88
+                },
+                "run stride 58": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1775.86
+                },
+                "run stride 59": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1816.92
+                },
+                "run stride 6": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 2629.16
+                },
+                "run stride 60": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1903.16
+                },
+                "run stride 61": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1766.54
+                },
+                "run stride 62": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1819.04
+                },
+                "run stride 63": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 1791.84
+                },
+                "run stride 7": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 2572.1
+                },
+                "run stride 8": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 2721.3
+                },
+                "run stride 9": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 3950.52
+                },
+                "run two cache lines with fence at end": {
+                    "pagecount": 32,
+                    "runs": 100,
+                    "time": 5579.26
+                },
+                "summary": {
+                    "max": {
+                        "stride": 32,
+                        "time": 5373.92
+                    },
+                    "min": {
+                        "stride": 38,
+                        "time": 1261.84
+                    }
+                }
+            },
+            "test_cache_behavior_3": {
+                "ticks per nop (over 1 billion)": 0.800239
+            },
+            "test_cache_behavior_4": {
+                "results": ""
+            },
+            "test_cache_behavior_5": {
+                "results": ""
+            },
+            "test_cache_behavior_6": {
+                "results": ""
+            },
+            "test_cache_behavior_7": {
+                "results": ""
+            },
+            "test_cache_behavior_8": {
+                "clflush, nofence": {
+                    "different cache set": 62470,
+                    "same cache set": 58884
+                },
+                "clflush, sfence end": {
+                    "different cache set": 60736,
+                    "same cache set": 61044
+                },
+                "clflushopt, nofence": {
+                    "different cache set": 58792,
+                    "same cache set": 58806
+                },
+                "clflushopt, sfence end": {
+                    "different cache set": 61604,
+                    "same cache set": 61438
+                },
+                "clwb, nofence": {
+                    "different cache set": 58918,
+                    "same cache set": 58830
+                },
+                "clwb, sfence end": {
+                    "different cache set": 60766,
+                    "same cache set": 60772
+                },
+                "noflush, nofence": {
+                    "different cache set": 58768,
+                    "same cache set": 58780
+                },
+                "noflush, sfence end": {
+                    "different cache set": 60678,
+                    "same cache set": 60740
+                },
+                "pagecount": 32,
+                "runs": 100
+            },
+            "test_cache_behavior_9": {
+                "basic tests": {
+                    "clflush, nofence": {
+                        "different cache set": 58764,
+                        "same cache set": 58932
+                    },
+                    "clflush, sfence end": {
+                        "different cache set": 60670,
+                        "same cache set": 61064
+                    },
+                    "clflushopt, nofence": {
+                        "different cache set": 58810,
+                        "same cache set": 58946
+                    },
+                    "clflushopt, sfence end": {
+                        "different cache set": 61126,
+                        "same cache set": 61218
+                    },
+                    "clwb, nofence": {
+                        "different cache set": 58812,
+                        "same cache set": 58842
+                    },
+                    "clwb, sfence end": {
+                        "different cache set": 60678,
+                        "same cache set": 61174
+                    },
+                    "noflush, nofence": {
+                        "different cache set": 58840,
+                        "same cache set": 58792
+                    },
+                    "noflush, sfence end": {
+                        "different cache set": 60688,
+                        "same cache set": 61118
+                    }
+                },
+                "frequency tests": {
+                    "clflush, sfence periodic": {
+                        "1": {
+                            "different cache set": 125122,
+                            "same cache set": 122680
+                        },
+                        "128": {
+                            "different cache set": 60806,
+                            "same cache set": 61818
+                        },
+                        "16": {
+                            "different cache set": 62696,
+                            "same cache set": 63694
+                        },
+                        "2": {
+                            "different cache set": 89316,
+                            "same cache set": 91726
+                        },
+                        "3": {
+                            "different cache set": 79726,
+                            "same cache set": 80204
+                        },
+                        "32": {
+                            "different cache set": 60740,
+                            "same cache set": 61814
+                        },
+                        "4": {
+                            "different cache set": 74804,
+                            "same cache set": 81900
+                        },
+                        "5": {
+                            "different cache set": 71986,
+                            "same cache set": 72548
+                        },
+                        "6": {
+                            "different cache set": 70194,
+                            "same cache set": 76452
+                        },
+                        "64": {
+                            "different cache set": 60726,
+                            "same cache set": 66086
+                        },
+                        "7": {
+                            "different cache set": 68308,
+                            "same cache set": 69114
+                        },
+                        "8": {
+                            "different cache set": 66514,
+                            "same cache set": 67288
+                        }
+                    },
+                    "clflushopt, sfence periodic": {
+                        "1": {
+                            "different cache set": 145946,
+                            "same cache set": 118042
+                        },
+                        "128": {
+                            "different cache set": 61254,
+                            "same cache set": 61298
+                        },
+                        "16": {
+                            "different cache set": 62808,
+                            "same cache set": 62824
+                        },
+                        "2": {
+                            "different cache set": 89862,
+                            "same cache set": 90904
+                        },
+                        "3": {
+                            "different cache set": 79848,
+                            "same cache set": 80356
+                        },
+                        "32": {
+                            "different cache set": 61140,
+                            "same cache set": 61422
+                        },
+                        "4": {
+                            "different cache set": 74236,
+                            "same cache set": 73952
+                        },
+                        "5": {
+                            "different cache set": 74380,
+                            "same cache set": 77860
+                        },
+                        "6": {
+                            "different cache set": 70808,
+                            "same cache set": 70448
+                        },
+                        "64": {
+                            "different cache set": 61198,
+                            "same cache set": 61116
+                        },
+                        "7": {
+                            "different cache set": 68698,
+                            "same cache set": 68476
+                        },
+                        "8": {
+                            "different cache set": 66748,
+                            "same cache set": 66574
+                        }
+                    },
+                    "clwb, sfence periodic": {
+                        "1": {
+                            "different cache set": 147862,
+                            "same cache set": 117936
+                        },
+                        "128": {
+                            "different cache set": 60790,
+                            "same cache set": 60870
+                        },
+                        "16": {
+                            "different cache set": 62662,
+                            "same cache set": 62784
+                        },
+                        "2": {
+                            "different cache set": 90990,
+                            "same cache set": 89714
+                        },
+                        "3": {
+                            "different cache set": 79710,
+                            "same cache set": 80366
+                        },
+                        "32": {
+                            "different cache set": 60794,
+                            "same cache set": 60868
+                        },
+                        "4": {
+                            "different cache set": 73952,
+                            "same cache set": 74398
+                        },
+                        "5": {
+                            "different cache set": 72110,
+                            "same cache set": 72548
+                        },
+                        "6": {
+                            "different cache set": 70234,
+                            "same cache set": 70790
+                        },
+                        "64": {
+                            "different cache set": 60816,
+                            "same cache set": 60780
+                        },
+                        "7": {
+                            "different cache set": 68270,
+                            "same cache set": 68972
+                        },
+                        "8": {
+                            "different cache set": 66496,
+                            "same cache set": 66940
+                        }
+                    },
+                    "noflush, sfence periodic": {
+                        "1": {
+                            "different cache set": 119766,
+                            "same cache set": 119780
+                        },
+                        "128": {
+                            "different cache set": 61244,
+                            "same cache set": 61064
+                        },
+                        "16": {
+                            "different cache set": 62908,
+                            "same cache set": 62858
+                        },
+                        "2": {
+                            "different cache set": 89606,
+                            "same cache set": 90132
+                        },
+                        "3": {
+                            "different cache set": 80334,
+                            "same cache set": 80012
+                        },
+                        "32": {
+                            "different cache set": 61138,
+                            "same cache set": 61100
+                        },
+                        "4": {
+                            "different cache set": 74324,
+                            "same cache set": 74426
+                        },
+                        "5": {
+                            "different cache set": 72604,
+                            "same cache set": 72634
+                        },
+                        "6": {
+                            "different cache set": 70498,
+                            "same cache set": 70808
+                        },
+                        "64": {
+                            "different cache set": 61204,
+                            "same cache set": 61242
+                        },
+                        "7": {
+                            "different cache set": 68668,
+                            "same cache set": 68742
+                        },
+                        "8": {
+                            "different cache set": 66728,
+                            "same cache set": 66924
+                        }
+                    }
+                },
+                "pagecount": 32,
+                "runs": 100
+            },
+            "test_nontemporal_behavior": {
+                "size": 131072,
+                "ticks": 7824358
+            },
+            "write time test": [
+                1469296.0,
+                1065828.0,
+                1144524.0,
+                1272528.0,
+                1240670.0,
+                1192440.0,
+                1080708.0,
+                1179298.0,
+                1144826.0,
+                1200450.0
+            ]
+        },
+        "size 16KB": {
+            "fsync time test": [
+                80162.0,
+                2314.0,
+                1736.0,
+                1686.0,
+                1700.0,
+                1696.0,
+                1696.0,
+                1688.0,
+                1688.0,
+                1680.0
+            ],
+            "test_cache_behavior_1": {
+                "initialize first record of each page": {
+                    "pagecount": 4,
+                    "runs": 1,
+                    "time": 70.0
+                },
+                "walk list": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 22.68
+                },
+                "walk list + clflush after each write": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 799.04
+                },
+                "walk list + prefetch next entry": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 20.38
+                },
+                "walk list + prefetch next entry + clflush after each write": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 930.6
+                },
+                "walk list + sfence after each run": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 19.14
+                },
+                "walk list + sfence after each write": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 40.86
+                }
+            },
+            "test_cache_behavior_2": {
+                "initialize all blocks": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 1872.34
+                },
+                "run eight cache lines with fence at end": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 5781.2
+                },
+                "run four cache lines with fence at end": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 2289.34
+                },
+                "run one cache line with fence at end": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 327.44
+                },
+                "run stride 0": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 1081.12
+                },
+                "run stride 1": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 785.14
+                },
+                "run stride 10": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 333.92
+                },
+                "run stride 11": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 337.2
+                },
+                "run stride 12": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 531.88
+                },
+                "run stride 13": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 770.16
+                },
+                "run stride 14": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 1745.6
+                },
+                "run stride 15": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 606.82
+                },
+                "run stride 16": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 503.82
+                },
+                "run stride 17": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 325.26
+                },
+                "run stride 18": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 328.98
+                },
+                "run stride 19": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 327.88
+                },
+                "run stride 2": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 336.32
+                },
+                "run stride 20": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 1476.86
+                },
+                "run stride 21": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 386.24
+                },
+                "run stride 22": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 962.14
+                },
+                "run stride 23": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 1176.32
+                },
+                "run stride 24": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 728.7
+                },
+                "run stride 25": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 325.86
+                },
+                "run stride 26": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 301.24
+                },
+                "run stride 27": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 476.76
+                },
+                "run stride 28": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 1394.9
+                },
+                "run stride 29": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 996.64
+                },
+                "run stride 3": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 328.42
+                },
+                "run stride 30": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 1342.06
+                },
+                "run stride 31": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 1267.64
+                },
+                "run stride 32": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 273.5
+                },
+                "run stride 33": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 335.66
+                },
+                "run stride 34": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 347.44
+                },
+                "run stride 35": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 493.02
+                },
+                "run stride 36": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 1581.28
+                },
+                "run stride 37": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 806.28
+                },
+                "run stride 38": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 703.58
+                },
+                "run stride 39": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 413.7
+                },
+                "run stride 4": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 339.1
+                },
+                "run stride 40": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 639.48
+                },
+                "run stride 41": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 931.5
+                },
+                "run stride 42": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 263.62
+                },
+                "run stride 43": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 348.66
+                },
+                "run stride 44": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 351.58
+                },
+                "run stride 45": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 431.06
+                },
+                "run stride 46": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 621.32
+                },
+                "run stride 47": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 556.38
+                },
+                "run stride 48": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 412.88
+                },
+                "run stride 49": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 492.3
+                },
+                "run stride 5": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 1230.94
+                },
+                "run stride 50": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 299.2
+                },
+                "run stride 51": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 378.24
+                },
+                "run stride 52": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 418.5
+                },
+                "run stride 53": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 442.72
+                },
+                "run stride 54": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 327.44
+                },
+                "run stride 55": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 364.26
+                },
+                "run stride 56": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 307.2
+                },
+                "run stride 57": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 353.5
+                },
+                "run stride 58": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 349.24
+                },
+                "run stride 59": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 338.2
+                },
+                "run stride 6": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 1211.5
+                },
+                "run stride 60": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 534.98
+                },
+                "run stride 61": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 304.64
+                },
+                "run stride 62": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 460.86
+                },
+                "run stride 63": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 632.56
+                },
+                "run stride 7": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 661.44
+                },
+                "run stride 8": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 679.02
+                },
+                "run stride 9": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 347.7
+                },
+                "run two cache lines with fence at end": {
+                    "pagecount": 4,
+                    "runs": 100,
+                    "time": 670.8
+                },
+                "summary": {
+                    "max": {
+                        "stride": 14,
+                        "time": 1745.6
+                    },
+                    "min": {
+                        "stride": 42,
+                        "time": 263.62
+                    }
+                }
+            },
+            "test_cache_behavior_3": {
+                "ticks per nop (over 1 billion)": 0.800239
+            },
+            "test_cache_behavior_4": {
+                "results": ""
+            },
+            "test_cache_behavior_5": {
+                "results": ""
+            },
+            "test_cache_behavior_6": {
+                "results": ""
+            },
+            "test_cache_behavior_7": {
+                "results": ""
+            },
+            "test_cache_behavior_8": {
+                "clflush, nofence": {
+                    "different cache set": 45704,
+                    "same cache set": 5722
+                },
+                "clflush, sfence end": {
+                    "different cache set": 7616,
+                    "same cache set": 7992
+                },
+                "clflushopt, nofence": {
+                    "different cache set": 5734,
+                    "same cache set": 5700
+                },
+                "clflushopt, sfence end": {
+                    "different cache set": 7576,
+                    "same cache set": 7606
+                },
+                "clwb, nofence": {
+                    "different cache set": 5690,
+                    "same cache set": 5736
+                },
+                "clwb, sfence end": {
+                    "different cache set": 7626,
+                    "same cache set": 7604
+                },
+                "noflush, nofence": {
+                    "different cache set": 5680,
+                    "same cache set": 5704
+                },
+                "noflush, sfence end": {
+                    "different cache set": 7522,
+                    "same cache set": 7560
+                },
+                "pagecount": 4,
+                "runs": 100
+            },
+            "test_cache_behavior_9": {
+                "basic tests": {
+                    "clflush, nofence": {
+                        "different cache set": 5686,
+                        "same cache set": 5710
+                    },
+                    "clflush, sfence end": {
+                        "different cache set": 7592,
+                        "same cache set": 7632
+                    },
+                    "clflushopt, nofence": {
+                        "different cache set": 5702,
+                        "same cache set": 5700
+                    },
+                    "clflushopt, sfence end": {
+                        "different cache set": 7590,
+                        "same cache set": 7616
+                    },
+                    "clwb, nofence": {
+                        "different cache set": 5714,
+                        "same cache set": 5704
+                    },
+                    "clwb, sfence end": {
+                        "different cache set": 7636,
+                        "same cache set": 7620
+                    },
+                    "noflush, nofence": {
+                        "different cache set": 5678,
+                        "same cache set": 5696
+                    },
+                    "noflush, sfence end": {
+                        "different cache set": 7574,
+                        "same cache set": 7600
+                    }
+                },
+                "frequency tests": {
+                    "clflush, sfence periodic": {
+                        "1": {
+                            "different cache set": 11410,
+                            "same cache set": 11486
+                        },
+                        "128": {
+                            "different cache set": 7638,
+                            "same cache set": 7648
+                        },
+                        "16": {
+                            "different cache set": 7638,
+                            "same cache set": 7644
+                        },
+                        "2": {
+                            "different cache set": 9534,
+                            "same cache set": 9516
+                        },
+                        "3": {
+                            "different cache set": 7618,
+                            "same cache set": 7642
+                        },
+                        "32": {
+                            "different cache set": 7630,
+                            "same cache set": 7634
+                        },
+                        "4": {
+                            "different cache set": 7616,
+                            "same cache set": 7646
+                        },
+                        "5": {
+                            "different cache set": 7646,
+                            "same cache set": 7632
+                        },
+                        "6": {
+                            "different cache set": 7626,
+                            "same cache set": 7640
+                        },
+                        "64": {
+                            "different cache set": 7630,
+                            "same cache set": 7624
+                        },
+                        "7": {
+                            "different cache set": 7634,
+                            "same cache set": 7622
+                        },
+                        "8": {
+                            "different cache set": 7616,
+                            "same cache set": 7628
+                        }
+                    },
+                    "clflushopt, sfence periodic": {
+                        "1": {
+                            "different cache set": 11442,
+                            "same cache set": 11422
+                        },
+                        "128": {
+                            "different cache set": 7614,
+                            "same cache set": 7622
+                        },
+                        "16": {
+                            "different cache set": 7580,
+                            "same cache set": 7644
+                        },
+                        "2": {
+                            "different cache set": 9464,
+                            "same cache set": 9450
+                        },
+                        "3": {
+                            "different cache set": 7588,
+                            "same cache set": 7608
+                        },
+                        "32": {
+                            "different cache set": 7588,
+                            "same cache set": 7552
+                        },
+                        "4": {
+                            "different cache set": 7588,
+                            "same cache set": 7612
+                        },
+                        "5": {
+                            "different cache set": 7578,
+                            "same cache set": 7592
+                        },
+                        "6": {
+                            "different cache set": 7584,
+                            "same cache set": 7582
+                        },
+                        "64": {
+                            "different cache set": 7564,
+                            "same cache set": 7634
+                        },
+                        "7": {
+                            "different cache set": 7596,
+                            "same cache set": 7576
+                        },
+                        "8": {
+                            "different cache set": 7578,
+                            "same cache set": 7598
+                        }
+                    },
+                    "clwb, sfence periodic": {
+                        "1": {
+                            "different cache set": 11390,
+                            "same cache set": 11410
+                        },
+                        "128": {
+                            "different cache set": 7612,
+                            "same cache set": 7652
+                        },
+                        "16": {
+                            "different cache set": 7642,
+                            "same cache set": 7622
+                        },
+                        "2": {
+                            "different cache set": 9506,
+                            "same cache set": 9504
+                        },
+                        "3": {
+                            "different cache set": 7628,
+                            "same cache set": 7618
+                        },
+                        "32": {
+                            "different cache set": 7606,
+                            "same cache set": 7638
+                        },
+                        "4": {
+                            "different cache set": 7636,
+                            "same cache set": 7628
+                        },
+                        "5": {
+                            "different cache set": 7630,
+                            "same cache set": 7582
+                        },
+                        "6": {
+                            "different cache set": 7606,
+                            "same cache set": 7616
+                        },
+                        "64": {
+                            "different cache set": 7632,
+                            "same cache set": 7608
+                        },
+                        "7": {
+                            "different cache set": 7630,
+                            "same cache set": 7646
+                        },
+                        "8": {
+                            "different cache set": 7624,
+                            "same cache set": 7614
+                        }
+                    },
+                    "noflush, sfence periodic": {
+                        "1": {
+                            "different cache set": 11456,
+                            "same cache set": 11462
+                        },
+                        "128": {
+                            "different cache set": 7604,
+                            "same cache set": 7608
+                        },
+                        "16": {
+                            "different cache set": 7638,
+                            "same cache set": 7586
+                        },
+                        "2": {
+                            "different cache set": 9490,
+                            "same cache set": 9494
+                        },
+                        "3": {
+                            "different cache set": 7610,
+                            "same cache set": 7608
+                        },
+                        "32": {
+                            "different cache set": 7600,
+                            "same cache set": 7586
+                        },
+                        "4": {
+                            "different cache set": 7558,
+                            "same cache set": 7588
+                        },
+                        "5": {
+                            "different cache set": 7596,
+                            "same cache set": 7576
+                        },
+                        "6": {
+                            "different cache set": 7590,
+                            "same cache set": 7580
+                        },
+                        "64": {
+                            "different cache set": 7604,
+                            "same cache set": 7584
+                        },
+                        "7": {
+                            "different cache set": 7604,
+                            "same cache set": 7628
+                        },
+                        "8": {
+                            "different cache set": 7608,
+                            "same cache set": 7570
+                        }
+                    }
+                },
+                "pagecount": 4,
+                "runs": 100
+            },
+            "test_nontemporal_behavior": {
+                "size": 16384,
+                "ticks": 3348916
+            },
+            "write time test": [
+                143876.0,
+                106950.0,
+                107490.0,
+                97302.0,
+                104342.0,
+                108964.0,
+                106986.0,
+                107698.0,
+                104802.0,
+                107896.0
+            ]
+        },
+        "size 24KB": {
+            "fsync time test": [
+                260742.0,
+                20442.0,
+                34076.0,
+                38432.0,
+                34026.0,
+                37424.0,
+                27722.0,
+                42164.0,
+                32394.0,
+                16044.0
+            ],
+            "test_cache_behavior_1": {
+                "initialize first record of each page": {
+                    "pagecount": 6,
+                    "runs": 1,
+                    "time": 128.0
+                },
+                "walk list": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 239.16
+                },
+                "walk list + clflush after each write": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 30786.04
+                },
+                "walk list + prefetch next entry": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 96.08
+                },
+                "walk list + prefetch next entry + clflush after each write": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 25273.84
+                },
+                "walk list + sfence after each run": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 24.22
+                },
+                "walk list + sfence after each write": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 54.84
+                }
+            },
+            "test_cache_behavior_2": {
+                "initialize all blocks": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 2966.22
+                },
+                "run eight cache lines with fence at end": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 2667.04
+                },
+                "run four cache lines with fence at end": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 1662.4
+                },
+                "run one cache line with fence at end": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 597.98
+                },
+                "run stride 0": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 1725.9
+                },
+                "run stride 1": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 1173.86
+                },
+                "run stride 10": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 338.3
+                },
+                "run stride 11": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 408.52
+                },
+                "run stride 12": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 391.48
+                },
+                "run stride 13": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 355.16
+                },
+                "run stride 14": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 353.66
+                },
+                "run stride 15": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 405.2
+                },
+                "run stride 16": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 873.18
+                },
+                "run stride 17": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 373.58
+                },
+                "run stride 18": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 375.88
+                },
+                "run stride 19": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 510.86
+                },
+                "run stride 2": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 1719.2
+                },
+                "run stride 20": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 443.44
+                },
+                "run stride 21": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 374.28
+                },
+                "run stride 22": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 393.44
+                },
+                "run stride 23": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 394.18
+                },
+                "run stride 24": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 399.86
+                },
+                "run stride 25": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 380.0
+                },
+                "run stride 26": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 440.72
+                },
+                "run stride 27": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 422.3
+                },
+                "run stride 28": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 394.04
+                },
+                "run stride 29": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 332.9
+                },
+                "run stride 3": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 1347.58
+                },
+                "run stride 30": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 414.08
+                },
+                "run stride 31": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 394.32
+                },
+                "run stride 32": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 366.1
+                },
+                "run stride 33": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 347.16
+                },
+                "run stride 34": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 397.68
+                },
+                "run stride 35": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 391.94
+                },
+                "run stride 36": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 369.64
+                },
+                "run stride 37": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 460.84
+                },
+                "run stride 38": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 426.82
+                },
+                "run stride 39": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 425.3
+                },
+                "run stride 4": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 1596.9
+                },
+                "run stride 40": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 340.82
+                },
+                "run stride 41": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 407.34
+                },
+                "run stride 42": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 463.44
+                },
+                "run stride 43": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 412.74
+                },
+                "run stride 44": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 344.16
+                },
+                "run stride 45": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 391.58
+                },
+                "run stride 46": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 385.48
+                },
+                "run stride 47": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 352.32
+                },
+                "run stride 48": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 319.32
+                },
+                "run stride 49": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 356.8
+                },
+                "run stride 5": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 1870.9
+                },
+                "run stride 50": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 395.88
+                },
+                "run stride 51": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 358.7
+                },
+                "run stride 52": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 362.12
+                },
+                "run stride 53": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 389.0
+                },
+                "run stride 54": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 369.5
+                },
+                "run stride 55": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 341.24
+                },
+                "run stride 56": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 391.62
+                },
+                "run stride 57": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 405.52
+                },
+                "run stride 58": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 386.12
+                },
+                "run stride 59": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 333.88
+                },
+                "run stride 6": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 376.72
+                },
+                "run stride 60": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 418.32
+                },
+                "run stride 61": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 393.76
+                },
+                "run stride 62": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 386.74
+                },
+                "run stride 63": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 352.42
+                },
+                "run stride 7": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 388.54
+                },
+                "run stride 8": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 401.84
+                },
+                "run stride 9": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 380.58
+                },
+                "run two cache lines with fence at end": {
+                    "pagecount": 6,
+                    "runs": 100,
+                    "time": 870.48
+                },
+                "summary": {
+                    "max": {
+                        "stride": 5,
+                        "time": 1870.9
+                    },
+                    "min": {
+                        "stride": 48,
+                        "time": 319.32
+                    }
+                }
+            },
+            "test_cache_behavior_3": {
+                "ticks per nop (over 1 billion)": 0.800239
+            },
+            "test_cache_behavior_4": {
+                "results": ""
+            },
+            "test_cache_behavior_5": {
+                "results": ""
+            },
+            "test_cache_behavior_6": {
+                "results": ""
+            },
+            "test_cache_behavior_7": {
+                "results": ""
+            },
+            "test_cache_behavior_8": {
+                "clflush, nofence": {
+                    "different cache set": 9460,
+                    "same cache set": 9564
+                },
+                "clflush, sfence end": {
+                    "different cache set": 11358,
+                    "same cache set": 11784
+                },
+                "clflushopt, nofence": {
+                    "different cache set": 9484,
+                    "same cache set": 9530
+                },
+                "clflushopt, sfence end": {
+                    "different cache set": 11462,
+                    "same cache set": 11468
+                },
+                "clwb, nofence": {
+                    "different cache set": 9472,
+                    "same cache set": 9504
+                },
+                "clwb, sfence end": {
+                    "different cache set": 11344,
+                    "same cache set": 11416
+                },
+                "noflush, nofence": {
+                    "different cache set": 9518,
+                    "same cache set": 9450
+                },
+                "noflush, sfence end": {
+                    "different cache set": 11370,
+                    "same cache set": 11362
+                },
+                "pagecount": 6,
+                "runs": 100
+            },
+            "test_cache_behavior_9": {
+                "basic tests": {
+                    "clflush, nofence": {
+                        "different cache set": 11234,
+                        "same cache set": 11246
+                    },
+                    "clflush, sfence end": {
+                        "different cache set": 11826,
+                        "same cache set": 11886
+                    },
+                    "clflushopt, nofence": {
+                        "different cache set": 9496,
+                        "same cache set": 9496
+                    },
+                    "clflushopt, sfence end": {
+                        "different cache set": 11442,
+                        "same cache set": 11488
+                    },
+                    "clwb, nofence": {
+                        "different cache set": 9520,
+                        "same cache set": 9502
+                    },
+                    "clwb, sfence end": {
+                        "different cache set": 11376,
+                        "same cache set": 11392
+                    },
+                    "noflush, nofence": {
+                        "different cache set": 9504,
+                        "same cache set": 9482
+                    },
+                    "noflush, sfence end": {
+                        "different cache set": 11348,
+                        "same cache set": 11392
+                    }
+                },
+                "frequency tests": {
+                    "clflush, sfence periodic": {
+                        "1": {
+                            "different cache set": 18994,
+                            "same cache set": 19052
+                        },
+                        "128": {
+                            "different cache set": 11408,
+                            "same cache set": 11438
+                        },
+                        "16": {
+                            "different cache set": 11438,
+                            "same cache set": 11442
+                        },
+                        "2": {
+                            "different cache set": 15200,
+                            "same cache set": 15280
+                        },
+                        "3": {
+                            "different cache set": 13280,
+                            "same cache set": 13334
+                        },
+                        "32": {
+                            "different cache set": 11422,
+                            "same cache set": 11388
+                        },
+                        "4": {
+                            "different cache set": 13242,
+                            "same cache set": 13344
+                        },
+                        "5": {
+                            "different cache set": 11430,
+                            "same cache set": 11430
+                        },
+                        "6": {
+                            "different cache set": 11386,
+                            "same cache set": 11420
+                        },
+                        "64": {
+                            "different cache set": 11390,
+                            "same cache set": 11458
+                        },
+                        "7": {
+                            "different cache set": 11442,
+                            "same cache set": 11408
+                        },
+                        "8": {
+                            "different cache set": 11428,
+                            "same cache set": 11452
+                        }
+                    },
+                    "clflushopt, sfence periodic": {
+                        "1": {
+                            "different cache set": 19012,
+                            "same cache set": 18974
+                        },
+                        "128": {
+                            "different cache set": 11890,
+                            "same cache set": 11962
+                        },
+                        "16": {
+                            "different cache set": 11426,
+                            "same cache set": 11404
+                        },
+                        "2": {
+                            "different cache set": 15232,
+                            "same cache set": 15160
+                        },
+                        "3": {
+                            "different cache set": 13292,
+                            "same cache set": 13284
+                        },
+                        "32": {
+                            "different cache set": 11390,
+                            "same cache set": 11454
+                        },
+                        "4": {
+                            "different cache set": 13368,
+                            "same cache set": 13310
+                        },
+                        "5": {
+                            "different cache set": 11372,
+                            "same cache set": 11414
+                        },
+                        "6": {
+                            "different cache set": 11432,
+                            "same cache set": 11396
+                        },
+                        "64": {
+                            "different cache set": 13630,
+                            "same cache set": 13734
+                        },
+                        "7": {
+                            "different cache set": 11472,
+                            "same cache set": 11432
+                        },
+                        "8": {
+                            "different cache set": 11394,
+                            "same cache set": 11434
+                        }
+                    },
+                    "clwb, sfence periodic": {
+                        "1": {
+                            "different cache set": 18974,
+                            "same cache set": 18940
+                        },
+                        "128": {
+                            "different cache set": 11426,
+                            "same cache set": 11458
+                        },
+                        "16": {
+                            "different cache set": 11360,
+                            "same cache set": 11416
+                        },
+                        "2": {
+                            "different cache set": 15196,
+                            "same cache set": 15208
+                        },
+                        "3": {
+                            "different cache set": 13362,
+                            "same cache set": 13310
+                        },
+                        "32": {
+                            "different cache set": 11418,
+                            "same cache set": 11450
+                        },
+                        "4": {
+                            "different cache set": 13294,
+                            "same cache set": 13334
+                        },
+                        "5": {
+                            "different cache set": 11408,
+                            "same cache set": 11406
+                        },
+                        "6": {
+                            "different cache set": 11448,
+                            "same cache set": 11382
+                        },
+                        "64": {
+                            "different cache set": 11436,
+                            "same cache set": 11450
+                        },
+                        "7": {
+                            "different cache set": 11374,
+                            "same cache set": 11466
+                        },
+                        "8": {
+                            "different cache set": 11408,
+                            "same cache set": 11436
+                        }
+                    },
+                    "noflush, sfence periodic": {
+                        "1": {
+                            "different cache set": 19024,
+                            "same cache set": 19138
+                        },
+                        "128": {
+                            "different cache set": 11442,
+                            "same cache set": 11402
+                        },
+                        "16": {
+                            "different cache set": 11408,
+                            "same cache set": 11354
+                        },
+                        "2": {
+                            "different cache set": 15226,
+                            "same cache set": 15154
+                        },
+                        "3": {
+                            "different cache set": 13324,
+                            "same cache set": 13308
+                        },
+                        "32": {
+                            "different cache set": 11430,
+                            "same cache set": 11382
+                        },
+                        "4": {
+                            "different cache set": 13308,
+                            "same cache set": 13302
+                        },
+                        "5": {
+                            "different cache set": 11434,
+                            "same cache set": 11364
+                        },
+                        "6": {
+                            "different cache set": 11400,
+                            "same cache set": 11376
+                        },
+                        "64": {
+                            "different cache set": 11440,
+                            "same cache set": 11394
+                        },
+                        "7": {
+                            "different cache set": 11466,
+                            "same cache set": 11394
+                        },
+                        "8": {
+                            "different cache set": 11408,
+                            "same cache set": 11392
+                        }
+                    }
+                },
+                "pagecount": 6,
+                "runs": 100
+            },
+            "test_nontemporal_behavior": {
+                "size": 24576,
+                "ticks": 1464568
+            },
+            "write time test": [
+                2028510.0,
+                1893924.0,
+                2206802.0,
+                2044702.0,
+                1856338.0,
+                1945786.0,
+                2011842.0,
+                1821818.0,
+                2002444.0,
+                1864428.0
+            ]
+        },
+        "size 256KB": {
+            "fsync time test": [
+                99148.0,
+                2758.0,
+                1748.0,
+                1678.0,
+                1688.0,
+                1690.0,
+                1686.0,
+                1676.0,
+                1740.0,
+                1682.0
+            ],
+            "test_cache_behavior_1": {
+                "initialize first record of each page": {
+                    "pagecount": 64,
+                    "runs": 1,
+                    "time": 1112.0
+                },
+                "walk list": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 938.08
+                },
+                "walk list + clflush after each write": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 13891.66
+                },
+                "walk list + prefetch next entry": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 910.42
+                },
+                "walk list + prefetch next entry + clflush after each write": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 14130.34
+                },
+                "walk list + sfence after each run": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 802.3
+                },
+                "walk list + sfence after each write": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 991.56
+                }
+            },
+            "test_cache_behavior_2": {
+                "initialize all blocks": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 28068.86
+                },
+                "run eight cache lines with fence at end": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3259.14
+                },
+                "run four cache lines with fence at end": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3593.04
+                },
+                "run one cache line with fence at end": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3302.48
+                },
+                "run stride 0": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 2438.5
+                },
+                "run stride 1": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 2463.44
+                },
+                "run stride 10": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3142.86
+                },
+                "run stride 11": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3434.52
+                },
+                "run stride 12": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3178.58
+                },
+                "run stride 13": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3048.46
+                },
+                "run stride 14": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3167.74
+                },
+                "run stride 15": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3272.28
+                },
+                "run stride 16": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3194.54
+                },
+                "run stride 17": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3319.3
+                },
+                "run stride 18": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3170.12
+                },
+                "run stride 19": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3180.02
+                },
+                "run stride 2": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 2615.42
+                },
+                "run stride 20": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3174.44
+                },
+                "run stride 21": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3225.48
+                },
+                "run stride 22": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3352.96
+                },
+                "run stride 23": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3381.88
+                },
+                "run stride 24": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3100.76
+                },
+                "run stride 25": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3258.5
+                },
+                "run stride 26": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3197.6
+                },
+                "run stride 27": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3138.54
+                },
+                "run stride 28": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3391.16
+                },
+                "run stride 29": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3301.1
+                },
+                "run stride 3": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3143.72
+                },
+                "run stride 30": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3267.56
+                },
+                "run stride 31": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3078.14
+                },
+                "run stride 32": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 2426.14
+                },
+                "run stride 33": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 2411.6
+                },
+                "run stride 34": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 2434.38
+                },
+                "run stride 35": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 2996.38
+                },
+                "run stride 36": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3087.72
+                },
+                "run stride 37": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3108.88
+                },
+                "run stride 38": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3023.82
+                },
+                "run stride 39": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3273.8
+                },
+                "run stride 4": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3214.26
+                },
+                "run stride 40": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3063.98
+                },
+                "run stride 41": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 2993.68
+                },
+                "run stride 42": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3099.08
+                },
+                "run stride 43": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3123.3
+                },
+                "run stride 44": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3166.68
+                },
+                "run stride 45": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3209.0
+                },
+                "run stride 46": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3177.68
+                },
+                "run stride 47": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3153.24
+                },
+                "run stride 48": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3014.86
+                },
+                "run stride 49": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3131.12
+                },
+                "run stride 5": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3289.68
+                },
+                "run stride 50": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3132.76
+                },
+                "run stride 51": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3125.08
+                },
+                "run stride 52": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3202.26
+                },
+                "run stride 53": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3151.46
+                },
+                "run stride 54": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3037.9
+                },
+                "run stride 55": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3144.06
+                },
+                "run stride 56": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3075.72
+                },
+                "run stride 57": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3186.68
+                },
+                "run stride 58": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3273.04
+                },
+                "run stride 59": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3264.14
+                },
+                "run stride 6": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3324.06
+                },
+                "run stride 60": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3164.12
+                },
+                "run stride 61": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3026.0
+                },
+                "run stride 62": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3139.08
+                },
+                "run stride 63": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3158.24
+                },
+                "run stride 7": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3201.34
+                },
+                "run stride 8": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3239.08
+                },
+                "run stride 9": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3207.04
+                },
+                "run two cache lines with fence at end": {
+                    "pagecount": 64,
+                    "runs": 100,
+                    "time": 3194.78
+                },
+                "summary": {
+                    "max": {
+                        "stride": 11,
+                        "time": 3434.52
+                    },
+                    "min": {
+                        "stride": 33,
+                        "time": 2411.6
+                    }
+                }
+            },
+            "test_cache_behavior_3": {
+                "ticks per nop (over 1 billion)": 0.800239
+            },
+            "test_cache_behavior_4": {
+                "results": ""
+            },
+            "test_cache_behavior_5": {
+                "results": ""
+            },
+            "test_cache_behavior_6": {
+                "results": ""
+            },
+            "test_cache_behavior_7": {
+                "results": ""
+            },
+            "test_cache_behavior_8": {
+                "clflush, nofence": {
+                    "different cache set": 558026,
+                    "same cache set": 141918
+                },
+                "clflush, sfence end": {
+                    "different cache set": 577474,
+                    "same cache set": 129578
+                },
+                "clflushopt, nofence": {
+                    "different cache set": 565480,
+                    "same cache set": 119894
+                },
+                "clflushopt, sfence end": {
+                    "different cache set": 123134,
+                    "same cache set": 122586
+                },
+                "clwb, nofence": {
+                    "different cache set": 119850,
+                    "same cache set": 119584
+                },
+                "clwb, sfence end": {
+                    "different cache set": 121530,
+                    "same cache set": 127944
+                },
+                "noflush, nofence": {
+                    "different cache set": 119570,
+                    "same cache set": 119606
+                },
+                "noflush, sfence end": {
+                    "different cache set": 121470,
+                    "same cache set": 121532
+                },
+                "pagecount": 64,
+                "runs": 100
+            },
+            "test_cache_behavior_9": {
+                "basic tests": {
+                    "clflush, nofence": {
+                        "different cache set": 557346,
+                        "same cache set": 126340
+                    },
+                    "clflush, sfence end": {
+                        "different cache set": 569612,
+                        "same cache set": 121836
+                    },
+                    "clflushopt, nofence": {
+                        "different cache set": 550726,
+                        "same cache set": 128134
+                    },
+                    "clflushopt, sfence end": {
+                        "different cache set": 123204,
+                        "same cache set": 122670
+                    },
+                    "clwb, nofence": {
+                        "different cache set": 119596,
+                        "same cache set": 119672
+                    },
+                    "clwb, sfence end": {
+                        "different cache set": 121140,
+                        "same cache set": 121490
+                    },
+                    "noflush, nofence": {
+                        "different cache set": 119506,
+                        "same cache set": 119486
+                    },
+                    "noflush, sfence end": {
+                        "different cache set": 121384,
+                        "same cache set": 121352
+                    }
+                },
+                "frequency tests": {
+                    "clflush, sfence periodic": {
+                        "1": {
+                            "different cache set": 637094,
+                            "same cache set": 250772
+                        },
+                        "128": {
+                            "different cache set": 571474,
+                            "same cache set": 123614
+                        },
+                        "16": {
+                            "different cache set": 586366,
+                            "same cache set": 146734
+                        },
+                        "2": {
+                            "different cache set": 617396,
+                            "same cache set": 180796
+                        },
+                        "3": {
+                            "different cache set": 613798,
+                            "same cache set": 176516
+                        },
+                        "32": {
+                            "different cache set": 574092,
+                            "same cache set": 138954
+                        },
+                        "4": {
+                            "different cache set": 604792,
+                            "same cache set": 153842
+                        },
+                        "5": {
+                            "different cache set": 614644,
+                            "same cache set": 170058
+                        },
+                        "6": {
+                            "different cache set": 592648,
+                            "same cache set": 164856
+                        },
+                        "64": {
+                            "different cache set": 568580,
+                            "same cache set": 122676
+                        },
+                        "7": {
+                            "different cache set": 587112,
+                            "same cache set": 167174
+                        },
+                        "8": {
+                            "different cache set": 602106,
+                            "same cache set": 145830
+                        }
+                    },
+                    "clflushopt, sfence periodic": {
+                        "1": {
+                            "different cache set": 723002,
+                            "same cache set": 251300
+                        },
+                        "128": {
+                            "different cache set": 122706,
+                            "same cache set": 121580
+                        },
+                        "16": {
+                            "different cache set": 128180,
+                            "same cache set": 127744
+                        },
+                        "2": {
+                            "different cache set": 300062,
+                            "same cache set": 189400
+                        },
+                        "3": {
+                            "different cache set": 181218,
+                            "same cache set": 161158
+                        },
+                        "32": {
+                            "different cache set": 124098,
+                            "same cache set": 130020
+                        },
+                        "4": {
+                            "different cache set": 151126,
+                            "same cache set": 150970
+                        },
+                        "5": {
+                            "different cache set": 151504,
+                            "same cache set": 145742
+                        },
+                        "6": {
+                            "different cache set": 142028,
+                            "same cache set": 147434
+                        },
+                        "64": {
+                            "different cache set": 123446,
+                            "same cache set": 121878
+                        },
+                        "7": {
+                            "different cache set": 137580,
+                            "same cache set": 137598
+                        },
+                        "8": {
+                            "different cache set": 135702,
+                            "same cache set": 135632
+                        }
+                    },
+                    "clwb, sfence periodic": {
+                        "1": {
+                            "different cache set": 735830,
+                            "same cache set": 241214
+                        },
+                        "128": {
+                            "different cache set": 122098,
+                            "same cache set": 122104
+                        },
+                        "16": {
+                            "different cache set": 127744,
+                            "same cache set": 127982
+                        },
+                        "2": {
+                            "different cache set": 301712,
+                            "same cache set": 181586
+                        },
+                        "3": {
+                            "different cache set": 181420,
+                            "same cache set": 166214
+                        },
+                        "32": {
+                            "different cache set": 124004,
+                            "same cache set": 123932
+                        },
+                        "4": {
+                            "different cache set": 150658,
+                            "same cache set": 152074
+                        },
+                        "5": {
+                            "different cache set": 150074,
+                            "same cache set": 146152
+                        },
+                        "6": {
+                            "different cache set": 141010,
+                            "same cache set": 146816
+                        },
+                        "64": {
+                            "different cache set": 122086,
+                            "same cache set": 122410
+                        },
+                        "7": {
+                            "different cache set": 137406,
+                            "same cache set": 137514
+                        },
+                        "8": {
+                            "different cache set": 135274,
+                            "same cache set": 135832
+                        }
+                    },
+                    "noflush, sfence periodic": {
+                        "1": {
+                            "different cache set": 243766,
+                            "same cache set": 243278
+                        },
+                        "128": {
+                            "different cache set": 122886,
+                            "same cache set": 122382
+                        },
+                        "16": {
+                            "different cache set": 128286,
+                            "same cache set": 128078
+                        },
+                        "2": {
+                            "different cache set": 182002,
+                            "same cache set": 181896
+                        },
+                        "3": {
+                            "different cache set": 162008,
+                            "same cache set": 161110
+                        },
+                        "32": {
+                            "different cache set": 124564,
+                            "same cache set": 124202
+                        },
+                        "4": {
+                            "different cache set": 151898,
+                            "same cache set": 150762
+                        },
+                        "5": {
+                            "different cache set": 145474,
+                            "same cache set": 144684
+                        },
+                        "6": {
+                            "different cache set": 141428,
+                            "same cache set": 141422
+                        },
+                        "64": {
+                            "different cache set": 122720,
+                            "same cache set": 122292
+                        },
+                        "7": {
+                            "different cache set": 138336,
+                            "same cache set": 137960
+                        },
+                        "8": {
+                            "different cache set": 136366,
+                            "same cache set": 141146
+                        }
+                    }
+                },
+                "pagecount": 64,
+                "runs": 100
+            },
+            "test_nontemporal_behavior": {
+                "size": 262144,
+                "ticks": 17882020
+            },
+            "write time test": [
+                2022902.0,
+                1918450.0,
+                1918050.0,
+                1913046.0,
+                1870498.0,
+                1924994.0,
+                1850348.0,
+                4109204.0,
+                1976698.0,
+                1912820.0
+            ]
+        },
+        "size 32KB": {
+            "fsync time test": [
+                77094.0,
+                2392.0,
+                1734.0,
+                1732.0,
+                1686.0,
+                3844.0,
+                1684.0,
+                1702.0,
+                1706.0,
+                2222.0
+            ],
+            "test_cache_behavior_1": {
+                "initialize first record of each page": {
+                    "pagecount": 8,
+                    "runs": 1,
+                    "time": 148.0
+                },
+                "walk list": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 36.12
+                },
+                "walk list + clflush after each write": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 1669.82
+                },
+                "walk list + prefetch next entry": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 44.5
+                },
+                "walk list + prefetch next entry + clflush after each write": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 1671.24
+                },
+                "walk list + sfence after each run": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 33.9
+                },
+                "walk list + sfence after each write": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 68.7
+                }
+            },
+            "test_cache_behavior_2": {
+                "initialize all blocks": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 3764.32
+                },
+                "run eight cache lines with fence at end": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 696.64
+                },
+                "run four cache lines with fence at end": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 631.84
+                },
+                "run one cache line with fence at end": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 367.68
+                },
+                "run stride 0": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 515.64
+                },
+                "run stride 1": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 535.78
+                },
+                "run stride 10": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 454.48
+                },
+                "run stride 11": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 483.34
+                },
+                "run stride 12": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 458.38
+                },
+                "run stride 13": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 423.28
+                },
+                "run stride 14": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 417.6
+                },
+                "run stride 15": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 452.78
+                },
+                "run stride 16": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 467.4
+                },
+                "run stride 17": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 415.56
+                },
+                "run stride 18": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 406.86
+                },
+                "run stride 19": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 447.06
+                },
+                "run stride 2": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 452.92
+                },
+                "run stride 20": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 436.5
+                },
+                "run stride 21": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 452.98
+                },
+                "run stride 22": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 449.26
+                },
+                "run stride 23": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 442.48
+                },
+                "run stride 24": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 460.1
+                },
+                "run stride 25": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 412.66
+                },
+                "run stride 26": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 884.4
+                },
+                "run stride 27": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 474.8
+                },
+                "run stride 28": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 437.94
+                },
+                "run stride 29": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 414.62
+                },
+                "run stride 3": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 468.6
+                },
+                "run stride 30": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 469.14
+                },
+                "run stride 31": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 468.66
+                },
+                "run stride 32": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 429.64
+                },
+                "run stride 33": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 425.32
+                },
+                "run stride 34": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 472.24
+                },
+                "run stride 35": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 446.44
+                },
+                "run stride 36": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 425.62
+                },
+                "run stride 37": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 453.6
+                },
+                "run stride 38": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 465.6
+                },
+                "run stride 39": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 467.46
+                },
+                "run stride 4": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 469.9
+                },
+                "run stride 40": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 421.44
+                },
+                "run stride 41": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 467.42
+                },
+                "run stride 42": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 462.02
+                },
+                "run stride 43": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 479.44
+                },
+                "run stride 44": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 439.52
+                },
+                "run stride 45": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 453.0
+                },
+                "run stride 46": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 479.5
+                },
+                "run stride 47": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 437.96
+                },
+                "run stride 48": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 421.98
+                },
+                "run stride 49": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 497.78
+                },
+                "run stride 5": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 458.7
+                },
+                "run stride 50": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 448.66
+                },
+                "run stride 51": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 433.94
+                },
+                "run stride 52": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 443.92
+                },
+                "run stride 53": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 472.16
+                },
+                "run stride 54": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 470.86
+                },
+                "run stride 55": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 434.24
+                },
+                "run stride 56": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 467.94
+                },
+                "run stride 57": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 462.0
+                },
+                "run stride 58": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 430.02
+                },
+                "run stride 59": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 393.9
+                },
+                "run stride 6": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 415.52
+                },
+                "run stride 60": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 429.92
+                },
+                "run stride 61": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 428.04
+                },
+                "run stride 62": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 407.82
+                },
+                "run stride 63": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 398.16
+                },
+                "run stride 7": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 499.42
+                },
+                "run stride 8": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 497.72
+                },
+                "run stride 9": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 460.84
+                },
+                "run two cache lines with fence at end": {
+                    "pagecount": 8,
+                    "runs": 100,
+                    "time": 507.7
+                },
+                "summary": {
+                    "max": {
+                        "stride": 26,
+                        "time": 884.4
+                    },
+                    "min": {
+                        "stride": 59,
+                        "time": 393.9
+                    }
+                }
+            },
+            "test_cache_behavior_3": {
+                "ticks per nop (over 1 billion)": 0.800239
+            },
+            "test_cache_behavior_4": {
+                "results": ""
+            },
+            "test_cache_behavior_5": {
+                "results": ""
+            },
+            "test_cache_behavior_6": {
+                "results": ""
+            },
+            "test_cache_behavior_7": {
+                "results": ""
+            },
+            "test_cache_behavior_8": {
+                "clflush, nofence": {
+                    "different cache set": 10984,
+                    "same cache set": 11032
+                },
+                "clflush, sfence end": {
+                    "different cache set": 12554,
+                    "same cache set": 12958
+                },
+                "clflushopt, nofence": {
+                    "different cache set": 11022,
+                    "same cache set": 11000
+                },
+                "clflushopt, sfence end": {
+                    "different cache set": 12614,
+                    "same cache set": 12734
+                },
+                "clwb, nofence": {
+                    "different cache set": 10978,
+                    "same cache set": 11028
+                },
+                "clwb, sfence end": {
+                    "different cache set": 12560,
+                    "same cache set": 12616
+                },
+                "noflush, nofence": {
+                    "different cache set": 11004,
+                    "same cache set": 11024
+                },
+                "noflush, sfence end": {
+                    "different cache set": 12598,
+                    "same cache set": 12572
+                },
+                "pagecount": 8,
+                "runs": 100
+            },
+            "test_cache_behavior_9": {
+                "basic tests": {
+                    "clflush, nofence": {
+                        "different cache set": 11010,
+                        "same cache set": 11116
+                    },
+                    "clflush, sfence end": {
+                        "different cache set": 12560,
+                        "same cache set": 12608
+                    },
+                    "clflushopt, nofence": {
+                        "different cache set": 11016,
+                        "same cache set": 11044
+                    },
+                    "clflushopt, sfence end": {
+                        "different cache set": 12620,
+                        "same cache set": 12742
+                    },
+                    "clwb, nofence": {
+                        "different cache set": 10976,
+                        "same cache set": 11054
+                    },
+                    "clwb, sfence end": {
+                        "different cache set": 12588,
+                        "same cache set": 12616
+                    },
+                    "noflush, nofence": {
+                        "different cache set": 11006,
+                        "same cache set": 11018
+                    },
+                    "noflush, sfence end": {
+                        "different cache set": 12594,
+                        "same cache set": 12620
+                    }
+                },
+                "frequency tests": {
+                    "clflush, sfence periodic": {
+                        "1": {
+                            "different cache set": 21980,
+                            "same cache set": 22092
+                        },
+                        "128": {
+                            "different cache set": 12628,
+                            "same cache set": 12660
+                        },
+                        "16": {
+                            "different cache set": 12570,
+                            "same cache set": 12612
+                        },
+                        "2": {
+                            "different cache set": 17318,
+                            "same cache set": 17300
+                        },
+                        "3": {
+                            "different cache set": 15672,
+                            "same cache set": 15780
+                        },
+                        "32": {
+                            "different cache set": 12556,
+                            "same cache set": 12620
+                        },
+                        "4": {
+                            "different cache set": 14154,
+                            "same cache set": 14282
+                        },
+                        "5": {
+                            "different cache set": 14204,
+                            "same cache set": 14190
+                        },
+                        "6": {
+                            "different cache set": 14140,
+                            "same cache set": 14228
+                        },
+                        "64": {
+                            "different cache set": 12588,
+                            "same cache set": 12626
+                        },
+                        "7": {
+                            "different cache set": 12582,
+                            "same cache set": 12610
+                        },
+                        "8": {
+                            "different cache set": 12562,
+                            "same cache set": 12634
+                        }
+                    },
+                    "clflushopt, sfence periodic": {
+                        "1": {
+                            "different cache set": 22024,
+                            "same cache set": 22108
+                        },
+                        "128": {
+                            "different cache set": 12562,
+                            "same cache set": 12586
+                        },
+                        "16": {
+                            "different cache set": 12610,
+                            "same cache set": 12588
+                        },
+                        "2": {
+                            "different cache set": 17276,
+                            "same cache set": 17294
+                        },
+                        "3": {
+                            "different cache set": 15716,
+                            "same cache set": 15724
+                        },
+                        "32": {
+                            "different cache set": 12552,
+                            "same cache set": 12620
+                        },
+                        "4": {
+                            "different cache set": 14150,
+                            "same cache set": 14208
+                        },
+                        "5": {
+                            "different cache set": 14194,
+                            "same cache set": 14224
+                        },
+                        "6": {
+                            "different cache set": 14142,
+                            "same cache set": 14168
+                        },
+                        "64": {
+                            "different cache set": 12600,
+                            "same cache set": 12616
+                        },
+                        "7": {
+                            "different cache set": 12600,
+                            "same cache set": 12616
+                        },
+                        "8": {
+                            "different cache set": 12606,
+                            "same cache set": 12582
+                        }
+                    },
+                    "clwb, sfence periodic": {
+                        "1": {
+                            "different cache set": 21996,
+                            "same cache set": 22080
+                        },
+                        "128": {
+                            "different cache set": 12636,
+                            "same cache set": 12644
+                        },
+                        "16": {
+                            "different cache set": 12628,
+                            "same cache set": 12634
+                        },
+                        "2": {
+                            "different cache set": 17342,
+                            "same cache set": 17350
+                        },
+                        "3": {
+                            "different cache set": 15764,
+                            "same cache set": 15786
+                        },
+                        "32": {
+                            "different cache set": 12630,
+                            "same cache set": 12644
+                        },
+                        "4": {
+                            "different cache set": 14182,
+                            "same cache set": 14190
+                        },
+                        "5": {
+                            "different cache set": 14192,
+                            "same cache set": 14184
+                        },
+                        "6": {
+                            "different cache set": 14206,
+                            "same cache set": 14178
+                        },
+                        "64": {
+                            "different cache set": 12602,
+                            "same cache set": 12632
+                        },
+                        "7": {
+                            "different cache set": 12568,
+                            "same cache set": 12620
+                        },
+                        "8": {
+                            "different cache set": 12590,
+                            "same cache set": 12640
+                        }
+                    },
+                    "noflush, sfence periodic": {
+                        "1": {
+                            "different cache set": 22248,
+                            "same cache set": 22190
+                        },
+                        "128": {
+                            "different cache set": 12608,
+                            "same cache set": 12620
+                        },
+                        "16": {
+                            "different cache set": 12606,
+                            "same cache set": 12618
+                        },
+                        "2": {
+                            "different cache set": 17642,
+                            "same cache set": 17460
+                        },
+                        "3": {
+                            "different cache set": 15728,
+                            "same cache set": 15766
+                        },
+                        "32": {
+                            "different cache set": 12662,
+                            "same cache set": 12620
+                        },
+                        "4": {
+                            "different cache set": 14176,
+                            "same cache set": 14168
+                        },
+                        "5": {
+                            "different cache set": 14256,
+                            "same cache set": 14196
+                        },
+                        "6": {
+                            "different cache set": 14196,
+                            "same cache set": 14182
+                        },
+                        "64": {
+                            "different cache set": 12590,
+                            "same cache set": 12596
+                        },
+                        "7": {
+                            "different cache set": 12652,
+                            "same cache set": 12640
+                        },
+                        "8": {
+                            "different cache set": 12614,
+                            "same cache set": 12624
+                        }
+                    }
+                },
+                "pagecount": 8,
+                "runs": 100
+            },
+            "test_nontemporal_behavior": {
+                "size": 32768,
+                "ticks": 1602124
+            },
+            "write time test": [
+                278012.0,
+                259704.0,
+                269730.0,
+                254106.0,
+                227238.0,
+                226722.0,
+                242524.0,
+                226802.0,
+                249872.0,
+                239204.0
+            ]
+        },
+        "size 48KB": {
+            "fsync time test": [
+                397508.0,
+                2332.0,
+                1566.0,
+                1470.0,
+                1472.0,
+                1462.0,
+                1450.0,
+                1452.0,
+                1436.0,
+                1452.0
+            ],
+            "test_cache_behavior_1": {
+                "initialize first record of each page": {
+                    "pagecount": 12,
+                    "runs": 1,
+                    "time": 144.0
+                },
+                "walk list": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 93.1
+                },
+                "walk list + clflush after each write": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 2379.08
+                },
+                "walk list + prefetch next entry": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 112.82
+                },
+                "walk list + prefetch next entry + clflush after each write": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 2475.32
+                },
+                "walk list + sfence after each run": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 106.62
+                },
+                "walk list + sfence after each write": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 150.02
+                }
+            },
+            "test_cache_behavior_2": {
+                "initialize all blocks": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 4601.72
+                },
+                "run eight cache lines with fence at end": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 828.28
+                },
+                "run four cache lines with fence at end": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 60340.18
+                },
+                "run one cache line with fence at end": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 423.78
+                },
+                "run stride 0": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 598.66
+                },
+                "run stride 1": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 527.26
+                },
+                "run stride 10": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 399.58
+                },
+                "run stride 11": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 457.1
+                },
+                "run stride 12": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 472.22
+                },
+                "run stride 13": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 505.52
+                },
+                "run stride 14": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 432.74
+                },
+                "run stride 15": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 503.18
+                },
+                "run stride 16": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 603.54
+                },
+                "run stride 17": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 479.28
+                },
+                "run stride 18": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 489.2
+                },
+                "run stride 19": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 503.96
+                },
+                "run stride 2": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 525.32
+                },
+                "run stride 20": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 9273.0
+                },
+                "run stride 21": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 26870.14
+                },
+                "run stride 22": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 29228.92
+                },
+                "run stride 23": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 10481.26
+                },
+                "run stride 24": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 529.26
+                },
+                "run stride 25": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 490.76
+                },
+                "run stride 26": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 3969.28
+                },
+                "run stride 27": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 10812.72
+                },
+                "run stride 28": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 8765.22
+                },
+                "run stride 29": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 7695.68
+                },
+                "run stride 3": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 530.74
+                },
+                "run stride 30": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 9900.84
+                },
+                "run stride 31": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 11229.88
+                },
+                "run stride 32": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 8919.78
+                },
+                "run stride 33": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 8633.76
+                },
+                "run stride 34": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 10381.96
+                },
+                "run stride 35": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 9297.2
+                },
+                "run stride 36": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 10049.16
+                },
+                "run stride 37": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 10276.04
+                },
+                "run stride 38": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 10244.8
+                },
+                "run stride 39": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 8046.72
+                },
+                "run stride 4": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 611.24
+                },
+                "run stride 40": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 492.96
+                },
+                "run stride 41": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 550.94
+                },
+                "run stride 42": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 544.34
+                },
+                "run stride 43": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 3943.78
+                },
+                "run stride 44": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 5091.36
+                },
+                "run stride 45": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 4392.7
+                },
+                "run stride 46": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 5746.4
+                },
+                "run stride 47": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 4465.62
+                },
+                "run stride 48": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 5150.98
+                },
+                "run stride 49": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 5290.28
+                },
+                "run stride 5": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 657.64
+                },
+                "run stride 50": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 6316.84
+                },
+                "run stride 51": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 5062.46
+                },
+                "run stride 52": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 6087.34
+                },
+                "run stride 53": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 4780.04
+                },
+                "run stride 54": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 28194.12
+                },
+                "run stride 55": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 4768.9
+                },
+                "run stride 56": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 5886.32
+                },
+                "run stride 57": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 4169.3
+                },
+                "run stride 58": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 5010.68
+                },
+                "run stride 59": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 4315.36
+                },
+                "run stride 6": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 521.6
+                },
+                "run stride 60": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 5716.48
+                },
+                "run stride 61": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 4354.26
+                },
+                "run stride 62": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 561.66
+                },
+                "run stride 63": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 527.64
+                },
+                "run stride 7": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 576.34
+                },
+                "run stride 8": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 526.68
+                },
+                "run stride 9": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 453.08
+                },
+                "run two cache lines with fence at end": {
+                    "pagecount": 12,
+                    "runs": 100,
+                    "time": 561.54
+                },
+                "summary": {
+                    "max": {
+                        "stride": 22,
+                        "time": 29228.92
+                    },
+                    "min": {
+                        "stride": 10,
+                        "time": 399.58
+                    }
+                }
+            },
+            "test_cache_behavior_3": {
+                "ticks per nop (over 1 billion)": 0.800239
+            },
+            "test_cache_behavior_4": {
+                "results": ""
+            },
+            "test_cache_behavior_5": {
+                "pagecount": 12,
+                "results": {
+                    "transaction length 10": {
+                        "aborted count": 100,
+                        "committed count": 0,
+                        "op time": 0,
+                        "total time": 26378
+                    },
+                    "transaction length 11": {
+                        "aborted count": 100,
+                        "committed count": 0,
+                        "op time": 0,
+                        "total time": 26316
+                    },
+                    "transaction length 2": {
+                        "aborted count": 0,
+                        "committed count": 100,
+                        "op time": 2328,
+                        "total time": 8812
+                    },
+                    "transaction length 3": {
+                        "aborted count": 0,
+                        "committed count": 100,
+                        "op time": 2240,
+                        "total time": 9214
+                    },
+                    "transaction length 4": {
+                        "aborted count": 0,
+                        "committed count": 100,
+                        "op time": 2240,
+                        "total time": 9906
+                    },
+                    "transaction length 5": {
+                        "aborted count": 0,
+                        "committed count": 100,
+                        "op time": 2294,
+                        "total time": 10868
+                    },
+                    "transaction length 6": {
+                        "aborted count": 0,
+                        "committed count": 100,
+                        "op time": 2402,
+                        "total time": 11244
+                    },
+                    "transaction length 7": {
+                        "aborted count": 0,
+                        "committed count": 100,
+                        "op time": 2406,
+                        "total time": 11674
+                    },
+                    "transaction length 8": {
+                        "aborted count": 0,
+                        "committed count": 100,
+                        "op time": 2574,
+                        "total time": 12390
+                    },
+                    "transaction length 9": {
+                        "aborted count": 100,
+                        "committed count": 0,
+                        "op time": 0,
+                        "total time": 25608
+                    }
+                },
+                "runs": 100
+            },
+            "test_cache_behavior_6": {
+                "clean cache line flush in ticks": 7964.0,
+                "clflush (final sfence) 10 writes on same cache line in ticks": 24670.0,
+                "clflush (final sfence) 11 writes on same cache line in ticks": 65402.0,
+                "clflush (final sfence) 16 writes on same cache line in ticks": 294754.0,
+                "clflush (final sfence) 6 writes on same cache line in ticks": 2590.0,
+                "clflush (final sfence) 7 writes on same cache line in ticks": 5658.0,
+                "clflush (final sfence) 8 writes on same cache line in ticks": 3736.0,
+                "clflush (final sfence) 9 writes on same cache line in ticks": 4848.0,
+                "clflush (final sfence) four writes on same cache line in ticks": 3090.0,
+                "clflush+sfence 16 writes on same cache line in ticks": 307608.0,
+                "clflush+sfence ticks for 4 writes on same cache line in ticks": 3446.0,
+                "pagecount": 12,
+                "run list (cold cache) in ticks": 30376.0,
+                "run list (warm cache) in ticks": 50678.0,
+                "runs": 100
+            },
+            "test_cache_behavior_7": {
+                "results": ""
+            },
+            "test_cache_behavior_8": {
+                "clflush, nofence": {
+                    "different cache set": 21000,
+                    "same cache set": 20882
+                },
+                "clflush, sfence end": {
+                    "different cache set": 22782,
+                    "same cache set": 22802
+                },
+                "clflushopt, nofence": {
+                    "different cache set": 21068,
+                    "same cache set": 20930
+                },
+                "clflushopt, sfence end": {
+                    "different cache set": 25154,
+                    "same cache set": 23862
+                },
+                "clwb, nofence": {
+                    "different cache set": 20896,
+                    "same cache set": 20838
+                },
+                "clwb, sfence end": {
+                    "different cache set": 22758,
+                    "same cache set": 22860
+                },
+                "noflush, nofence": {
+                    "different cache set": 20894,
+                    "same cache set": 20812
+                },
+                "noflush, sfence end": {
+                    "different cache set": 22758,
+                    "same cache set": 22754
+                },
+                "pagecount": 12,
+                "runs": 100
+            },
+            "test_cache_behavior_9": {
+                "basic tests": {
+                    "clflush, nofence": {
+                        "different cache set": 25628,
+                        "same cache set": 20976
+                    },
+                    "clflush, sfence end": {
+                        "different cache set": 26242,
+                        "same cache set": 22808
+                    },
+                    "clflushopt, nofence": {
+                        "different cache set": 29154,
+                        "same cache set": 20900
+                    },
+                    "clflushopt, sfence end": {
+                        "different cache set": 23956,
+                        "same cache set": 22900
+                    },
+                    "clwb, nofence": {
+                        "different cache set": 20922,
+                        "same cache set": 20864
+                    },
+                    "clwb, sfence end": {
+                        "different cache set": 23798,
+                        "same cache set": 22740
+                    },
+                    "noflush, nofence": {
+                        "different cache set": 20870,
+                        "same cache set": 20882
+                    },
+                    "noflush, sfence end": {
+                        "different cache set": 22826,
+                        "same cache set": 22712
+                    }
+                },
+                "frequency tests": {
+                    "clflush, sfence periodic": {
+                        "1": {
+                            "different cache set": 51376,
+                            "same cache set": 41828
+                        },
+                        "128": {
+                            "different cache set": 41826,
+                            "same cache set": 22862
+                        },
+                        "16": {
+                            "different cache set": 32696,
+                            "same cache set": 22914
+                        },
+                        "2": {
+                            "different cache set": 49618,
+                            "same cache set": 32422
+                        },
+                        "3": {
+                            "different cache set": 28578,
+                            "same cache set": 28632
+                        },
+                        "32": {
+                            "different cache set": 42914,
+                            "same cache set": 22924
+                        },
+                        "4": {
+                            "different cache set": 47400,
+                            "same cache set": 26702
+                        },
+                        "5": {
+                            "different cache set": 36142,
+                            "same cache set": 26666
+                        },
+                        "6": {
+                            "different cache set": 67734,
+                            "same cache set": 24750
+                        },
+                        "64": {
+                            "different cache set": 40518,
+                            "same cache set": 22888
+                        },
+                        "7": {
+                            "different cache set": 53230,
+                            "same cache set": 24776
+                        },
+                        "8": {
+                            "different cache set": 43088,
+                            "same cache set": 24752
+                        }
+                    },
+                    "clflushopt, sfence periodic": {
+                        "1": {
+                            "different cache set": 57952,
+                            "same cache set": 41832
+                        },
+                        "128": {
+                            "different cache set": 39804,
+                            "same cache set": 22758
+                        },
+                        "16": {
+                            "different cache set": 31708,
+                            "same cache set": 22788
+                        },
+                        "2": {
+                            "different cache set": 37786,
+                            "same cache set": 32270
+                        },
+                        "3": {
+                            "different cache set": 49332,
+                            "same cache set": 28604
+                        },
+                        "32": {
+                            "different cache set": 22796,
+                            "same cache set": 22960
+                        },
+                        "4": {
+                            "different cache set": 33028,
+                            "same cache set": 26594
+                        },
+                        "5": {
+                            "different cache set": 32486,
+                            "same cache set": 26648
+                        },
+                        "6": {
+                            "different cache set": 32754,
+                            "same cache set": 24626
+                        },
+                        "64": {
+                            "different cache set": 26162,
+                            "same cache set": 22776
+                        },
+                        "7": {
+                            "different cache set": 24816,
+                            "same cache set": 24670
+                        },
+                        "8": {
+                            "different cache set": 26648,
+                            "same cache set": 24736
+                        }
+                    },
+                    "clwb, sfence periodic": {
+                        "1": {
+                            "different cache set": 49092,
+                            "same cache set": 41836
+                        },
+                        "128": {
+                            "different cache set": 22944,
+                            "same cache set": 22862
+                        },
+                        "16": {
+                            "different cache set": 23206,
+                            "same cache set": 22866
+                        },
+                        "2": {
+                            "different cache set": 37060,
+                            "same cache set": 32358
+                        },
+                        "3": {
+                            "different cache set": 38104,
+                            "same cache set": 28602
+                        },
+                        "32": {
+                            "different cache set": 24596,
+                            "same cache set": 22906
+                        },
+                        "4": {
+                            "different cache set": 34782,
+                            "same cache set": 26740
+                        },
+                        "5": {
+                            "different cache set": 30066,
+                            "same cache set": 26724
+                        },
+                        "6": {
+                            "different cache set": 32238,
+                            "same cache set": 24924
+                        },
+                        "64": {
+                            "different cache set": 30388,
+                            "same cache set": 22818
+                        },
+                        "7": {
+                            "different cache set": 32646,
+                            "same cache set": 24750
+                        },
+                        "8": {
+                            "different cache set": 30142,
+                            "same cache set": 24830
+                        }
+                    },
+                    "noflush, sfence periodic": {
+                        "1": {
+                            "different cache set": 41710,
+                            "same cache set": 41862
+                        },
+                        "128": {
+                            "different cache set": 22852,
+                            "same cache set": 22912
+                        },
+                        "16": {
+                            "different cache set": 22880,
+                            "same cache set": 22842
+                        },
+                        "2": {
+                            "different cache set": 32456,
+                            "same cache set": 32468
+                        },
+                        "3": {
+                            "different cache set": 28478,
+                            "same cache set": 28614
+                        },
+                        "32": {
+                            "different cache set": 22864,
+                            "same cache set": 22826
+                        },
+                        "4": {
+                            "different cache set": 26638,
+                            "same cache set": 26680
+                        },
+                        "5": {
+                            "different cache set": 26626,
+                            "same cache set": 26590
+                        },
+                        "6": {
+                            "different cache set": 24806,
+                            "same cache set": 24974
+                        },
+                        "64": {
+                            "different cache set": 22864,
+                            "same cache set": 22798
+                        },
+                        "7": {
+                            "different cache set": 24808,
+                            "same cache set": 24922
+                        },
+                        "8": {
+                            "different cache set": 24744,
+                            "same cache set": 24780
+                        }
+                    }
+                },
+                "pagecount": 12,
+                "runs": 100
+            },
+            "test_nontemporal_behavior": {
+                "size": 49152,
+                "ticks": 2944920
+            },
+            "write time test": [
+                360790.0,
+                389792.0,
+                299714.0,
+                312924.0,
+                303150.0,
+                300622.0,
+                349602.0,
+                292284.0,
+                312978.0,
+                327790.0
+            ]
+        },
+        "size 64KB": {
+            "fsync time test": [
+                4652522.0,
+                22482.0,
+                1780.0,
+                1678.0,
+                1902.0,
+                1692.0,
+                1704.0,
+                1686.0,
+                1678.0,
+                1708.0
+            ],
+            "test_cache_behavior_1": {
+                "initialize first record of each page": {
+                    "pagecount": 16,
+                    "runs": 1,
+                    "time": 238.0
+                },
+                "walk list": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 317.32
+                },
+                "walk list + clflush after each write": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 69728.18
+                },
+                "walk list + prefetch next entry": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 252.44
+                },
+                "walk list + prefetch next entry + clflush after each write": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 66747.42
+                },
+                "walk list + sfence after each run": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 213.52
+                },
+                "walk list + sfence after each write": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 927.4
+                }
+            },
+            "test_cache_behavior_2": {
+                "initialize all blocks": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 15176.14
+                },
+                "run eight cache lines with fence at end": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 6020.52
+                },
+                "run four cache lines with fence at end": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 5359.54
+                },
+                "run one cache line with fence at end": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 3135.8
+                },
+                "run stride 0": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 4789.98
+                },
+                "run stride 1": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 4386.48
+                },
+                "run stride 10": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 7386.1
+                },
+                "run stride 11": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 4326.98
+                },
+                "run stride 12": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 3896.9
+                },
+                "run stride 13": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 5496.04
+                },
+                "run stride 14": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 7634.34
+                },
+                "run stride 15": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 750.72
+                },
+                "run stride 16": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 728.42
+                },
+                "run stride 17": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 694.16
+                },
+                "run stride 18": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2486.16
+                },
+                "run stride 19": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 3812.6
+                },
+                "run stride 2": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 5606.4
+                },
+                "run stride 20": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2892.2
+                },
+                "run stride 21": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2572.38
+                },
+                "run stride 22": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2966.6
+                },
+                "run stride 23": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 4338.28
+                },
+                "run stride 24": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 3130.14
+                },
+                "run stride 25": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 3369.66
+                },
+                "run stride 26": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 3482.6
+                },
+                "run stride 27": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 3960.12
+                },
+                "run stride 28": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 3872.44
+                },
+                "run stride 29": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 4578.3
+                },
+                "run stride 3": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 4733.3
+                },
+                "run stride 30": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 3914.06
+                },
+                "run stride 31": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 4156.5
+                },
+                "run stride 32": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 4441.84
+                },
+                "run stride 33": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 4760.24
+                },
+                "run stride 34": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 3768.84
+                },
+                "run stride 35": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 4762.84
+                },
+                "run stride 36": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 3987.92
+                },
+                "run stride 37": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 4546.14
+                },
+                "run stride 38": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 3913.8
+                },
+                "run stride 39": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 4188.9
+                },
+                "run stride 4": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 4424.06
+                },
+                "run stride 40": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 1191.98
+                },
+                "run stride 41": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 737.6
+                },
+                "run stride 42": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 706.94
+                },
+                "run stride 43": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 1588.38
+                },
+                "run stride 44": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2032.86
+                },
+                "run stride 45": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2278.46
+                },
+                "run stride 46": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2744.08
+                },
+                "run stride 47": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2585.7
+                },
+                "run stride 48": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2276.94
+                },
+                "run stride 49": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2763.08
+                },
+                "run stride 5": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 5219.5
+                },
+                "run stride 50": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2395.84
+                },
+                "run stride 51": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 3589.7
+                },
+                "run stride 52": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 3300.64
+                },
+                "run stride 53": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2983.16
+                },
+                "run stride 54": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2520.34
+                },
+                "run stride 55": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2998.44
+                },
+                "run stride 56": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2894.82
+                },
+                "run stride 57": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2596.0
+                },
+                "run stride 58": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2065.4
+                },
+                "run stride 59": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2624.72
+                },
+                "run stride 6": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 4243.42
+                },
+                "run stride 60": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2988.82
+                },
+                "run stride 61": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2940.32
+                },
+                "run stride 62": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2590.36
+                },
+                "run stride 63": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 2739.4
+                },
+                "run stride 7": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 6456.22
+                },
+                "run stride 8": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 7463.76
+                },
+                "run stride 9": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 5643.46
+                },
+                "run two cache lines with fence at end": {
+                    "pagecount": 16,
+                    "runs": 100,
+                    "time": 5504.78
+                },
+                "summary": {
+                    "max": {
+                        "stride": 14,
+                        "time": 7634.34
+                    },
+                    "min": {
+                        "stride": 17,
+                        "time": 694.16
+                    }
+                }
+            },
+            "test_cache_behavior_3": {
+                "ticks per nop (over 1 billion)": 0.800239
+            },
+            "test_cache_behavior_4": {
+                "results": ""
+            },
+            "test_cache_behavior_5": {
+                "results": ""
+            },
+            "test_cache_behavior_6": {
+                "results": ""
+            },
+            "test_cache_behavior_7": {
+                "results": ""
+            },
+            "test_cache_behavior_8": {
+                "clflush, nofence": {
+                    "different cache set": 28382,
+                    "same cache set": 28570
+                },
+                "clflush, sfence end": {
+                    "different cache set": 30292,
+                    "same cache set": 30682
+                },
+                "clflushopt, nofence": {
+                    "different cache set": 28390,
+                    "same cache set": 28452
+                },
+                "clflushopt, sfence end": {
+                    "different cache set": 30488,
+                    "same cache set": 30532
+                },
+                "clwb, nofence": {
+                    "different cache set": 28566,
+                    "same cache set": 28568
+                },
+                "clwb, sfence end": {
+                    "different cache set": 30414,
+                    "same cache set": 30366
+                },
+                "noflush, nofence": {
+                    "different cache set": 28480,
+                    "same cache set": 28454
+                },
+                "noflush, sfence end": {
+                    "different cache set": 30308,
+                    "same cache set": 30362
+                },
+                "pagecount": 16,
+                "runs": 100
+            },
+            "test_cache_behavior_9": {
+                "basic tests": {
+                    "clflush, nofence": {
+                        "different cache set": 28450,
+                        "same cache set": 28470
+                    },
+                    "clflush, sfence end": {
+                        "different cache set": 30428,
+                        "same cache set": 36072
+                    },
+                    "clflushopt, nofence": {
+                        "different cache set": 28476,
+                        "same cache set": 28424
+                    },
+                    "clflushopt, sfence end": {
+                        "different cache set": 30426,
+                        "same cache set": 30514
+                    },
+                    "clwb, nofence": {
+                        "different cache set": 28522,
+                        "same cache set": 28328
+                    },
+                    "clwb, sfence end": {
+                        "different cache set": 30416,
+                        "same cache set": 30486
+                    },
+                    "noflush, nofence": {
+                        "different cache set": 28476,
+                        "same cache set": 28418
+                    },
+                    "noflush, sfence end": {
+                        "different cache set": 30236,
+                        "same cache set": 30364
+                    }
+                },
+                "frequency tests": {
+                    "clflush, sfence periodic": {
+                        "1": {
+                            "different cache set": 56836,
+                            "same cache set": 57124
+                        },
+                        "128": {
+                            "different cache set": 30396,
+                            "same cache set": 30486
+                        },
+                        "16": {
+                            "different cache set": 30412,
+                            "same cache set": 30416
+                        },
+                        "2": {
+                            "different cache set": 43610,
+                            "same cache set": 43810
+                        },
+                        "3": {
+                            "different cache set": 37966,
+                            "same cache set": 38176
+                        },
+                        "32": {
+                            "different cache set": 30362,
+                            "same cache set": 30546
+                        },
+                        "4": {
+                            "different cache set": 36160,
+                            "same cache set": 36182
+                        },
+                        "5": {
+                            "different cache set": 34224,
+                            "same cache set": 34298
+                        },
+                        "6": {
+                            "different cache set": 34072,
+                            "same cache set": 34274
+                        },
+                        "64": {
+                            "different cache set": 30406,
+                            "same cache set": 30478
+                        },
+                        "7": {
+                            "different cache set": 34180,
+                            "same cache set": 34244
+                        },
+                        "8": {
+                            "different cache set": 32276,
+                            "same cache set": 32308
+                        }
+                    },
+                    "clflushopt, sfence periodic": {
+                        "1": {
+                            "different cache set": 56924,
+                            "same cache set": 57084
+                        },
+                        "128": {
+                            "different cache set": 30454,
+                            "same cache set": 30444
+                        },
+                        "16": {
+                            "different cache set": 30390,
+                            "same cache set": 30428
+                        },
+                        "2": {
+                            "different cache set": 43822,
+                            "same cache set": 43712
+                        },
+                        "3": {
+                            "different cache set": 38104,
+                            "same cache set": 38022
+                        },
+                        "32": {
+                            "different cache set": 30408,
+                            "same cache set": 30418
+                        },
+                        "4": {
+                            "different cache set": 36230,
+                            "same cache set": 36110
+                        },
+                        "5": {
+                            "different cache set": 34316,
+                            "same cache set": 34262
+                        },
+                        "6": {
+                            "different cache set": 34344,
+                            "same cache set": 34260
+                        },
+                        "64": {
+                            "different cache set": 30462,
+                            "same cache set": 30278
+                        },
+                        "7": {
+                            "different cache set": 34420,
+                            "same cache set": 34300
+                        },
+                        "8": {
+                            "different cache set": 32546,
+                            "same cache set": 32382
+                        }
+                    },
+                    "clwb, sfence periodic": {
+                        "1": {
+                            "different cache set": 56866,
+                            "same cache set": 58560
+                        },
+                        "128": {
+                            "different cache set": 30560,
+                            "same cache set": 30514
+                        },
+                        "16": {
+                            "different cache set": 30400,
+                            "same cache set": 30420
+                        },
+                        "2": {
+                            "different cache set": 43672,
+                            "same cache set": 43896
+                        },
+                        "3": {
+                            "different cache set": 37988,
+                            "same cache set": 38104
+                        },
+                        "32": {
+                            "different cache set": 30638,
+                            "same cache set": 30564
+                        },
+                        "4": {
+                            "different cache set": 36228,
+                            "same cache set": 36332
+                        },
+                        "5": {
+                            "different cache set": 34236,
+                            "same cache set": 39174
+                        },
+                        "6": {
+                            "different cache set": 34176,
+                            "same cache set": 36884
+                        },
+                        "64": {
+                            "different cache set": 30384,
+                            "same cache set": 30490
+                        },
+                        "7": {
+                            "different cache set": 34362,
+                            "same cache set": 34222
+                        },
+                        "8": {
+                            "different cache set": 32170,
+                            "same cache set": 32410
+                        }
+                    },
+                    "noflush, sfence periodic": {
+                        "1": {
+                            "different cache set": 56930,
+                            "same cache set": 56934
+                        },
+                        "128": {
+                            "different cache set": 30400,
+                            "same cache set": 30418
+                        },
+                        "16": {
+                            "different cache set": 30566,
+                            "same cache set": 30490
+                        },
+                        "2": {
+                            "different cache set": 44000,
+                            "same cache set": 44106
+                        },
+                        "3": {
+                            "different cache set": 37974,
+                            "same cache set": 38036
+                        },
+                        "32": {
+                            "different cache set": 30440,
+                            "same cache set": 30516
+                        },
+                        "4": {
+                            "different cache set": 36350,
+                            "same cache set": 36124
+                        },
+                        "5": {
+                            "different cache set": 34204,
+                            "same cache set": 34216
+                        },
+                        "6": {
+                            "different cache set": 34282,
+                            "same cache set": 34500
+                        },
+                        "64": {
+                            "different cache set": 30434,
+                            "same cache set": 30440
+                        },
+                        "7": {
+                            "different cache set": 34290,
+                            "same cache set": 34312
+                        },
+                        "8": {
+                            "different cache set": 32412,
+                            "same cache set": 32408
+                        }
+                    }
+                },
+                "pagecount": 16,
+                "runs": 100
+            },
+            "test_nontemporal_behavior": {
+                "size": 65536,
+                "ticks": 3903712
+            },
+            "write time test": [
+                1139026.0,
+                543650.0,
+                552002.0,
+                686666.0,
+                578042.0,
+                627316.0,
+                586984.0,
+                652656.0,
+                622224.0,
+                592094.0
+            ]
+        }
+    },
+    "system description": {
+        "CLFLUSHOPT": 1,
+        "CLWB": 1,
+        "HLE": 1,
+        "L1 cache size (KB)": 32,
+        "L2 cache size (KB)": 1024,
+        "L3 cache size (KB)": 33792,
+        "RTM": 1,
+        "cache info": " ",
+        "cache line size": 64,
+        "file backing memory": "/mnt/pmem0p1/fsgeek-test.dat",
+        "processor": 2
+    }
+}
