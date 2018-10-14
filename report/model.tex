@@ -10,561 +10,713 @@ is an important part of searching for insight into how to effectively utilize \a
 In this chapter, I will consider what it means for data structures to be \textit{consistent} (\ref{section:model:consistency}).
 Of course a key element of that understanding is to consider the potential set of \textit{failure conditions} that might arise.
 This leads into the conversation about \textit{failure models} (\ref{section:model:failure}).
+The challenge is that \textit{consistency}, like magic, has a price.  This is discussed further in \S \ref{ch:Results}.
 
 In addition, I will also describe the methodology that I employed when evaluating the Intel Apache Pass
 \acs{NVM} system. 
 
 \section{Failure Models}\label{section:model:failure}
 
-The challenge in constructing a failure model for non-volatile memory is to identify the potential causes for such failure;
-while I looked for a systematic analysis of such failures in \acs{NVM}, I did not find one in the literature (which does not
-mean there is not one, just that I could not identify it.)
-
-Thus, I decided to ``step back'' from the immediate concern and attempt to construct a model for failure
-in helping me reason about what it means.
-
-In \cite{guerraoui2008obstruction} the authors describe:
-
-\begin{quotation}
-    Processes. We consider a classical asynchronous sharedmemory
-    system [18, 24] of n processes (threads) p1, . . . , pn,
-    of which n−1 may, at any time, fail by crashing. Once a process
-    crashes, it does not take any further actions. The failures
-    model the fact that processes may often be delayed arbitrarily
-    (e.g., when de-scheduled, waiting for IO operations,
-    or encountering a page fault), in which case they should
-    not block other processes (the very idea behind obstructionfreedom).
-    A process that does not crash (in a given execution)
-    is said to be correct.
-\end{quotation}
-
-I actually like this generic description of failure.  Not sure it applies here, but it is worth considering.
-
-In \cite{condit2009better} the authors describe failure:
-
-\begin{quotation}
-    Atomic writes allow BPFS to commit changes by
-    writing a single value to BPRAM such that power failures and
-    crashes cannot create a corrupted file system image. Epoch barriers
-    allow BPFS to declare ordering constraints among BPRAM writes
-    while still using the L1 and L2 caches to improve performance.
-\end{quotation}
-
-Thus, their two class of failures are power failues and crashes - where crashes are consistent with the previous description of failure.
-
-\cite{rajwar2005virtualizing}
-
-\begin{quotation}
-    Locks also cause vulnerability
-to thread failures and delays: if a thread holding a
-lock is delayed by a page fault, or context switch, other
-running threads may be blocked. A thread failure also
-leaves shared objects with inconsistent updates. Locks
-also inhibit concurrency because they must be used conservatively:
-a thread must acquire a lock whenever there is
-a possibility of synchronization conflict, even if such conflict
-is actually rare.
-\end{quotation}
-
-
-\cite{hitz1994file}
-
-This is WAFL (NetApp).
-
-\begin{quotation}
-    Large file systems make RAID
-    desirable because the probability of disk failure increases with the number of disks.
-
-    power loss or system failure
-\end{quotation}
-
-\cite{wu1994envy}
-
-Discusses ``power failure''.
-
-A failure of the chip is defined as when a given write or
-erase operation takes more time than allowed in the
-specification.
-
-Power failure (SRAM).
-
-\cite{bailey2011operating}
-
-Power failure.
-
-Data corruption. If a hardware or software fault
-corrupts application state, then that corruption is
-non-volatile, particularly if the system has a singlelevel
-store. A benefit of having a two-level store is
-that data is (implicitly or explicitly) scrubbed as it is
-transferred between the levels. As well, with the exception
-of mmap’ed data, memory corruption is unlikely
-to propagate to the file system. An NVRAMbased
-system might need to give programmers abstractions
-to regain this kind of resilience.
-
-\cite{volos2011mnemosyne}
-
-This paper does focus on failure.
-
-\begin{quotation}
-Failure Models. While data stored in SCM is persistent, data
-stored in a processor cache is not. Thus, after a failure, only data
-actually resident in SCM survives. A system using SCM could reduce
-this restriction with low-level software that flushes data from
-the processor cache on application or OS failure. However, without
-battery backing, sudden loss of power or hardware faults could still
-cause data loss. We therefore assume that on a system failure, inflight
-memory operations may fail, and that atomic updates either
-complete or do not modify memory.
-\end{quotation}
-
-
-\cite{coburn2011nv}
-
-"application and systems failures"
-
-power failure
-
-\cite{venkataraman2011consistent}
-
-Discusses failure recovery extensively.  Failure is defined as power or software failure.
-
-This paper \textit{does} discuss mis-ordered writes, so now we have the implicit ordering consideration.
-
-system crash
-
-power failure
-
-\cite{mahajan2011consistency}
-
-Byzantine failure
-omissions failure
-
-\cite{conway2012logic}
-
-Partial failure
-
-\cite{bhandari2012implications}
-
-``hardware or power failure''
-
-\cite{moraru2013consistent}
-
-crash or power failure
-
-
-\cite{zhao2013kiln}
-
-
-Again ``system failures''
-
-\cite{chakrabarti2014atlas}
-
-This is a good term: ``tolerated failure''
-
-\begin{quotation}
-We assume a fail-stop or crash-recovery model. If a program
-encounters a tolerated failure, such as a power failure, data
-already in NVRAM survives, those in DRAM or caches do not. If
-a CPU fails, we assume that the data in NVRAM is still reachable
-from another CPU, either because the data is accessible from a
-second CPU, or because the CPU has been replaced.
-\end{quotation}
-
-Also: ``We assume that the hardware defines the notion of “tolerated failure”, and
-that it includes at least power failures.''
-
-Atlas does include formal definitions of persistence and consistency around failures.
-
-\cite{dulloor2014system}
-
-\begin{quotation}
-For PMFS validation, we use a hypervisorbased
-validation tool that uses record-replay to simulate
-and test for ordering and durability failures in PM software
-(§3.5) [31]
-\end{quotation}
-
-``power failure''
-
-They have a tool for simulating failure (\textit{Yat}) using hypervisor framework and instruction tracing.
-
-\cite{park2013failure}
-
-\begin{quotation}
-    Preserving the integrity of application data is the paramount
-    responsibility of computing systems, and sudden system
-    crashes due to power outages and kernel panics pose the
-    most serious threats to application data integrity.
-\end{quotation}
-
-\cite{pelley2014memory}
-
-\begin{quotation}
-    Whereas memory
-consistency concerns the order that memory operations
-are observed between numerous processors, persistent memory
-systems must constrain the order that writes occur with
-respect to failure.
-\end{quotation}
-
-This turns out to be a highly applicable paper.  I've printed it, but it does a good job of describing
-issues.
-
-\cite{lu2014loose}
-
-Another "system failure" paper
-
-This is good because it deals with HTM: \cite{leis2014exploiting}
-
-\begin{quotation}
-    For example with a transaction size of 16 KB, for any
-one cache set it is quite unlikely that it contains more than 8
-entries. However, at the same time, it is likely that at least
-one cache set exceeds this limit. An eviction of a line from
-the cache automatically leads to a failure of this transaction
-as it would become impossible to detect conflicting writes to
-this cache line.
-\end{quotation}
-
-\textbf{\Large{This is the real issue that concerns me - cache line eviction!}}
-
-"Thread failures and delays" as a form of problem in locking based systems. \cite{herlihy2014future}
-
-\cite{joshi2015efficient}
-
-\begin{quotation}
-    At the time of failure, the
-cache might have 
-ushed the pointer write to persis-
-tent memory, but the write to the node might still be
-in the cache leading to an inconsistent state of the data
-structure in persistent memory.
-\end{quotation}
-
-\cite{Oukid:2014:SHS:2619228.2619236} - they have an example of split writes as well and how they protect against it.
-
-\cite{arulraj2015let} - discussion about failure recovery in NVM.  Again, its torn writes and how to recover from them.
-
-\cite{dulloor2015systems} - this discusses use of atomics to avoid the torn write situation.
-
-\cite{chatzistergiou2015rewind} - another discussion of failure.  They discuss issues of ``careful ordering''.
-
-\begin{quotation}
-
-    The non-volatility
-property has the promise to persist in-memory data structures for
-instantaneous failure recovery. However, realizing such promise
-requires a careful design to ensure that in-memory data structures
-are in known consistent states after failures.
-\cite{chen2015persistent}
-\end{quotation}
-
-
-\cite{liang2016case} - failures from power fail/system failure.
-
-\begin{quotation}
-
-    This paper describes a lightweight software library to solve
-    the challenges [6], [3], [1], [5], [2] of programming storage
-    class memory (SCM). It provides primitives to demarcate
-    failure-atomic code regions. SCM loads and stores within
-    each demarcated code region (called a ”wrap”) are routed
-    through the library, which buffers updates and transmits them
-    to SCM locations asynchronously while allowing their speedy
-    propagation from writers to readers through CPU caches.
-        \cite{giles2015transaction}
-\end{quotation}
-
-\begin{quotation}
-    Failure model. ThyNVM allows software applications to
-resume CPU execution from a consistent checkpoint of
-memory data after system failures, such as system crashes
-or power loss. To this end, we periodically checkpoint memory
-data updates and the CPU state, including registers, store
-buffers and dirty cache blocks. Our checkpointing schemes
-protect persistent memory data and CPU states from corruption
-on system failures.
-\cite{ren2015thynvm}
-\end{quotation}
-
-\begin{quotation}
-    Providing strong consistency guarantees is particularly
-challenging for memory-based file systems because maintaining
-data consistency in NVMM can be costly. Modern
-CPU and memory systems may reorder stores to memory to
-improve performance, breaking consistency in case of system
-failure. To compensate, the file system needs to explicitly
-flush data from the CPU’s caches to enforce orderings, adding
-significant overhead and squandering the improved performance
-that NVMM can provide.\cite{xu2016nova}
-\end{quotation}
-
-yet another example of ``systems failure''\cite{lu2017improving}
-
-\begin{quotation}
-    Importantly, most of these applications
-need to update their data without risking corruption
-after a failure as failure-consistent update is a fundamental
-requirement for computer systems.\cite{ou2016fast}
-\end{quotation}
-
-\begin{quotation}
-    Persistent memory invites applications to manipulate persistent
-data via LOAD and STORE instructions. Because failures
-during updates may destroy transient data (e.g., in CPU
-registers), preserving data integrity in the presence of failures
-requires failure-atomic bundles of updates. Prior failure
-atomicity approaches for persistent memory entail overheads
-due to logging and CPU cache flushing.
-    \cite{izraelevitz2016failure}
-\end{quotation}
-
-More power failure: \cite{Maeng:2017:AIE:3152284.3133920}
-
-\begin{quotation}
-    A failure to load any one persistent
-structure of an application makes an entire application
-state unusable.\cite{kannan2016pvm}
-\end{quotation}
-
-\begin{quotation}
-    The advent of Storage Class Memory (SCM) is disrupting the database
-landscape and driving novel database architectures that store data,
-access it, and modify it directly from SCM at a cache-line granularity
-[3, 7, 9]. However, the no free lunch folklore conjecture
-holds more than ever as SCM brings unprecedented challenges. Consistency
-failure scenarios and recovery strategies of software that
-persists data depend on the underlying storage technology. In the
-traditional case of block-based devices, software has full control
-over when data is made persistent. Basically, software schedules I/O
-to persist modified data at a page granularity. The user level has no
-direct access to the primary copy of the data and can only access
-copies of the data that are buffered in main memory. Hence, software
-errors can corrupt data only in main memory which can be reverted
-as long as the corruption was not explicitly propagated to storage.
-In fact, crash-safety for block-based software highly depends on the
-correctness of the underlying file system. In contrast, SCM is byte addressable
-and is accessed via a long volatility chain that includes
-store buffers, CPU caches, and the memory controller buffers, over
-all of which software has little control. The SNIA [2] recommends
-to manage SCM using an SCM-aware file system that grants the application
-layer direct access to SCM with mmap, enabling load/store
-semantics. As a side effect, changes can be speculatively propagated
-from the CPU cache to SCM at any time, and compilers and outof-
-order CPU execution can jeopardize consistency by reordering
-memory operations. Moreover, changes are made persistent at a
-cache line granularity which necessitates the use of CPU persistence
-primitives. This adds another level of complexity as enforcing the
-order in which changes are made persistent cannot be delayed like
-with block-based devices, and must be synchronous. In addition to
-data consistency, memory leaks in SCM have a deeper impact than
-in DRAM. This is because SCM allocations are persistent, hence, a
-memory leak would also be persistent.\cite{oukid2016testing}
-\end{quotation}
-
-\begin{quotation}
-    Finally, PM applications have to be crashrecoverable.
-In contrast to volatile memory programs, they
-have to carefully order and persist writes to memory with
-respect to failures. At a low level, these properties are ensured
-by (i) explicitly writing data back from the processor
-cache to PM, (ii) enforcing ordering between writes to dependent
-structures [15], and (iii) waiting for data to become
-durable in PM before continuing execution.\cite{Nalli:2017:APM:3093337.3037730}
-\end{quotation}
-
-\begin{quotation}
-    Hotpot provides three guarantees: coherence among cached copies
-of in-PM data, recovery from various types of failures into a consistent
-state, and user data reliability and availability under concurrent
-failures.
-    \cite{shan2017distributed}
-\end{quotation}
-
-\textit{This} is the kind of ``hand-waving'' that makes analyzing this difficult.
-
-Another ``power failure and system crash'' definition of failure.\cite{liu2017durable}
-
-\begin{quotation}
-    [T]he restart mechanism must find a consistent state in durable storage, which may
-have last written at an arbitrary point in a program’s execution. This problem is well-known in the
-database community, and a significant portion of a DB system is devoted to ensuring durability in the
-presence of failures. NVM is different, however, because writes are fine-grain and low-cost and are
-initiated by store instructions. A further complication is that a processor’s memory system reorders
-writes to NVM, making it difficult to ensure that program state, even when consistent in memory,
-is recorded consistently to durable storage. In the interest of high performance, processors employ
-caches and write buffers and store values to memory at unpredictable times. As a consequence,
-stored values may not reach NVM in the same order in which a program executes them, which
-complicates capturing a consistent snapshot in durable storage.\cite{Cohen:2017:ELN:3152284.3133891}
-\end{quotation}
-
-\begin{quotation}
-    Although they share the same goals, crash-safety testing for
-disk-based and SCM-based software are different in that they
-have to address radically different failure scenarios, such as
-missing or misplaced persistence primitives. Consistency and
-recovery testing of SCM-based software did not get much
-attention so far.\cite{oukid2017data}
-\end{quotation}
-
-\begin{quotation}
-    Due to power constraints, we expect that writes and flushes into
-NVM will be guaranteed to be failure-atomic only at increments of eight bytes – not across a
-full 64-byte cache line.\cite{nawab2017dali}
-\end{quotation}
-
-more ``power fail''\cite{joshi2017atom}
-
-\begin{quotation}
-    A language-level persistency model has to provide programmers with guarantees on
-two orthogonal properties: (a) the granularity of failure-atomic regions (i.e., persists from
-one region are committed to PM atomically) and (b) the ordering of these regions. Programmers
-need both these guarantees to write correct recoverable software. Figure 5.1
-shows the various options that a language may choose to provide for each of these guarantees
-and places existing academic and industrial proposals for persistent programming
-within this taxonomy. The granularity of failure atomicity can vary from an individual
-persist (8-byte atomic writes) to a synchronization free region (code between two synchronization
-accesses) to an outer critical section (code between the first lock acquired by a
-thread until the thread holds no locks). It is important to note that if a programmer desires
-87
-a larger granularity of failure atomicity than what is natively provided by the language, she
-can achieve it through undo or write-ahead logging mechanisms.\cite{kolli2017architecting}
-\end{quotation}
-
-\begin{quotation}
-    Given the already challenging problem of ensuring failure safety ...\cite{wang2017hardware}
-\end{quotation}
-
-``system failure''\cite{xia2017hikv}
-
-\begin{quotation}
-    Failure-atomic slottedpaging
-consists of two key elements: (i) in-place commit
-per page using hardware transactional memory and (ii) slotheader
-logging that logs the commit mark of each page.
-    \cite{seo2017failure}
-\end{quotation}
-
-Interesting: they use hardware transactional memory as part of their work.
-
-So many papers that talk about NVM and ``failures'' but never define what failures are.
-\cite{wu2018espresso}
-
-\begin{quotation}
-    A safe way to
-manipulate persistent data is to ensure that data structure
-updates are failure atomic, i.e., even in the presence of
-failures, either all or none of the updates are reflected in
-the NVM. The challenge in implementing failure atomicity
-is to correctly handle partial updates even in the presence
-of multi-threading, volatile caches, and reordering of NVM
-writes by the processor. Managing persistent data structures
-is costly due to these challenges (e.g., frequently flushing
-cache lines to NVM is very costly [37]). For any persistent
-programming system to be practical, its overheads should
-be low enough that applications actually benefit from using
-NVM.\cite{Hsu:2017:NPP:3064176.3064204}
-\end{quotation}
-
-\begin{quotation}
-    The fundamental problem is that failures, such as
-    operating system crashes, hardware lockups, or power disruptions,
-    may occur at any time, and thereby introduce a data race into an
-    otherwise race-free program: loads performed during recovery inherently
-    race with stores before the failure. A failure may interrupt
-    the atomicity of a critical section, exposing a partial (and possibly
-    reordered) set of updates to PM to recovery code.\cite{Kolli:2017:LP:3140659.3080229}
-\end{quotation}
-
-\begin{quotation}
-    All this state
-needs to be persisted correctly, including when there is a
-failure in the middle of the operation. Ensuring failureatomicity
-for all this computation without failure-atomic
-transactions is practically infeasible, if not impossible.\cite{marathe2017persistent}
-\end{quotation}
-
-\begin{quotation}
-    Data consistency is difficult to ensure in systems with volatile caches
-because the order in which values are persisted (e.g. written back to
-the NVMM) depends on the cache replacement policy, which often
-differs from program order.\cite{shin2017proteus}
-\end{quotation}
-
-\begin{quotation}
-    In this work, we design and develop clfB-tree—a B-tree structure whose tree node fits in a single cache
-line.We employ existing write combining store buffer and restricted transactional memory to provide a failureatomic
-cache line write operation. Using the failure-atomic cache line write operations, we atomically update
-a clfB-tree node via a single cache line flush instruction without major changes in hardware.\cite{kim2018clfb}
-\end{quotation}
-
-\begin{quotation}
-    In the traditional block-based storage device,
-the failure atomicity unit, which is the update unit
-where consistent state is guaranteed upon any system
-failure, has been the disk block size. However, as persistent
-memory, which is byte-addressable and non-volatile,
-will be accessible though the memory bus rather than via
-the PCI interface, the failure atomicity unit for persistent
-memory is generally expected to be 8 bytes or no larger
-than a cache line [5, 6, 12, 13, 15, 19].
-The smaller failure atomicity unit, however, appears
-to be a double-edged sword in the sense that though this
-allows for reduction of data written to persistent store,
-it can lead to high overhead to enforce consistency. This
-is because in modern processors, memory write operations
-are often arbitrarily reordered in cache line granularity
-and to enforce the ordering of memory write operations,
-we need to employ memory fence and cache
-line flush instructions [21]. These instructions have been
-pointed out as a major cause of performance degradation
-[3, 9, 15, 20]. Furthermore, if data to be written is
-larger than the failure-atomic write unit, then expensive
-mechanisms such as logging or copy-on-write (CoW)
-must be employed to maintain consistency.\cite{lee2017wort}
-\end{quotation}
-
-\begin{quotation}
-    Another example is the
-asynchronous DRAM refresh (ADR) feature provided by
-modern processors, where the memory controller buffers
-are flushed out to memory DIMMs on power failure [15].
-With the ADR feature, the memory controller buffers can
-be considered effectively persistent since the data is guaranteed,
-discounting ADR hardware failures, to persist.
-There may be other ways to slice the memory hierarchy
-in persistent and nonpersistent parts; however, we focus
-on 3 specific partitioning strategies that we believe will
-capture most future system configurations.\cite{marathe2018persistent}
-\end{quotation}
-
-This feature of ADR is \textit{very} important to the failure model.
-
-\begin{quotation}
-    As mentioned earlier, today’s processors have no mechanism
-for preventing memory writes from reaching memory
-and doing so for arbitrarily large updates would be
-infeasible. Similarly, there is no guarantee that writes
-will not be reordered by either the processor or by the
-memory controller. While processors support a mfence
-instruction, it only provides write visibility and does not
-guarantee that all memory writes are propagated to memory
-(NVBM in this case) or that the ordering of writes is
-maintained. While cache contents can be flushed using
-the wbinvd instruction, it is a high-overhead operation
-(multiple ms per invocation) and flushes the instruction
-cache and other unrelated cached data. While it is possible
-to mark specific memory regions as write-through,
-this impacts write throughput as all stores have to wait
-for the data to reach main memory.\cite{venkataraman2011consistent}
-\end{quotation}
+There are 24 years of literature regarding non-volatile memory, 
+some of which handles issues around appropriate failure models.
+Logically, this makes sense as persistent memory has the same
+type of failure requirements as storage based file systems: it
+is well-established that resiliency in the face of failure is
+an essential functional requirement for production systems.~\cite{oukid2016testing,ou2016fast}
+
+Some of the papers which detail their solution to resiliency
+in the face of failure do not cite any specific failure model.~\cite{shan2017distributed,
+wang2017hardware,wu2018espresso} 
+Further, a substantial number merely cite to generic failure
+classes such as ``power failure'' or ``systems failure'' --- in
+other words a spontaneous reboot of the system at an arbitrary
+point of execution.~\cite{bhandari2012implications,condit2009better,hitz1994file,wu1994envy,bailey2011operating,moraru2013consistent,zhao2013kiln,park2013failure,lu2014loose,liang2016case,liu2017durable,joshi2017atom}
+
+There are still a substantial number of papers that delve into
+the nature of failures.  These papers cover a variety of issues,
+including:
+
+\begin{description}
+    \item[transient persistent data in CPU cache] --- this scenario is one in which data is resident in a CPU cache at the time of failure.~\cite{volos2011mnemosyne,chakrabarti2014atlas}  
+
+    \item[byzantine failure] --- this is one in which components in the system either return corrupted data, or simply lose requests.~\cite{mahajan2011consistency} 
+    
+    \item[partial failure] --- a situation in which some part of an operation succeeds while another fails.  This manifests as torn or out of order write operations.~\cite{conway2012logic,Oukid:2014:SHS:2619228.2619236,joshi2015efficient,
+    Oukid:2014:SHS:2619228.2619236,
+    arulraj2015let,
+    dulloor2015systems, pelley2014memory,Cohen:2017:ELN:3152284.3133891,chatzistergiou2015rewind,Nalli:2017:APM:3093337.3037730, xu2016nova,Hsu:2017:NPP:3064176.3064204}
+
+    \item[durability failures] --- what happens when the memory wears out, which can happen with some types of NVM.~\cite{dulloor2014system}
+    
+    \item[transactional memory] --- hardware and software transactional memory approaches to providing consistency models.~\cite{leis2014exploiting,seo2017failure}
+
+    \item[atomicity] --- the idea that a set of operations must occur all together or not at all~\cite{giles2015transaction, izraelevitz2016failure,marathe2017persistent,kim2018clfb,nawab2017dali,marathe2018persistent}
+    
+    \item[checkpointing] --- failure recovery from periodic safe spots (checkpoints)~\cite{ren2015thynvm}
+    
+    \item[thread failures and delays] --- because of the pre-emptable nature of execution units (threads) on modern systems, there is a risk of having long gaps in time as the operating system switches between threads.  Traditional techniques for synchronization such as locks do not work well in persistent memory systems.~\cite{herlihy2014future} 
+    
+\end{description}
+
+One challenge in constructing persistency techniques is the tools provided by the hardware 
+has a significant impact on performance.~\cite{lee2017wort,venkataraman2011consistent}  
+Thus, a critical element in considering implementation of persistent data structures 
+in non-volatile memory is balancing persistence requirements against the cost of forcing such persistence.
+
+Analyzing failure in non-volatile memory is in fact a new class of failure.  It is not just like disk
+storage failures, because of the processor cache interactions.  Dynamic memory failures across reboot
+cycles are non-issues.  Storage class persistence does not deal with \textit{eviction} of data blocks
+under its control.  These different semantics require a model of failure that considers both
+persistence and processor level issues.~\cite{oukid2016testing,oukid2017data}
 
 \section{Consistency}\label{section:model:consistency}
 
-\cite{adve1996shared}
+While \S \ref{section:model:failure} describes potential failure scenarios, in fact the primary
+concern is the ability to provide \textbf{consistency} guarantees.  There is a dynamic tension
+between providing strong persistence guarantees, good performance, and generality of solutions.
+For example, a resilient non-volatile memory allocator does not provide explicit guarantees
+about consistency of the data stored within the allocated memory without changing the usage
+model of that memory.  One approach to providing stronger guarantees is to embed them within
+the programming language, either explicitly or via libraries.~\cite{kolli2017architecting}
+However, this model requires changing the implementation of existing programs, which limits
+the likelihood of adoption.
+
+Thus, consistency must define the level at which it operates and the guarantees that it
+provides relative to the failure model.  Storage systems routinely are called upon to
+provide specific consistency guarantees that balance performance, generality, and persistence
+against one another.~\cite{sigurbjarnarson2016push,fryer2012recon,chen2015using}  This
+is not unique to storage, however, and the lessons for multi-processor consistency models
+is similarly applicable, with the added challenge of considering this behavior across
+system reboots.~\cite{adve1996shared}
 
 \section{Methodology}\label{section:model:methodology}
 
-Detailed results from my study of the Intel Apache Pass memory testbed system are reported in Chapter \ref{ch:Results}.
+Detailed results from my study of the Intel Apache Pass memory testbed system are reported in 
+Chapter \ref{ch:Results}. I used three techniques to collect that data:
+
+\begin{enumerate}
+    \item Intel Provided Tools (MLC) --- see \S \ref{section:model:methodology:mlc}.  This approach used the Intel Memory Latency Checker, along with the Intel provided AEP monitoring framework to analyze the baseline performance of the non-volatile memory.
+    
+    \item Custom-Developed Micro-Benchmark --- see \S \ref{section:model:methodology:perc}.  By using fine-grained (\texttt{rdtsc}) timing calculation, I observed the behavior and cost of the processor performing specific NVM-related memory operations.
+    
+    \item Memory Allocation Measurements --- see \S \ref{section:model:methodology:malloc}.  By using an existing evaluation framework for non-volatile memory allocators, I measured the performance of existing memory allocators.
+\end{enumerate}
+
+The system in question is described in greater detail in \S \ref{table:results:hardware} and \S \ref{table:results:hardware:2}. The NVM was all accessed via \acs{DAX} mode using either \textbf{xfs} or \textbf{ext4} with \acs{DAX} mode enabled.  Of the three configured NVDIMM modules, two were installed locally to node 0, and one was installed locally to node 1 (xfs was used with memory in both nodes, ext4 was used with memory in node 0).
+
+
+The balance of this section describes details of the tools and the tests performed.
+
+\subsection{Intel Provided Tools (MLC)}\label{section:model:methodology:mlc}
+
+The Intel Memory Latency Checker is a utility program that Intel makes generally available; I was provided access to the actual source code for 
+the tool as part of the Apache Pass access program.  I used Version 3.5 of MLC, which is
+\href{https://software.intel.com/en-us/articles/intelr-memory-latency-checker}{available on the Intel website.}  I did not modify the source
+code for this utility --- my use was restricted to using it to understand what the checker was itself actually doing, as the test modes
+for persistent memory were not documented.
+
+NVM testing was done using MLC via memory mapped access using a \acs{DAX} supporting file system.  The variables used were:
+
+\begin{description}
+    \item[access type] --- memory access count be \textbf{random} or \textbf{sequential}.  The specifics of the level of randomness are defined by the MLC utility. Buffer size for testing was 400MB.
+    \item[test] --- tests included a read-only test, several read/write tests of varying ratios with both cached and non-cached (non-temporal) operations.
+    \item[stride-size] --- the test allows controlling the data operations.  While I tested stride sizes from 1 to 4096 bytes, I discarded the results below 32 bytes and above 2048 as the tests did not appear to be stable (e.g., they failed) outside those ranges.  The reported figures are for that range.
+    \item[processors] --- the test permits using a range of logical cores in testing.  I limited my use to only a single hyper-thread per core.  Processor 0 is used to measure load latency, while processors 1 to 23 were used to generate load.  I varied the number of processors to observe the system behavior with varying degrees of memory contention.  I collected some cross-node performance data, but do not report that information in this report.
+\end{description}
+
+For each run of the test, I used an Intel-provided monitoring tool that collects performance data from the invidual NVDIMM modules.  Thus, for each test run I would start the monitor, run the test, then stop the monitor.  That tool generated data files that were then fed into a custom-built version of gnuplot and detailed graphs of the NVDIMM behavior could be observed.  This was useful in validating that the system was in fact only accessing a single NVDIMM, rather than a striped memory configuration, for example.  I have not included those charts in this report because they do not appear to offer substantial insight.
+
+The details of the specific switches used, and the specific workloads they represent is shown in Table \ref{mlc:switches}.
+
+\subsection{Custom-Developed Micro-benchmark}\label{section:model:methodology:perc}
+
+My purpose in developing this micro-benchmark suite was to evaluate the performance of processors across a number of different tests:
+
+\begin{description}
+\item[baseline tests] --- each run measured the time to perform \texttt{write} over the test file, as well as the time required to perform \texttt{fsync}.  Each operation was repeated 10 times.
+\item[linked list manipulation] --- a block of memory was initialized to consist of a series of forward references plus a monotonically increasing value (a \texttt{counter}).  The forward references provide a mechanism for disabling effective prefetching, since the processor cannot prefetch until the address has been loaded from memory. There are up to seven subtests:
+\begin{itemize}
+    \item list initialization
+    \item list walk, with counter increment
+    \item list walk, explicit prefetch operation for the next entry
+    \item list walk, explicit prefetch operation, \texttt{clflush} after each write
+    \item list walk, \texttt{clflush} after each write
+    \item list walk, \texttt{sfence} after each write
+    \item list walk, \texttt{sfence} after each full run of the list
+\end{itemize}
+Note that these references are all done from the same L1 hardware cache set  (the pointers are offset by one page).
+\item[multi-cache line linked list] --- the block of memory is initialized and multiple cache sets are used and the CPU ticks are counted. 
+\item[no-op test] --- measure the time required per operation to perform 1 billion \texttt{nop} operations.
+\item[cache flush tests] --- using the linked lists and counters again, this time with various patterns for flushing and fencing.
+\item[periodic cache flush tests] --- linked lists again, this time with various flushing, and periodic sfence behaviors, against the same cache set or across cache sets.
+\item[non-temporal move behavior] --- using non-temporal move instructions to perform data writes.
+\item[TSX tests] --- evaluating transaction abort rates and times required for various transaction lengths against the same associative cache set.  
+\end{description}
+
+These tests were performed against a varity of memory block sizes.  The linked list lengths were dictated by the number of memory pages in the provided buffer.  This model made it simple to test both dynamic memory as well as non-volatile memory, simpy by creating a buffer via memory mapping using anonymous mappings (for DRAM testing) or specific file mappings (for NVM testing).
+
+Each test was run multiple times (normally 100).
+
+Results for this are reported in \S \ref{section:results:micro}
+
+\subsection{Memory Allocation Measurements}\label{section:model:methodology:malloc}
+
+The final type of testing that I performed was for memory allocation.  I started with the memory allocator evaluation framework developed by the Hasso-Plattner Institute. See \href{https://github.com/hyrise/nvm\_malloc}{nvm\_malloc} for the original source code, and \href{https://github.com/fsgeek/nvm\_malloc}{fsgeek\_nvm\_malloc}.  This in turn was based upon the work by \cite{schwalb2015nvm} and the evaluation of their memory allocator.
+
+The modifications that I made included allowing the framework to work on actual persistent memory and on the Fedora system installed on the testbed system.  I also integrated two of the \acs{PMDK} memory allocators into this framework.
+
+This framework is a very simple evaluation of the allocator.  In each of these tests the size of the allocation unit is randomly chosen over a range, using the C++ uniform distribution.  For my testing I only used 64 bytes.  The default is to perform each operation 100,000 times. These tests are:
+
+\begin{description}
+    \item[alloc/free/alloc] --- in this test, one pass of allocations, then one set of free operations in FIFO order, then a second set of allocations.
+    \item[alloc/free] --- in this test one pass of allocation and free operations are performed.
+    \item[fast alloc] --- in this test one pass of allocation is is performed.  Nothing is freed.
+    \item[linkedlist] --- a series of entries are allocated and added to a doubly linked list structure.
+    \item[recovery] --- this is a test of the cost to recover state from persistent memory; I do not report any results from this test in this report. 
+\end{description}
+
+Note that this is a multi-threaded test; allocated objects are only used by the thread that allocated the memory.  The allocation structures
+and memory pool are shared.
+
+Results for this are reported in \S \ref{section:results:malloc}
+
+\endinput
+
+\begin{comment}
+
+    while I looked for a systematic analysis of such failures in \acs{NVM}, I did not find one in the literature (which does not
+    mean there is not one, just that I could not identify it.)
+    
+    Thus, I decided to ``step back'' from the immediate concern and attempt to construct a model for failure
+    in helping me reason about what it means.
+    
+    In \cite{guerraoui2008obstruction} the authors describe:
+    
+    \begin{quotation}
+        Processes. We consider a classical asynchronous shared memory
+        system [18, 24] of n processes (threads) p1, . . . , pn,
+        of which n−1 may, at any time, fail by crashing. Once a process
+        crashes, it does not take any further actions. The failures
+        model the fact that processes may often be delayed arbitrarily
+        (e.g., when de-scheduled, waiting for IO operations,
+        or encountering a page fault), in which case they should
+        not block other processes (the very idea behind obstruction freedom).
+        A process that does not crash (in a given execution)
+        is said to be correct.
+    \end{quotation}
+    
+    I actually like this generic description of failure.  Not sure it applies here, but it is worth considering.
+    
+    
+    \cite{rajwar2005virtualizing}
+    
+    \begin{quotation}
+        Locks also cause vulnerability
+    to thread failures and delays: if a thread holding a
+    lock is delayed by a page fault, or context switch, other
+    running threads may be blocked. A thread failure also
+    leaves shared objects with inconsistent updates. Locks
+    also inhibit concurrency because they must be used conservatively:
+    a thread must acquire a lock whenever there is
+    a possibility of synchronization conflict, even if such conflict
+    is actually rare.
+    \end{quotation}
+    
+    
+    \cite{hitz1994file}
+    
+    This is WAFL (NetApp).
+    
+    \begin{quotation}
+        Large file systems make RAID
+        desirable because the probability of disk failure 
+        increases with the number of disks.
+    
+        power loss or system failure
+    \end{quotation}
+    
+    \cite{wu1994envy}
+    
+    Discusses ``power failure''.
+    
+    A failure of the chip is defined as when a given write or
+    erase operation takes more time than allowed in the
+    specification.
+    
+    Power failure (SRAM).
+    
+    \cite{bailey2011operating}
+    
+    Power failure.
+    
+    Data corruption. If a hardware or software fault
+    corrupts application state, then that corruption is
+    non-volatile, particularly if the system has a singlelevel
+    store. A benefit of having a two-level store is
+    that data is (implicitly or explicitly) scrubbed as it is
+    transferred between the levels. As well, with the exception
+    of mmap’ed data, memory corruption is unlikely
+    to propagate to the file system. An NVRAMbased
+    system might need to give programmers abstractions
+    to regain this kind of resilience.
+    
+    \cite{volos2011mnemosyne}
+    
+    This paper does focus on failure.
+    
+    \begin{quotation}
+    Failure Models. While data stored in SCM is persistent, data
+    stored in a processor cache is not. Thus, after a failure, only data
+    actually resident in SCM survives. A system using SCM could reduce
+    this restriction with low-level software that flushes data from
+    the processor cache on application or OS failure. However, without
+    battery backing, sudden loss of power or hardware faults could still
+    cause data loss. We therefore assume that on a system failure, inflight
+    memory operations may fail, and that atomic updates either
+    complete or do not modify memory.
+    \end{quotation}
+    
+    
+    \cite{coburn2011nv}
+    
+    "application and systems failures"
+    
+    power failure
+    
+    \cite{venkataraman2011consistent}
+    
+    Discusses failure recovery extensively.  Failure is defined as power or software failure.
+    
+    This paper \textit{does} discuss mis-ordered writes, so now we have the implicit ordering consideration.
+    
+    system crash
+    
+    power failure
+    
+    \cite{mahajan2011consistency}
+    
+    Byzantine failure
+    omissions failure
+    
+    \cite{conway2012logic}
+    
+    Partial failure
+    
+    \cite{bhandari2012implications}
+    
+    ``hardware or power failure''
+    
+    \cite{moraru2013consistent}
+    
+    crash or power failure
+    
+    
+    \cite{zhao2013kiln}
+    
+    
+    Again ``system failures''
+    
+    \cite{chakrabarti2014atlas}
+    
+    This is a good term: ``tolerated failure''
+    
+    \begin{quotation}
+    We assume a fail-stop or crash-recovery model. If a program
+    encounters a tolerated failure, such as a power failure, data
+    already in NVRAM survives, those in DRAM or caches do not. If
+    a CPU fails, we assume that the data in NVRAM is still reachable
+    from another CPU, either because the data is accessible from a
+    second CPU, or because the CPU has been replaced.
+    \end{quotation}
+    
+    Also: ``We assume that the hardware defines the notion of “tolerated failure”, and
+    that it includes at least power failures.''
+    
+    Atlas does include formal definitions of persistence and consistency around failures.
+    
+    \cite{dulloor2014system}
+    
+    \begin{quotation}
+    For PMFS validation, we use a hypervisor based
+    validation tool that uses record-replay to simulate
+    and test for ordering and durability failures in PM software
+    (§3.5) [31]
+    \end{quotation}
+    
+    ``power failure''
+    
+    They have a tool for simulating failure (\textit{Yat}) using hypervisor framework and instruction tracing.
+    
+    \cite{park2013failure}
+    
+    \begin{quotation}
+        Preserving the integrity of application data is the paramount
+        responsibility of computing systems, and sudden system
+        crashes due to power outages and kernel panics pose the
+        most serious threats to application data integrity.
+    \end{quotation}
+    
+    \cite{pelley2014memory}
+    
+    \begin{quotation}
+        Whereas memory
+    consistency concerns the order that memory operations
+    are observed between numerous processors, persistent memory
+    systems must constrain the order that writes occur with
+    respect to failure.
+    \end{quotation}
+    
+    This turns out to be a highly applicable paper.  I've printed it, but it does a good job of describing
+    issues.
+    
+    \cite{lu2014loose}
+    
+    Another "system failure" paper
+    
+    This is good because it deals with HTM: \cite{leis2014exploiting}
+    
+    \begin{quotation}
+        For example with a transaction size of 16 KB, for any
+    one cache set it is quite unlikely that it contains more than 8
+    entries. However, at the same time, it is likely that at least
+    one cache set exceeds this limit. An eviction of a line from
+    the cache automatically leads to a failure of this transaction
+    as it would become impossible to detect conflicting writes to
+    this cache line.
+    \end{quotation}
+    
+    \textbf{\Large{This is the real issue that concerns me - cache line eviction!}}
+    
+    "Thread failures and delays" as a form of problem in locking based systems. \cite{herlihy2014future}
+    
+    \cite{joshi2015efficient}
+    
+    \begin{quotation}
+        At the time of failure, the
+    cache might have 
+    pushed the pointer write to persis-
+    tent memory, but the write to the node might still be
+    in the cache leading to an inconsistent state of the data
+    structure in persistent memory.
+    \end{quotation}
+    
+    \cite{Oukid:2014:SHS:2619228.2619236} - they have an example of split writes as well and how they protect against it.
+    
+    \cite{arulraj2015let} - discussion about failure recovery in NVM.  Again, its torn writes and how to recover from them.
+    
+    \cite{dulloor2015systems} - this discusses use of atomics to avoid the torn write situation.
+    
+    \cite{chatzistergiou2015rewind} - another discussion of failure.  They discuss issues of ``careful ordering''.
+    
+    \begin{quotation}
+    
+        The non-volatility
+    property has the promise to persist in-memory data structures for
+    instantaneous failure recovery. However, realizing such promise
+    requires a careful design to ensure that in-memory data structures
+    are in known consistent states after failures.
+    \cite{chen2015persistent}
+    \end{quotation}
+    
+    
+    \cite{liang2016case} - failures from power fail/system failure.
+    
+    \begin{quotation}
+    
+        This paper describes a lightweight software library to solve
+        the challenges [6], [3], [1], [5], [2] of programming storage
+        class memory (SCM). It provides primitives to demarcate
+        failure-atomic code regions. SCM loads and stores within
+        each demarcated code region (called a ”wrap”) are routed
+        through the library, which buffers updates and transmits them
+        to SCM locations asynchronously while allowing their speedy
+        propagation from writers to readers through CPU caches.
+            \cite{giles2015transaction}
+    \end{quotation}
+    
+    \begin{quotation}
+        Failure model. ThyNVM allows software applications to
+    resume CPU execution from a consistent checkpoint of
+    memory data after system failures, such as system crashes
+    or power loss. To this end, we periodically checkpoint memory
+    data updates and the CPU state, including registers, store
+    buffers and dirty cache blocks. Our checkpointing schemes
+    protect persistent memory data and CPU states from corruption
+    on system failures.
+    \cite{ren2015thynvm}
+    \end{quotation}
+    
+    \begin{quotation}
+        Providing strong consistency guarantees is particularly
+    challenging for memory-based file systems because maintaining
+    data consistency in NVMM can be costly. Modern
+    CPU and memory systems may reorder stores to memory to
+    improve performance, breaking consistency in case of system
+    failure. To compensate, the file system needs to explicitly
+    flush data from the CPU’s caches to enforce orderings, adding
+    significant overhead and squandering the improved performance
+    that NVMM can provide.\cite{xu2016nova}
+    \end{quotation}
+    
+    yet another example of ``systems failure''\cite{lu2017improving}
+    
+    \begin{quotation}
+        Importantly, most of these applications
+    need to update their data without risking corruption
+    after a failure as failure-consistent update is a fundamental
+    requirement for computer systems.\cite{ou2016fast}
+    \end{quotation}
+    
+    \begin{quotation}
+        Persistent memory invites applications to manipulate persistent
+    data via LOAD and STORE instructions. Because failures
+    during updates may destroy transient data (e.g., in CPU
+    registers), preserving data integrity in the presence of failures
+    requires failure-atomic bundles of updates. Prior failure
+    atomicity approaches for persistent memory entail overheads
+    due to logging and CPU cache flushing.
+        \cite{izraelevitz2016failure}
+    \end{quotation}
+    
+    More power failure: \cite{Maeng:2017:AIE:3152284.3133920}
+    
+    \begin{quotation}
+        A failure to load any one persistent
+    structure of an application makes an entire application
+    state unusable.\cite{kannan2016pvm}
+    \end{quotation}
+    
+    \begin{quotation}
+        The advent of Storage Class Memory (SCM) is disrupting the database
+    landscape and driving novel database architectures that store data,
+    access it, and modify it directly from SCM at a cache-line granularity
+    [3, 7, 9]. However, the no free lunch folklore conjecture
+    holds more than ever as SCM brings unprecedented challenges. Consistency
+    failure scenarios and recovery strategies of software that
+    persists data depend on the underlying storage technology. In the
+    traditional case of block-based devices, software has full control
+    over when data is made persistent. Basically, software schedules I/O
+    to persist modified data at a page granularity. The user level has no
+    direct access to the primary copy of the data and can only access
+    copies of the data that are buffered in main memory. Hence, software
+    errors can corrupt data only in main memory which can be reverted
+    as long as the corruption was not explicitly propagated to storage.
+    In fact, crash-safety for block-based software highly depends on the
+    correctness of the underlying file system. In contrast, SCM is byte addressable
+    and is accessed via a long volatility chain that includes
+    store buffers, CPU caches, and the memory controller buffers, over
+    all of which software has little control. The SNIA [2] recommends
+    to manage SCM using an SCM-aware file system that grants the application
+    layer direct access to SCM with mmap, enabling load/store
+    semantics. As a side effect, changes can be speculatively propagated
+    from the CPU cache to SCM at any time, and compilers and outof-
+    order CPU execution can jeopardize consistency by reordering
+    memory operations. Moreover, changes are made persistent at a
+    cache line granularity which necessitates the use of CPU persistence
+    primitives. This adds another level of complexity as enforcing the
+    order in which changes are made persistent cannot be delayed like
+    with block-based devices, and must be synchronous. In addition to
+    data consistency, memory leaks in SCM have a deeper impact than
+    in DRAM. This is because SCM allocations are persistent, hence, a
+    memory leak would also be persistent.\cite{oukid2016testing}
+    \end{quotation}
+    
+    \begin{quotation}
+        Finally, PM applications have to be crashrecoverable.
+    In contrast to volatile memory programs, they
+    have to carefully order and persist writes to memory with
+    respect to failures. At a low level, these properties are ensured
+    by (i) explicitly writing data back from the processor
+    cache to PM, (ii) enforcing ordering between writes to dependent
+    structures [15], and (iii) waiting for data to become
+    durable in PM before continuing execution.\cite{Nalli:2017:APM:3093337.3037730}
+    \end{quotation}
+    
+    \begin{quotation}
+        Hotpot provides three guarantees: coherence among cached copies
+    of in-PM data, recovery from various types of failures into a consistent
+    state, and user data reliability and availability under concurrent
+    failures.
+        \cite{shan2017distributed}
+    \end{quotation}
+    
+    \textit{This} is the kind of ``hand-waving'' that makes analyzing this difficult.
+    
+    Another ``power failure and system crash'' definition of failure.\cite{liu2017durable}
+    
+    \begin{quotation}
+        [T]he restart mechanism must find a consistent state in durable storage, which may
+    have last written at an arbitrary point in a program’s execution. This problem is well-known in the
+    database community, and a significant portion of a DB system is devoted to ensuring durability in the
+    presence of failures. NVM is different, however, because writes are fine-grain and low-cost and are
+    initiated by store instructions. A further complication is that a processor’s memory system reorders
+    writes to NVM, making it difficult to ensure that program state, even when consistent in memory,
+    is recorded consistently to durable storage. In the interest of high performance, processors employ
+    caches and write buffers and store values to memory at unpredictable times. As a consequence,
+    stored values may not reach NVM in the same order in which a program executes them, which
+    complicates capturing a consistent snapshot in durable storage.\cite{Cohen:2017:ELN:3152284.3133891}
+    \end{quotation}
+    
+    \begin{quotation}
+        Although they share the same goals, crash-safety testing for
+    disk-based and SCM-based software are different in that they
+    have to address radically different failure scenarios, such as
+    missing or misplaced persistence primitives. Consistency and
+    recovery testing of SCM-based software did not get much
+    attention so far.\cite{oukid2017data}
+    \end{quotation}
+    
+    \begin{quotation}
+        Due to power constraints, we expect that writes and flushes into
+    NVM will be guaranteed to be failure-atomic only at increments of eight bytes – not across a
+    full 64-byte cache line.\cite{nawab2017dali}
+    \end{quotation}
+    
+    more ``power fail''\cite{joshi2017atom}
+    
+    \begin{quotation}
+        A language-level persistency model has to provide programmers with guarantees on
+    two orthogonal properties: (a) the granularity of failure-atomic regions (i.e., persists from
+    one region are committed to PM atomically) and (b) the ordering of these regions. Programmers
+    need both these guarantees to write correct recoverable software. Figure 5.1
+    shows the various options that a language may choose to provide for each of these guarantees
+    and places existing academic and industrial proposals for persistent programming
+    within this taxonomy. The granularity of failure atomicity can vary from an individual
+    persist (8-byte atomic writes) to a synchronization free region (code between two synchronization
+    accesses) to an outer critical section (code between the first lock acquired by a
+    thread until the thread holds no locks). It is important to note that if a programmer desires
+    87
+    a larger granularity of failure atomicity than what is natively provided by the language, she
+    can achieve it through undo or write-ahead logging mechanisms.\cite{kolli2017architecting}
+    \end{quotation}
+    
+    \begin{quotation}
+        Given the already challenging problem of ensuring failure safety ...\cite{wang2017hardware}
+    \end{quotation}
+    
+    ``system failure''\cite{xia2017hikv}
+    
+    \begin{quotation}
+        Failure-atomic slotted paging
+    consists of two key elements: (i) in-place commit
+    per page using hardware transactional memory and (ii) slotheader
+    logging that logs the commit mark of each page.
+        \cite{seo2017failure}
+    \end{quotation}
+    
+    Interesting: they use hardware transactional memory as part of their work.
+    
+    So many papers that talk about NVM and ``failures'' but never define what failures are.
+    \cite{wu2018espresso}
+    
+    \begin{quotation}
+        A safe way to
+    manipulate persistent data is to ensure that data structure
+    updates are failure atomic, i.e., even in the presence of
+    failures, either all or none of the updates are reflected in
+    the NVM. The challenge in implementing failure atomicity
+    is to correctly handle partial updates even in the presence
+    of multi-threading, volatile caches, and reordering of NVM
+    writes by the processor. Managing persistent data structures
+    is costly due to these challenges (e.g., frequently flushing
+    cache lines to NVM is very costly [37]). For any persistent
+    programming system to be practical, its overheads should
+    be low enough that applications actually benefit from using
+    NVM.\cite{Hsu:2017:NPP:3064176.3064204}
+    \end{quotation}
+    
+    \begin{quotation}
+        The fundamental problem is that failures, such as
+        operating system crashes, hardware lockups, or power disruptions,
+        may occur at any time, and thereby introduce a data race into an
+        otherwise race-free program: loads performed during recovery inherently
+        race with stores before the failure. A failure may interrupt
+        the atomicity of a critical section, exposing a partial (and possibly
+        reordered) set of updates to PM to recovery code.\cite{Kolli:2017:LP:3140659.3080229}
+    \end{quotation}
+    
+    \begin{quotation}
+        All this state
+    needs to be persisted correctly, including when there is a
+    failure in the middle of the operation. Ensuring failure atomicity
+    for all this computation without failure-atomic
+    transactions is practically infeasible, if not impossible.\cite{marathe2017persistent}
+    \end{quotation}
+    
+    \begin{quotation}
+        Data consistency is difficult to ensure in systems with volatile caches
+    because the order in which values are persisted (e.g. written back to
+    the NVMM) depends on the cache replacement policy, which often
+    differs from program order.\cite{shin2017proteus}
+    \end{quotation}
+    
+    \begin{quotation}
+        In this work, we design and develop clfB-tree—a B-tree structure whose tree node fits in a single cache
+    line.We employ existing write combining store buffer and restricted transactional memory to provide a failure atomic
+    cache line write operation. Using the failure-atomic cache line write operations, we atomically update
+    a clfB-tree node via a single cache line flush instruction without major changes in hardware.\cite{kim2018clfb}
+    \end{quotation}
+    
+    \begin{quotation}
+        In the traditional block-based storage device,
+    the failure atomicity unit, which is the update unit
+    where consistent state is guaranteed upon any system
+    failure, has been the disk block size. However, as persistent
+    memory, which is byte-addressable and non-volatile,
+    will be accessible though the memory bus rather than via
+    the PCI interface, the failure atomicity unit for persistent
+    memory is generally expected to be 8 bytes or no larger
+    than a cache line [5, 6, 12, 13, 15, 19].
+    The smaller failure atomicity unit, however, appears
+    to be a double-edged sword in the sense that though this
+    allows for reduction of data written to persistent store,
+    it can lead to high overhead to enforce consistency. This
+    is because in modern processors, memory write operations
+    are often arbitrarily reordered in cache line granularity
+    and to enforce the ordering of memory write operations,
+    we need to employ memory fence and cache
+    line flush instructions [21]. These instructions have been
+    pointed out as a major cause of performance degradation
+    [3, 9, 15, 20]. Furthermore, if data to be written is
+    larger than the failure-atomic write unit, then expensive
+    mechanisms such as logging or copy-on-write (CoW)
+    must be employed to maintain consistency.\cite{lee2017wort}
+    \end{quotation}
+    
+    \begin{quotation}
+        Another example is the
+    asynchronous DRAM refresh (ADR) feature provided by
+    modern processors, where the memory controller buffers
+    are flushed out to memory DIMMs on power failure [15].
+    With the ADR feature, the memory controller buffers can
+    be considered effectively persistent since the data is guaranteed,
+    discounting ADR hardware failures, to persist.
+    There may be other ways to slice the memory hierarchy
+    in persistent and nonpersistent parts; however, we focus
+    on 3 specific partitioning strategies that we believe will
+    capture most future system configurations.\cite{marathe2018persistent}
+    \end{quotation}
+    
+    This feature of ADR is \textit{very} important to the failure model.
+    
+    \begin{quotation}
+        As mentioned earlier, today’s processors have no mechanism
+    for preventing memory writes from reaching memory
+    and doing so for arbitrarily large updates would be
+    infeasible. Similarly, there is no guarantee that writes
+    will not be reordered by either the processor or by the
+    memory controller. While processors support a mfence
+    instruction, it only provides write visibility and does not
+    guarantee that all memory writes are propagated to memory
+    (NVBM in this case) or that the ordering of writes is
+    maintained. While cache contents can be flushed using
+    the wbinvd instruction, it is a high-overhead operation
+    (multiple ms per invocation) and flushes the instruction
+    cache and other unrelated cached data. While it is possible
+    to mark specific memory regions as write-through,
+    this impacts write throughput as all stores have to wait
+    for the data to reach main memory.\cite{venkataraman2011consistent}
+    \end{quotation}
+    
+    \end{comment}
+    
