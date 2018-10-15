@@ -387,14 +387,39 @@ on the actual test system. These tests, and the results, are shown in Table \ref
 The results were slightly faster, as I was using a newer system, but within 20\% of the original
 Intel reference numbers.
 
+Figure \ref{chart:aep:bw} shows the bandwidth evaluation; the test system has somewhat better bandwidth than the Intel reference system.
+
+Figure \ref{chart:aep:idle} shows the idle latency evaluation; the test system has somewhat better idle latency than the Intel reference system.
+
+Figure \ref{chart:aep:read} shows the random read evaluation for the
+test system.  Again, it is somewhat better than the Intel reference
+system results.
+
+These better measurements are indicative of the fact that the system
+under test was more recent hardware than the original Intel reference
+system.  The improvements are modest (approximately 10\%) and seem
+to be consistent across the various tests.  Thus, I concluded that my
+experimental setup was correct.
+
+Evaluating how Intel was performing these tests provided me with
+insight into how Intel was using the \acs{MLC} test program.  Notably
+they were using undocumented switches and generated specific
+configurations for testing that indicated specific optimization for
+their target benchmarks.  For example, Intel allocates \textbf{two}
+cores (``threads'') per NVM DIMM module for performing their load
+generation.  As a result, in my own testing I used a varied number of
+threads to evaluate this area further.
+
 \subsection{Non-Temporal Baseline Measurements}
 
+This section describes the information for \textbf{non-temporal move}
+operations on the same node. Because these are done as non-temporal
+move operations, they bypass the cache and write directly to the actual
+memory.  Note that I discuss the failure domain in greater detail in 
+\S \ref{section:model:failure}.
+The transfer involved here is sufficiently large that the impact of 
+the memory controller caching does not impact behavior.
 
-This section describes the information for \textbf{non-temporal move} operations on the same node. Because
-these are done as non-temporal move operations, they bypass the cache and write directly to the actual
-memory.  Note that the failure domain is discussed in greater detail in \S \ref{section:model:failure}.
-The transfer involved here is sufficiently large that the impact of the memory controller caching
-does not impact behavior.
 
 \subsubsection{DRAM}\label{baseline:dram}
 
@@ -426,7 +451,16 @@ The control file specified the disposition of the individual CPUs
 
 I do not report results for any other DRAM tests.
 
-Results for this test are showin in Figure \ref{chart:baseline:dram}.
+Figure \ref{chart:baseline:dram} shows a baseline test for
+non-temporal read operations with various stride sizes.  This
+establishes the ``optimal'' performance using dynamic memory. One core
+is used to measure the loaded bandwidth, the other 23 cores are used
+to generate load.  It is interesting to note that a 32 byte stride
+size provides the best bandwidth measurement (1600000 MB/s 
+sequential).  I suspect this is due to prefetching and caching 
+behavior, though I
+did not validate this theory.  The 64 byte stride size (one cache line)
+provides half this (80000 MB/s). 
 
 \subsubsection{NVM}\label{baseline:nvm}
 
@@ -455,15 +489,63 @@ The \verb+pmem+ directive is used to put the test utility into ``persistent memo
 The final value is the name of the directory to use.  It \textbf{must} be a persistent memory
 to run this test.  Otherwise the test will refuse to run.
 
+Figure \ref{chart:baseline:nvm} shows a baseline test for non-temporal
+read operations.  In this case the measurements show both NUMA local
+as well as cross-NUMA node persistent memory values.  Note that
+these values are substantialy below the DRAM values by more than an
+order of magnitude.  The cross-node performance was surprising to
+me, as I would have expected the memory bandwidth to be the rate
+limiting issue, but apparently there is some consideration in the NUMA
+memory management that imposes a substantial performance restriction.
 
-\subsection{Cached Read}\label{mlc:r}
+Equally surprising is that the cost of random versus sequential
+operations converge fairly quickly
 
-\subsubsection{Random Read}
+\subsection{Read}\label{mlc:r}
+
+I tested specific configurations for random read and those are
+reported in this section in more detail than likely anyone will read.
+Note that these are cached reads.
+
+\subsubsection{Random}\label{mlc:r:rand}
 \begin{figure}
     \centering
     \caption{Random Read (R)}\label{chart:random:read}
     \includegraphics[scale=0.5]{charts/random-r-crop.pdf}
 \end{figure}
+
+Random read testing was done using the switches:
+
+\begin{verbatim}
+    --loaded_latency -d0 -t10 -R -l64 \
+     -odata/bw_ctl_pmem0p1_rand_R-0_12_400000_pmem.dat
+\end{verbatim}
+
+Note that the \verb+-l+ parameter was varied for different
+stride sizes, and the configuration file was varied to control
+the number of cores being used in the test.
+
+The file \verb+data/bw_ctl_pmem0p1_rand_R-0_23_400000_dram.dat+ contained the confirmation information
+for the specific test layout:
+
+\begin{verbatim}
+0	R rand 400000 pmem /mnt/pmem0p1
+1-12	R rand 400000 pmem /mnt/pmem0p1
+\end{verbatim}
+
+The results from this test are shown in Figure \ref{chart:random:read}.
+Note that the chart shows both bandwidth and latency in a single
+chart; bandwidth is along the left y-axis and latency is along the
+right x-axis.
+
+Random read performance shows quite well at two cores, which suggests
+that may be why Intel performance figures have been computed using two
+cores for loading with 256 byte stride sizes.
+
+These figures help better observe the nature of concurrency costs when
+accessing non-volatile memory.
+
+\subsubsection{Sequential}\label{mlc:r:seq}
 
 \begin{figure}
     \centering
@@ -471,17 +553,105 @@ to run this test.  Otherwise the test will refuse to run.
     \includegraphics[scale=0.5]{charts/sequential-r-crop.pdf}
 \end{figure}
 
+Sequential read is a common operation; it is also one that I would
+expect is an optimal case, benefitting from caches and prefetch
+logic.
+
+Sequential read testing was done using the switches:
+
+\begin{verbatim}
+    --loaded_latency -d0 -t10 -R -l64 \
+    -odata/bw_ctl_pmem0p1_seq_R-0_20_400000_pmem.dat
+\end{verbatim}
+
+Note that the \verb+-l+ parameter was varied for different
+stride sizes, and the configuration file was varied to control
+the number of cores being used in the test.
+
+The file \verb+data/bw_ctl_pmem0p1_seq_R-0_20_400000_pmem.dat+ contained the confirmation information
+for the specific test layout:
+
+\begin{verbatim}
+0	R seq 400000 pmem /mnt/pmem0p1
+1-20	R seq 400000 pmem /mnt/pmem0p1
+\end{verbatim}
+
+Figure \ref{chart:sequential:read} shows the results from this test.
+The performance for sequential read is substantially better than
+random read (see \S \ref{mlc:r:rand}), both in terms of bandwidth
+and latency.
+
+\subsection{Mixed Read/Write 2:1}
+
+This workload consists of a mixed read/write at two-to-one ratio and
+is considered for both random and sequential access patterns.
+
+\subsubsection{Random}
+
 \begin{figure}
     \centering
     \caption{Random 2:1 Read/Write (W2)}\label{chart:random:W2}
     \includegraphics[scale=0.5]{charts/random-w2-crop.pdf}
 \end{figure}
 
+Random read testing was done using the switches:
+
+\begin{verbatim}
+    --loaded_latency -d0 -t10 -W2 -l64 \
+    -odata/bw_ctl_pmem0p1_rand_W2-0_20_400000_pmem.dat
+\end{verbatim}
+
+Note that the \verb+-l+ parameter was varied for different
+stride sizes, and the configuration file was varied to control
+the number of cores being used in the test.
+
+The file \verb+data/bw_ctl_pmem0p1_rand_W2-0_20_400000_pmem.dat+ contained the confirmation information
+for the specific test layout:
+
+\begin{verbatim}
+0	W2 rand 400000 pmem /mnt/pmem0p1
+1-20	W2 rand 400000 pmem /mnt/pmem0p1
+\end{verbatim}
+
+Figure \ref{chart:random:W2} shows the results from this test.
+
+The results here suggest that bandwidth decreases with more cores,
+possibly due to some contention issues, but appears to be stable
+after 12 or so cores are active, though latency rises rapidly
+above four cores.
+
+\subsubsection{Sequential}
+
 \begin{figure}
     \centering
     \caption{Sequential 2:1 Read/Write (W2)}\label{chart:sequential:W2}
     \includegraphics[scale=0.5]{charts/sequential-w2-crop.pdf}
 \end{figure}
+
+Sequential read testing was done using the switches:
+
+\begin{verbatim}
+    --loaded_latency -d0 -t10 -W2 -l64 \
+    -odata/bw_ctl_pmem0p1_seq_W2-0_20_400000_pmem.dat
+\end{verbatim}
+
+Note that the \verb+-l+ parameter was varied for different
+stride sizes, and the configuration file was varied to control
+the number of cores being used in the test.
+
+The file \verb+data/bw_ctl_pmem0p1_seq_W2-0_20_400000_pmem.dat+ contained the confirmation information
+for the specific test layout:
+
+\begin{verbatim}
+0	W2 seq 400000 pmem /mnt/pmem0p1
+1-20	W2 seq 400000 pmem /mnt/pmem0p1
+\end{verbatim}
+
+Figure \ref{chart:sequential:W2} shows the results from this test.
+
+Bandwidth results are more consistent for this workload.
+
+\subsection{Mixed Sequential Read/Write 2:1}
 
 \begin{figure}
     {\centering
@@ -490,7 +660,7 @@ to run this test.  Otherwise the test will refuse to run.
     }
 \end{figure}
 
-
+\subsection{Mixed Random Read/Write }
 
 \begin{figure}
     \centering
@@ -498,9 +668,9 @@ to run this test.  Otherwise the test will refuse to run.
     \includegraphics[scale=0.5]{charts/random-w5-crop.pdf}
 \end{figure}
 
+\subsection{Non-Temporal Write}
 
-
-
+\subsubsection{Random}
 
 \begin{figure}
     \centering
@@ -508,24 +678,7 @@ to run this test.  Otherwise the test will refuse to run.
     \includegraphics[scale=0.5]{charts/random-w6-crop.pdf}
 \end{figure}
 
-\begin{figure}
-    \centering
-    \caption{Random 2:1 Read to Non-Temporal Write (W7)}\label{chart:random:W7}
-    \includegraphics[scale=0.5]{charts/random-w7-crop.pdf}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \caption{Random 1:1 Read to Non-Temporal Write (W8)}\label{chart:random:W8}
-    \includegraphics[scale=0.5]{charts/random-w8-crop.pdf}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \caption{Sequential 1:1 Read to Write (W5)}\label{chart:sequential:W5}
-    \includegraphics[scale=0.5]{charts/sequential-w5-crop.pdf}
-\end{figure}
-
+\subsubsection{Sequential}
 
 \begin{figure}
     \centering
@@ -534,12 +687,44 @@ to run this test.  Otherwise the test will refuse to run.
 \end{figure}
 
 
+\subsection{Non-Temporal Read/Write 2:1}
+
+\subsubsection{Random}
+
+\begin{figure}
+    \centering
+    \caption{Random 2:1 Read to Non-Temporal Write (W7)}\label{chart:random:W7}
+    \includegraphics[scale=0.5]{charts/random-w7-crop.pdf}
+\end{figure}
+
+\subsubsection{Sequential}
+
 \begin{figure}
     \centering
     \caption{Sequential 2:1 Read to Non-Temporal Write (W7)}\label{chart:sequential:W7}
     \includegraphics[scale=0.5]{charts/sequential-w7-crop.pdf}
 \end{figure}
 
+
+\subsection{Non-Temporal Read/Write 1:1}
+
+\subsubsection{Random}
+
+\begin{figure}
+    \centering
+    \caption{Random 1:1 Read to Non-Temporal Write (W8)}\label{chart:random:W8}
+    \includegraphics[scale=0.5]{charts/random-w8-crop.pdf}
+\end{figure}
+
+\subsubsection{Sequential}
+
+\begin{figure}
+    \centering
+    \caption{Sequential 1:1 Read to Write (W5)}\label{chart:sequential:W5}
+    \includegraphics[scale=0.5]{charts/sequential-w5-crop.pdf}
+\end{figure}
+
+\subsection{Sequential Streaming Triad Read/Non-Temporal Write 3:1}
 
 \begin{figure}
     \centering
