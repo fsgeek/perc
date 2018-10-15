@@ -1,0 +1,2 @@
+0	W5 seq 400000 pmem /mnt/pmem0p1
+1-16	W5 seq 400000 pmem /mnt/pmem0p1

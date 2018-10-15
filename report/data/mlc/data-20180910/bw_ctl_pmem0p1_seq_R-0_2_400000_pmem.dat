@@ -1,0 +1,2 @@
+0	R seq 400000 pmem /mnt/pmem0p1
+1-2	R seq 400000 pmem /mnt/pmem0p1

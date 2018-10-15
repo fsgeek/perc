@@ -1,0 +1,2 @@
+0	W6 seq 400000 pmem /mnt/pmem10
+1-23	W6 seq 400000 pmem /mnt/pmem10

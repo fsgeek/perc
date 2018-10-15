@@ -1,0 +1,2 @@
+0	W8 rand 400000 pmem /mnt/pmem0p1
+1-4	W8 rand 400000 pmem /mnt/pmem0p1
