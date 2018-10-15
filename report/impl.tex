@@ -549,6 +549,73 @@ to run this test.  Otherwise the test will refuse to run.
 
 \section{Micro-Benchmark Results}\label{section:results:micro}
 
+\begin{figure}
+    \centering
+    \caption{NVM Cache Flush Measurements}\label{micro:cache-flush}
+    \includegraphics[scale=0.35]{micro/nvm-cache-flush-measurements.pdf}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \caption{NVM CLFLUSHOPT (Different CPU Set)}\label{micro:clflushopt:different}
+    \includegraphics[scale=0.35]{micro/nvm-clflushopt-periodic-different.pdf}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \caption{NVM CLFLUSHOPT (Same CPU Set)}\label{micro:clflushopt:same}
+    \includegraphics[scale=0.35]{micro/nvm-clflushopt-periodic-same.pdf}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \caption{NVM CLFLUSH (Different CPU Set)}\label{micro:clflush:different}
+    \includegraphics[scale=0.35]{micro/nvm-clflush-periodic-different.pdf}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \caption{NVM CLFLUSH (Same CPU Set)}\label{micro:clflush:same}
+    \includegraphics[scale=0.35]{micro/nvm-clflush-periodic-same.pdf}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \caption{NVM CLWB (Different CPU Set)}\label{micro:clwb:different}
+    \includegraphics[scale=0.35]{micro/nvm-clwb-periodic-different.pdf}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \caption{NVM CLWB (Same CPU Set)}\label{micro:clwb:same}
+    \includegraphics[scale=0.35]{micro/nvm-clwb-periodic-same.pdf}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \caption{NVM Linked List Baseline (No Flush)}\label{micro:llbaseline:noflush}
+    \includegraphics[scale=0.35]{micro/nvm-linked-list-baseline-no-flush.pdf}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \caption{NVM Linked List Baseline (With Flush)}\label{micro:llbaseline:flush}
+    \includegraphics[scale=0.35]{micro/nvm-linked-list-baseline-with-flush.pdf}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \caption{NVM Periodic Fence, No Flush, Different Cache Set}\label{micro:sfence:noflush:different}
+    \includegraphics[scale=0.35]{micro/nvm-noflush-periodic-different.pdf}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \caption{NVM Periodic Fence, No Flush, Same Cache Set}\label{micro:sfence:noflush:same}
+    \includegraphics[scale=0.35]{micro/nvm-noflush-periodic-same.pdf}
+\end{figure}
+
 \section{Memory Allocator Results}\label{section:results:malloc}
 
 \begin{figure}
