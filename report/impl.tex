@@ -1399,7 +1399,7 @@ lost.
 
 Evolving from the simple fencing, I broadened my analysis to include periodic fencing.  This section describes those measurements.  In this case there is no flushing.  This helps understand the cost of fence operations. 
 
-
+In this subsection I look at the use of periodic fencing with both the same and different cache sets (as described more fully in \S \ref{micro:sec:cachesets}).
 
 \subsubsection{Different Cache Set}
 
@@ -1409,6 +1409,11 @@ Evolving from the simple fencing, I broadened my analysis to include periodic fe
     \includegraphics[scale=0.35]{micro/nvm-noflush-periodic-different.pdf}
 \end{figure}
 
+The results from these tests are shown in Figure \ref{micro:sfence:noflush:different}.
+
+These results are surprisingly similar to those observed when using flush operations (\S \ref{micro:sec:clflushopt},
+\S \ref{micro:sec:clflush}, and \S \ref{micro:sec:clwb}).  Further analysis may be required to understand
+if there is any benefit to the cache flush operations.
 
 \subsubsection{Same Cache Set}
 
@@ -1418,14 +1423,68 @@ Evolving from the simple fencing, I broadened my analysis to include periodic fe
     \includegraphics[scale=0.35]{micro/nvm-noflush-periodic-same.pdf}
 \end{figure}
 
+The results from these tests are shown in Figure \ref{micro:sfence:noflush:different}.
+
+These result are essentially the same as seen when using a different cache set; this was
+to such an extent that I went back and confirmed they were not the same --- they are not,
+but they are quite similar.
+
 \section{Memory Allocator Results}\label{section:results:malloc}
 
+The memory allocator studies consist of four distinct tests:
+
+\begin{description}
+\item[Alloc/Free/Alloc Test] --- this performs a multi-threaded allocate/free/allocate sequence of 100,000 items per thread. See \S \ref{section:results:malloc:afa}.
+\item[Alloc/Free Test] --- this performs a multi-threaded alloc/free sequence of 100,00 items per thread. See \S \ref{section:results:malloc:af}.
+\item[Fast Alloc Test] --- this performs a multi-threaded allocation of 100,000 items per thread. See \S \ref{section:results:malloc:fa}
+\item[Linked List Test] --- this performs a multi-threaded allocation and insertion into a linked list, 100,000 items per thread. See \S \ref{section:results:malloc:ll}
+\end{description}
+
+For each case the number of threads is varied.  All allocations are 64 bytes (fixed).
+
+Five allocators are evaluated.  A sixth (Makalu) is not included in these figures because its performance was so poor it made the charts not useful for evaluating the other allocators.
+
+All of these allocators conform to the \textbf{malloc} interface.  The test framework adds an absolute-to-relative and
+relative-to-absolute addressing function to enable storing
+the pointers persistently as well as accessing them using
+pointer operations in memory.
+
+The five allocators evaluated are:
+
+\begin{description}
+    \item[malloc] --- this is one of the baseline allocators and is evaluated using DRAM on the target machine.  It uses the system standard \texttt{malloc} implementation which on this test system was \textbf{glibc}.
+    \item[jemalloc] --- this is a NUMA and core aware allocator that provides excellent scalable performance.  It is evaluated against DRAM and is the second baseline allocator for this evaluation.
+    \item[nvm] --- This is the HPI persistent memory allocator (see \S \ref{section:model:methodology:malloc} for more details).
+    \item[pmcto] -- this is the PMDK experimental allocator with \textbf{open/cose} consistency guarantees only --- it does not flush or fence.
+    \item[pmobj] --- this is the PMDK object allocator with objectallocation guarantees; it is based upon a version of \textit{jemalloc} that has been modified to work with persistent memory.      
+\end{description}
+
+As I will discuss in \S \ref{ch:Discussion} additional
+allocators should be evaluated and/or developed for use with
+non-volatile memory.
+
+\subsection{Alloc/Free/Alloc Test}\label{section:results:malloc:afa}
 \begin{figure}
     \centering
     \caption{Memory Allocation Tests (Alloc-Free-Alloc)}\label{plot:afa}
     \includegraphics[scale=0.35]{malloc/alloc_free_alloc.pdf}
 \end{figure}
 
+The results for this test are shown in Figure \ref{plot:afa}.
+
+Observations:
+
+\begin{description}
+    \item[jemalloc] --- this provides a highly scalable implementation in DRAM.  It represent more of a sanity check that the system is working as expected as I would not expect to see performance below this from persistent memory (unless it was \textit{faster} than the DRAM on the system).
+    \item[malloc] --- this is not an optimal implementation, but provides an example of a non-NUMA, multi-core optimized allocator can provide.
+    \item[pmcto] --- given that this is the optimized \acs{PMDK} version of malloc without flush or fence, it should represent the optimal possible performance on the current system.
+    \item[nvm] --- this result was surprising: this is clearly a better performing allocator than is present in the PMDK. It's performance without flush/fence is not as good as the PMDK, but it's performance \textit{with} flush/fence is substantially better than the PMDK's object allocator.
+    \item[pmobj] --- this is the PMDK's object allocator; it provides variable size objects to the caller, with persistence.  Note that the contents of the object are not managed by the PDMK by default; applications must be written to use PMDK interfaces to properly flush and fence.     
+\end{description}
+
+Non-volatile memory allocators are still fairly inefficient.  There is certainly room for improvement.
+
+\subsection{Alloc/Free Test}\label{section:results:malloc:af}
 
 \begin{figure}
     \centering
@@ -1433,17 +1492,45 @@ Evolving from the simple fencing, I broadened my analysis to include periodic fe
     \includegraphics[scale=0.35]{malloc/alloc_free.pdf}
 \end{figure}
 
+The results from this test are shown in Figure \ref{plot:af}.
+
+The observations here are similar to those in \S \ref{section:results:malloc:afa}.  It is interesting to note that once again the HPI allocator (``nvm'') has the same performance with or without the use of \texttt{clflushopt}.
+
+\subsection{Fast Alloc Test}\label{section:results:malloc:fa}
+
 \begin{figure}
     \centering
     \caption{Memory Allocation Tests (Fastalloc)}\label{plot:fastalloc}
     \includegraphics[scale=0.35]{malloc/fastalloc.pdf}
 \end{figure}
 
+The results for this test are shown in Figure \ref{plot:fastalloc}.
+
+Recall that this is an allocation only test, none of the
+memory is freed.
+
+These results actually \textit{do} have some surprises in them:
+
+\begin{itemize}
+    \item pmcto is only slightly worse than the glibc \texttt{malloc}.
+    \item nvm \textbf{without} flush/fence operations performs worse than \textit{with} flush/fence operations on several tests and is remarkably close.
+    \item pmobj remains the least performance allocator shown (Makalu was \textit{far} worse).
+\end{itemize}
+
+This raises interesting questions regarding the efficiency of deletion operations.
+
+\subsection{Linked List Test}\label{section:results:malloc:ll}
+
 \begin{figure}
     \centering
     \caption{Memory Allocation Tests (Linkedlist)}\label{plot:linkedlist}
     \includegraphics[scale=0.35]{malloc/linkedlist.pdf}
 \end{figure}
+
+The results for this test are shown in Figure 
+\ref{plot:linkedlist}.
+
+No significant observations from this particular data; may require further analysis.
 
 
 \endinput

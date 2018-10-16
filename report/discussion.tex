@@ -4,17 +4,101 @@
 \chapter{Discussion}
 \label{ch:Discussion}
 
+In this section I attempt to summarize the important observations that have emerged from my analysis and future work that can build upon those findings.
+
 \section{Observations}
+
+There are quite a few detailed observations in Chapter \ref{ch:Results}.  My goal is to extract the most significant of those and summarize them here:
+
+\begin{itemize}
+    \item Non-volatile Memory, as currently implemented by Intel and presented in Apache Pass, is not a performance play.  This is not a DRAM replacement. To make effective use of it we need to play to its strengths: persistence and size. Techniques such as striping may prove beneficial to improve performance: testing parallel access to \textit{different} NVM modules may provide further insight into whether or not this could be effective.
+    \item Working with non-volatile memory is generally not a ``drop-in'' replacement.  I did not explore this extensively in this research, but the literature fairly clearly points out the problems of mixing volatile and non-volatile memory.  In discussing this, one interesting model to help address this was to consider using a portion of the extended address space to present NVM as a form of key-value store.  This is discussed (albeit briefly) in \S \ref{discussion:kvstore}.
+    \item Slightly relaxed fencing can lead to substantial improvements in overall performance.
+    \item Cache set awareness can create a natural way to limit the failure window and minimize the cost of performing sfence operations.
+    \item Consideration of failure models is vital to effective use and understanding of NVM.  Failure for non-volatile memory requires rethinking how things fail; this is well-described in the literature but easily overlooked.  A better model for failure may be useful here.
+    \item Exploiting NVM is likely to require either program language support or purpose build and tuned systems.  Program languages can help deal with the problems of mixing persistent and dynamic memory systems.  Purpose built systems can be carefully crafted by experienced developers (e.g., systems developers) who are familiar with the challenges of mixing persistent and ephemeral address spaces.
+\end{itemize}
+
+There are quite a few areas that I was not able to explore in the given time period; such is the nature of research.
+
+An open question is how useful it is to explore this research space further, given the present state of the technology and the 25+ \textit{years} that have already been spent analyzing persistent memory.
 
 \section{Future Work}
 
 The work that I have done here has raised more questions and potential new avenues to explore than provided answers.  Some of these I expect to continue exploring and I describe them here.  Some are more speculative ideas that may warrant further exploration.  I include both of these to demonstrate some of the fruits of this research project as well as provide a semi-coherent reminder of these thoughts for future consideration.
 
-\subsection{Allocators}
+\subsection{Transactional Memory}\label{discussion:trmem}
 
-\subsection{Concurrent Persistent Data Structures}
+One observation that I have made during the course of this investigation is that \textit{controlling the cache} is one of the challenges in creating persistent memory. Storage developers are used to being able to control their write back behavior; processor caches do not work this way.
 
-\subsection{Key-Value Stores}
+Thus, the problem is that ordinary operational events, such as a context switch or interrupts, can cause cache lines to be evicted.  This in turn means that atomic updates to memory must be transactional.  Many of the schemes described in the literature are \textit{de facto} software transactional memory implementations, whether it is through versioning, logging, or shadowing.
 
+I would suggest exploring the use of hardware transactional memory as a means of managing the cache: it provides a \textit{notification} when partially modified contents in memory have been evicted because the hardware transaction will abort.  These are rare events.  I would expect this is a good \textit{special purpose} solution --- such as building a high performance persistent storage solution --- and could potentially be used by programming language support, but is by itself not a general purpose solution given the pragmatic limitation on the size of transactions.
+
+Thus, future work could evaluate the various transactional memory approaches described here.  An investigation into the costs and benefits of implementing common data structures in persistent memory using the various techniques might help construct better systems in the future.
+
+\subsection{Allocators}\label{discussion:allocators}
+
+Space allocators, such as in dynamic program heaps, slab allocators, buddy allocators, and/or object allocators are known to be challenging to construct for arbitrary usage patterns.  Persistent allocation is a complex issue in media file systems, for example, because there is no \textit{a priori} way to optimally allocate space without knowing the usage pattern, which is unlikely to be a common case.
+
+In this report I have evaluated several existing allocators.  An area for future work would be to do a more systematic deconstruction and analysis of these allocators to better understand the performance bottlenecks --- given a real hardware system, are there ways to improve those existing allocators.  Is it possible to construct an allocator optimized for working with
+non-volatile memory?
+
+To do this I would suggest measuring:
+
+\begin{description}
+    \item[allocation versus free performance] --- these results show that free is expensive.  Why is it expensive?  Are there approaches to improving this?
+    \item[read versus write performance] --- these preliminary results suggest that the performance of the system is highly dependent upon specific access patterns.  How do these impact allocation?
+    \item[System Benchmarks] --- these results are all focused micro-benchmarks.  Allocators (especially if custom built) should be evaluated within the context of useful systems. Thus, measuring something like \textit{etcd} using existing measurements, for read/write/delete performance and for a range of object sizes.  Continue to use micro-benchmarks for improving understanding of the performance profile.  
+\end{description}
+
+Ultimately the goal of forward-looking work in this area should be:
+
+\begin{itemize}
+    \item Understand the change in relative costs between DRAM and NVM --- these directly impact design decisions
+    \item Understand \textit{why} we observe these differences?  If they are specific to the hardware, they are less interesting.  If they are general to the technology or the problem space, they are more interesting.
+    \item Using these insights try to extract a set of \textit{principles} that provide greater insight into understanding the problems constructing allocators.
+\end{itemize}
+
+One idea, not captured by these previous notes, would be to see if there is any possibility of constructing a log-structured allocator.  This led to the discussion of using the extended virtual memory address space as a form of key-value store, as described more in \S \ref{discussion:kvstore}.
+
+\subsection{Concurrent Persistent Data Structures}\label{discussion:cpds}
+
+The original proposal for this research discussed evaluating
+persistent data structures.  While I gained some low-level
+understanding of the primitives, the higher level goal of
+looking at data structure design was largely deferred.
+
+I would suggest that a useful research direction would be to look at how to construct concurrent persistent data structures.  To do this one approach would be to consider adding \textbf{persistence}
+to existing concurrent data structures, and independently adding
+\textbf{concurrency} to existing persistent data structures.
+
+Once done, analyzing the lessons learned in doing this and comparing the end state would be useful if it provided greater insight into the tradeoffs inherent in constructing such data structures.
+
+\subsection{Key-Value Stores}\label{discussion:kvstore}
+
+One motivation for evaluating persistent memory was as a
+potential medium for constructing an in-memory graph file
+system --- the addition of persistence would yield a file system.
+
+An interesting observation that came about while discussing
+the topics of this research was the observation that one of
+the challenges in persistent memory is the use of 
+\textit{pointers}.  These are problematic because when used in
+a memory mapped model there are no real guarantees that the
+same mapping will be subsequently available.
+
+One possible mechanism for handling this was to add an extra
+level of indirection to the references, so they can be 
+reallocated, such as via compaction.  It was at this point that 
+we observed this is essentially the function of a key-value
+store.
+
+One possible area to research then would be to use a fragment of the virtual address space as a \textit{persistent} part of the address space.  For the Intel platform under study, the address
+space is now 128PB, with the five level page table support, a single top level entry represents 128TB of address space.  If this were used as a form of key-value store, the addresses could be mapped to a valid memory location via the normal page fault handling mechanism.
+
+A more general observation here is that a key-value store
+optimized for non-volatile memory certainly could present
+interesting questions: a sort of ``NVRAMCloud'' style project, perhaps.
 
 
