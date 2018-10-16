@@ -330,7 +330,7 @@ For the various tests I use the switches as shown in Table \ref{mlc:switches}.
         \verb+-W2+ & Read-Write 2:1 Workload & \ref{chart:sequential:W2} \ref{chart:random:W2} \\ 
         \verb+-W3+ & Read-Write 3:1 Workload & \ref{chart:sequential:w3} \\
         \verb+-W5+ & Read-Write 1:1 Workload & \ref{chart:random:W5} \ref{chart:sequential:W5} \\
-        \verb+-W6+ & Non-Temporal Write Workload & \ref{chart:random:w6} \ref{chart:sequential:W6} \\
+        \verb+-W6+ & Non-Temporal Write Workload & \ref{chart:random:W6} \ref{chart:sequential:W6} \\
         \verb+-W7+ & Read-Non-Temporal-Write 2:1 Workload & \ref{chart:random:W7} \ref{chart:sequential:W7} \\
         \verb+-W8+ & Read-Non-Temporal-Write 1:1 Workload  & \ref{chart:random:W8} \\
         \verb+-W10+ & Read-Non-Temporal-Write 3:1 (Streaming Triad) & \ref{chart:sequential:W10} \\ \bottomrule
@@ -651,7 +651,7 @@ Figure \ref{chart:sequential:W2} shows the results from this test.
 
 Bandwidth results are more consistent for this workload.
 
-\subsection{Mixed Sequential Read/Write 2:1}
+\subsection{Mixed Sequential Read/Write 3:1}
 
 \begin{figure}
     {\centering
@@ -660,7 +660,42 @@ Bandwidth results are more consistent for this workload.
     }
 \end{figure}
 
-\subsection{Mixed Random Read/Write }
+Sequential read/write testing using a three-to-one read-to-write ratio was 
+done using the switches:
+
+\begin{verbatim}
+    --loaded_latency -d0 -t10 -W3 -l64 \
+    -odata/bw_ctl_pmem0p1_seq_W3-0_20_400000_pmem.dat
+\end{verbatim}
+
+Note that the \verb+-l+ parameter was varied for different
+stride sizes, and the configuration file was varied to control
+the number of cores being used in the test.
+
+The file \verb+data/bw_ctl_pmem0p1_seq_W3-0_20_400000_pmem.dat+ contained the confirmation information
+for the specific test layout:
+
+\begin{verbatim}
+0	W3 seq 400000 pmem /mnt/pmem0p1
+1-20	W3 seq 400000 pmem /mnt/pmem0p1
+\end{verbatim}
+
+Figure \ref{chart:sequential:w3} shows the results from this test.
+
+These results show a much larger lack of divergence than seen with
+prior workloads.  Cache line impact seems to be fairly
+substantial with the 64 byte stride size showing markedly better
+performance than other stride sizes, while 128 and 256 byte stride
+sizes showing better latency than other stride values. 
+
+\subsection{Mixed Read/Write 1:1}
+
+In this test, a one-to-one read-to-write workload is used with
+a random read/write access pattern; caching is eanbled.
+Results are provided for both random and sequential access
+patterns.
+
+\subsubsection{Random}
 
 \begin{figure}
     \centering
@@ -668,53 +703,29 @@ Bandwidth results are more consistent for this workload.
     \includegraphics[scale=0.5]{charts/random-w5-crop.pdf}
 \end{figure}
 
-\subsection{Non-Temporal Write}
+The following switches were used:
 
-\subsubsection{Random}
+\begin{verbatim}
+    --loaded_latency -d0 -t10 -W5 -l64 \
+    -odata/bw_ctl_pmem0p1_rand_W5-0_20_400000_pmem.dat
+\end{verbatim}
 
-\begin{figure}
-    \centering
-    \caption{Random Non-Temporal Write (W6)}\label{chart:random:w6}
-    \includegraphics[scale=0.5]{charts/random-w6-crop.pdf}
-\end{figure}
+Note that the \verb+-l+ parameter was varied for different
+stride sizes, and the configuration file was varied to control
+the number of cores being used in the test.
 
-\subsubsection{Sequential}
+The file \verb+data/bw_ctl_pmem0p1_rand_W5-0_20_400000_pmem.dat+ contained the confirmation information
+for the specific test layout:
 
-\begin{figure}
-    \centering
-    \caption{Sequential Non-Temporal Write (W6)}\label{chart:sequential:W6}
-    \includegraphics[scale=0.5]{charts/sequential-w6-crop.pdf}
-\end{figure}
+\begin{verbatim}
+0	W5 rand 400000 pmem /mnt/pmem0p1
+1-20	W5 rand 400000 pmem /mnt/pmem0p1
+\end{verbatim}
 
+Figure \ref{chart:random:W5} shows the results from this test.
 
-\subsection{Non-Temporal Read/Write 2:1}
-
-\subsubsection{Random}
-
-\begin{figure}
-    \centering
-    \caption{Random 2:1 Read to Non-Temporal Write (W7)}\label{chart:random:W7}
-    \includegraphics[scale=0.5]{charts/random-w7-crop.pdf}
-\end{figure}
-
-\subsubsection{Sequential}
-
-\begin{figure}
-    \centering
-    \caption{Sequential 2:1 Read to Non-Temporal Write (W7)}\label{chart:sequential:W7}
-    \includegraphics[scale=0.5]{charts/sequential-w7-crop.pdf}
-\end{figure}
-
-
-\subsection{Non-Temporal Read/Write 1:1}
-
-\subsubsection{Random}
-
-\begin{figure}
-    \centering
-    \caption{Random 1:1 Read to Non-Temporal Write (W8)}\label{chart:random:W8}
-    \includegraphics[scale=0.5]{charts/random-w8-crop.pdf}
-\end{figure}
+Interestingly, performance here is remarkably uniform regardless
+of stride size.
 
 \subsubsection{Sequential}
 
@@ -724,7 +735,237 @@ Bandwidth results are more consistent for this workload.
     \includegraphics[scale=0.5]{charts/sequential-w5-crop.pdf}
 \end{figure}
 
+
+The testing was done using the switches:
+
+\begin{verbatim}
+    --loaded_latency -d0 -t10 -W5 -l64 \
+    -odata/bw_ctl_pmem0p1_seq_W5-0_20_400000_pmem.dat
+\end{verbatim}
+
+Note that the \verb+-l+ parameter was varied for different
+stride sizes, and the configuration file was varied to control
+the number of cores being used in the test.
+
+The file \verb+data/bw_ctl_pmem0p1_seq_W5-0_20_400000_pmem.dat+ contained the confirmation information
+for the specific test layout:
+
+\begin{verbatim}
+0	W5 seq 400000 pmem /mnt/pmem0p1
+1-20	W5 seq 400000 pmem /mnt/pmem0p1
+\end{verbatim}
+
+Figure \ref{chart:sequential:W5} shows the results from this test.
+
+
+\subsection{Non-Temporal Write}
+
+The non-temporal tests explictly avoid the processor cache;
+as such they provide a better measure of pure performance for
+the underlying non-volatile memory.  The tests in this case
+work for both random and sequential access patterns.
+
+The workload used for these tests is a pure \textbf{write}
+workload.  This is useful when considering predominately write
+usage patterns, such as for logs.
+
+\subsubsection{Random}
+
+\begin{figure}
+    \centering
+    \caption{Random Non-Temporal Write (W6)}\label{chart:random:W6}
+    \includegraphics[scale=0.5]{charts/random-w6-crop.pdf}
+\end{figure}
+
+In this test, a one-to-one read-to-write workload is used with
+a random read/write access pattern; caching is eanbled.  The
+following switches were used:
+
+\begin{verbatim}
+    --loaded_latency -d0 -t10 -W6 -l64 \
+    -odata/bw_ctl_pmem0p1_rand_W6-0_20_400000_pmem.dat
+\end{verbatim}
+
+Note that the \verb+-l+ parameter was varied for different
+stride sizes, and the configuration file was varied to control
+the number of cores being used in the test.
+
+The file \verb+data/bw_ctl_pmem0p1_rand_W6-0_20_400000_pmem.dat+ contained the confirmation information
+for the specific test layout:
+
+\begin{verbatim}
+0	W6 rand 400000 pmem /mnt/pmem0p1
+1-20	W6 rand 400000 pmem /mnt/pmem0p1
+\end{verbatim}
+
+Figure \ref{chart:random:W6} shows the results from this test.
+
+Interestingly, performance here is remarkably uniform regardless
+of stride size.  Performance generally seems best with 64 byte
+strides, with corresponding lower latency as well.
+
+
+\subsubsection{Sequential}
+
+\begin{figure}
+    \centering
+    \caption{Sequential Non-Temporal Write (W6)}\label{chart:sequential:W6}
+    \includegraphics[scale=0.5]{charts/sequential-w6-crop.pdf}
+\end{figure}
+
+Sequential read/write testing using a three-to-one read-to-write ratio was 
+done using the switches:
+
+\begin{verbatim}
+    --loaded_latency -d0 -t10 -W6 -l64 \
+    -odata/bw_ctl_pmem0p1_seq_W6-0_20_400000_pmem.dat
+\end{verbatim}
+
+Note that the \verb+-l+ parameter was varied for different
+stride sizes, and the configuration file was varied to control
+the number of cores being used in the test.
+
+The file \verb+data/bw_ctl_pmem0p1_seq_W6-0_20_400000_pmem.dat+ contained the confirmation information
+for the specific test layout:
+
+\begin{verbatim}
+0	W6 seq 400000 pmem /mnt/pmem0p1
+1-20	W6 seq 400000 pmem /mnt/pmem0p1
+\end{verbatim}
+
+Figure \ref{chart:sequential:W6} shows the results from this test.
+
+The results here do quite well with 64 byte strides both in
+terms of latency and bandwidth.  The performance drops with
+increased processor contention above 8 cores, with latency
+increasing substantially above 12 cores.
+
+\subsection{Non-Temporal Read/Write 2:1}
+
+This workload is in fact a \textbf{cached} read with 
+\textbf{non-cached} workload mix.  Writes are done using
+non-temporal instructions, while reads are done using CPU
+caching.
+
+It uses a two-to-one read-to-write workload pattern. Non-temporal
+writes will perform cache invalidation, so a subsequent read of
+the memory region would force a reload from memory.
+
+\subsubsection{Random}
+
+\begin{figure}
+    \centering
+    \caption{Random 2:1 Read to Non-Temporal Write (W7)}\label{chart:random:W7}
+    \includegraphics[scale=0.5]{charts/random-w7-crop.pdf}
+\end{figure}
+
+The following switches were used:
+
+\begin{verbatim}
+    --loaded_latency -d0 -t10 -W7 -l64 \
+    -odata/bw_ctl_pmem0p1_rand_W7-0_20_400000_pmem.dat
+\end{verbatim}
+
+Note that the \verb+-l+ parameter was varied for different
+stride sizes, and the configuration file was varied to control
+the number of cores being used in the test.
+
+The file \verb+data/bw_ctl_pmem0p1_rand_W7-0_20_400000_pmem.dat+ contained the confirmation information
+for the specific test layout:
+
+\begin{verbatim}
+0	W7 rand 400000 pmem /mnt/pmem0p1
+1-20	W7 rand 400000 pmem /mnt/pmem0p1
+\end{verbatim}
+
+Figure \ref{chart:random:W7} shows the results from this test.
+
+The best bandwidth here is using 64 byte strides, with the
+lowest latency for any stride size.  Bandwidth declines
+and latency increases with increased core contention.
+
+\subsubsection{Sequential}
+
+\begin{figure}
+    \centering
+    \caption{Sequential 2:1 Read to Non-Temporal Write (W7)}\label{chart:sequential:W7}
+    \includegraphics[scale=0.5]{charts/sequential-w7-crop.pdf}
+\end{figure}
+
+The testing was done using the switches:
+
+\begin{verbatim}
+    --loaded_latency -d0 -t10 -W7 -l64 \
+    -odata/bw_ctl_pmem0p1_seq_W7-0_20_400000_pmem.dat
+\end{verbatim}
+
+Note that the \verb+-l+ parameter was varied for different
+stride sizes, and the configuration file was varied to control
+the number of cores being used in the test.
+
+The file \verb+data/bw_ctl_pmem0p1_seq_W7-0_20_400000_pmem.dat+ contained the confirmation information
+for the specific test layout:
+
+\begin{verbatim}
+0	W7 seq 400000 pmem /mnt/pmem0p1
+1-20	W7 seq 400000 pmem /mnt/pmem0p1
+\end{verbatim}
+
+Figure \ref{chart:sequential:W7} shows the results from this test.
+
+The best bandwidth is seen using a 64 byte stride; latency is
+similar across the smaller stride sizes.  Bandwidth decreases
+and latency increases with increased core contention for all
+stride sizes, although there is a peculiar dip in latency when
+half of the cores are active.
+
+\subsection{Non-Temporal Read/Write 1:1}
+
+This workload is a \textbf{cached} read with 
+\textbf{non-cached} workload mix.  Writes are done using
+non-temporal instructions, while reads are done using CPU
+caching.
+
+It uses a one-to-one read-to-write workload pattern. Non-temporal
+writes will perform cache invalidation, so a subsequent read of
+the memory region would force a reload from memory.
+
+\subsubsection{Random}
+
+\begin{figure}
+    \centering
+    \caption{Random 1:1 Read to Non-Temporal Write (W8)}\label{chart:random:W8}
+    \includegraphics[scale=0.5]{charts/random-w8-crop.pdf}
+\end{figure}
+
+The following switches were used:
+
+\begin{verbatim}
+    --loaded_latency -d0 -t10 -W8 -l64 \
+    -odata/bw_ctl_pmem0p1_rand_W8-0_20_400000_pmem.dat
+\end{verbatim}
+
+Note that the \verb+-l+ parameter was varied for different
+stride sizes, and the configuration file was varied to control
+the number of cores being used in the test.
+
+The file \verb+data/bw_ctl_pmem0p1_rand_W8-0_20_400000_pmem.dat+ contained the confirmation information
+for the specific test layout:
+
+\begin{verbatim}
+0	W8 rand 400000 pmem /mnt/pmem0p1
+1-20	W8 rand 400000 pmem /mnt/pmem0p1
+\end{verbatim}
+
+Figure \ref{chart:random:W8} shows the results from this test.
+
+The 64 byte stride shows the best bandwidth and lowest latency.
+Bandwidth decreases and latency increases with increased core
+contention.
+
+
 \subsection{Sequential Streaming Triad Read/Non-Temporal Write 3:1}
+
 
 \begin{figure}
     \centering
@@ -732,7 +973,160 @@ Bandwidth results are more consistent for this workload.
     \includegraphics[scale=0.5]{charts/sequential-w10-crop.pdf}
 \end{figure}
 
+This workload is a streaming non-temporal write with
+triad read operations.  There are three reads per write, with
+the reads being triads (sequential reads).  This appears to
+be a common high performance load for certain types of
+video processing.
+
+The testing was done using the switches:
+
+\begin{verbatim}
+    --loaded_latency -d0 -t10 -W10 -l64 \
+    -odata/bw_ctl_pmem0p1_seq_W10-0_20_400000_pmem.dat
+\end{verbatim}
+
+Note that the \verb+-l+ parameter was varied for different
+stride sizes, and the configuration file was varied to control
+the number of cores being used in the test.
+
+The file \verb+data/bw_ctl_pmem0p1_seq_W10-0_20_400000_pmem.dat+ contained the confirmation information
+for the specific test layout:
+
+\begin{verbatim}
+0	W10 seq 400000 pmem /mnt/pmem0p1
+1-20	W10 seq 400000 pmem /mnt/pmem0p1
+\end{verbatim}
+
+Figure \ref{chart:sequential:W10} shows the results from this test.
+
+These results show best bandwidth for the 64 byte stride sizes.
+Latency is lowest with minimal processor contention.  Other
+stride sizes show substantially lower bandwidth results.
+
 \section{Micro-Benchmark Results}\label{section:results:micro}
+
+The micro-benchmark results are based upon custom tests that
+I wrote as part of this investigation.  My focus in looking
+at this performance was to better understand the interplay
+between cache behavior and persistence operations.  By better
+understanding the trade-offs involved, I can more easily reason
+about constructing persistent data structures.
+
+Throughout this section, I describe various flushing operation.
+These are achieve by using specific instructions, including
+the cache flush instructions: \texttt{clflush, clflushopt, clwb}
+and the memory barrier instruction \texttt{sfence}, which
+provides guarantees that all prior store instructions are now
+visible to other processors.  \textbf{Note:} the \texttt{sfence}
+instruction does not guarantee the data is in the memory. 
+At the present time, this typically means that it is visible
+to the \textit{memory controller}.  Current Intel platforms
+guarantee that once presented to the memory controller it will
+be persisted to main memory \textbf{even in the face of a power failure condition.}
+
+\subsection{Cache Sets}\label{micro:sec:cachesets}
+
+Many of the tests distinguish between the cache set that is
+being evaluted.  The code does this by constructing linked
+lists of entries. As the linked list is traversed, a counter
+value is incremented --- this is the \textit{write} operation
+that causes a dirtying of the cache line.
+
+On most Intel CPUs (and certainly the ones I have tested) the
+entries are scattered across cache sets.  However, Intel's
+architecture guarantees that memory at the same offset ends up in the same associative cache set; my testing included data not reported here that confirms this is the case.
+
+Many of the tests distinguish between testing linked lists allocated from the same or different cache sets.  I describe how this was implemented in the remainder of this subsection.
+
+\subsubsection{Same Cache Set}
+
+Placing the list entries into the \textbf{same} cache set
+ensures that an $n^{th}$ write will cause one of the other cached
+entries to be pushed back to memory (where n is the size of the 
+associative cache set); I do not know \textit{which}
+entry is written back. Note that when combined with fences, it does ensure that a consistent \textbf{set} has been written
+back, since doing otherwise would violate the fence guarantees.
+
+\begin{verbatim}
+static void 
+init_cache_test_memory_same_set(
+    const unsigned pagecount, 
+    void *memory)
+{
+    record_page_t *recpages = (record_page_t *)memory;
+
+    memset(memory, 0, pagecount * PAGE_SIZE);
+    for (unsigned index = 0; index < RECORDS_PER_PAGE; index++) {
+        record_t *r = &recpages[0].records[index];
+
+        for (unsigned index2 = 0; index2 < pagecount; index2++) {
+            uintptr_t diff1, diff2;
+
+            r->s.next = &recpages[(index2 + 1) % 
+                        pagecount].records[index];
+            r->s.counter = 0;
+            diff1 = (uintptr_t)r - (uintptr_t)r->s.next;
+            diff2 = (uintptr_t)r->s.next - (uintptr_t)r;
+            r = r->s.next; 
+        }
+    }
+    
+    for (unsigned index = 0; index < RECORDS_PER_PAGE; index++) {
+        record_t *r = &recpages[0].records[index];
+
+        do {
+            r = r->s.next;
+            assert(NULL != r);
+        } while (r != &recpages[0].records[index]);
+    }
+}  
+\end{verbatim}
+
+This generic code sets up the ``same cache set'' and is
+used to test in the various configurations.
+
+\subsubsection{Different Cache Set}
+
+For these tests, cache memory is initialized to form a pattern
+that will not place a list entry in the same processor cache
+set. It creats a diagonal pattern through memory. The code for this is:
+
+\begin{verbatim}
+static void 
+init_cache_test_memory_different_set(
+    const unsigned pagecount, 
+    void *memory)
+{
+    record_page_t *recpages = (record_page_t *)memory;
+
+    memset(memory, 0, pagecount * PAGE_SIZE);
+    for (unsigned index1 = 0; index1 < RECORDS_PER_PAGE; index1++) {
+        record_t *r = &recpages[0].records[index1];
+        for (unsigned index2 = 0; index2 < pagecount; index2++) {
+            unsigned offset = (index2 + 1) % pagecount;
+            r->s.next = &recpages[offset].records[(index1 + 
+                        offset) % RECORDS_PER_PAGE];
+            r->s.next);
+            r = r->s.next;
+        }
+    }
+
+    for (unsigned index = 0; index < RECORDS_PER_PAGE; index++) {
+        record_t *r = &recpages[0].records[index];
+
+        do {
+            r = r->s.next;
+            assert(NULL != r);
+        } while (r != &recpages[0].records[index]);
+    }
+}
+\end{verbatim}
+    
+This generic code sets up the ``different cache set'' and is
+used to test in the various configurations described throughout this section.
+
+\subsection{Cache Flush}\label{micro:sec:cacheflush}
 
 \begin{figure}
     \centering
@@ -740,11 +1134,92 @@ Bandwidth results are more consistent for this workload.
     \includegraphics[scale=0.35]{micro/nvm-cache-flush-measurements.pdf}
 \end{figure}
 
+These tests work by creating linked list entries from a pool
+of memory pages.  Each list entry is at the same offset within
+the page, which causes them to be assigned to the same CPU
+associative cache set. 
+
+For example, the following code was used for testing clflush
+without fencing (Figure \ref{micro:cache-flush}):
+
+%\begin{minted}{c}
+\begin{verbatim}
+    
+static unsigned long test_cache_clflush_nofence(record_page_t *rp)
+{
+    record_t *r = rp->records[0].s.next;
+    unsigned long start, end, time;
+    unsigned count = 0;
+
+    time = 0;
+
+    while (r != &rp->records[0]) {
+        start = _rdtsc();
+        r->s.counter++;
+        _mm_clflush(r);
+        r = r->s.next;
+        end = _rdtsc();
+        time += end - start;
+        count++;
+    }
+
+    // report the amount of CPU time
+    return time;
+
+}
+\end{verbatim}
+%\end{minted}
+
+The goal of this effort was to measure the specific overhead of
+the given operation: incrementing the counter, flushing the update, and then advancing to the next record in the list.
+Since the list is a circular doubly linked list, this will
+access each of the list elements exactly once.  The use of
+the pointers confounds the processor prefetch logic, since it
+depends upon the value loaded from memory.
+
+The processor tick counter is used for all measurements.  This
+can be converted to time based upon the processor speed but I
+chose to use ticks for this analysis (the two should be 
+equivalent.)
+
+All of the tests are modeled after similar behavior, where
+timings are collected around specific operations and attempt
+to ignore the overhead of the test harness.
+
+The interesting insight in these results is that the \textbf{non-flushed} paths experience
+a substantial penalty once the number of entries in a linked 
+list reach 64 unique entries.  This is interesting because the
+internal memory controller has 56 write back buffers (this is
+for Skylake Xeon processors).
+
+
+\subsection{CLFLUSHOPT}\label{micro:sec:clflushopt}
+
+The \texttt{clflushopt} instruction was introduced by Intel to provide a mechanism for writing back a single cache line, unlike
+the earlier \texttt{clflush} instruction. This instruction
+invalidates the given cache line.  A subsequent \texttt{sfence}
+guarantees that the cache line is persistent.
+
+This instruction is present on current generation Intel CPUs,
+but is not present on older CPUs.
+
+Note that \texttt{clflushopt} may be executed in parallel with
+other \texttt{clflushopt} instructions within the same
+instruction stream (e.g., parallel execution is permissible).
+
+\subsubsection{Different Cache Set}\label{impl:mb:clflushopt:diffset}
 \begin{figure}
     \centering
     \caption{NVM CLFLUSHOPT (Different CPU Set)}\label{micro:clflushopt:different}
     \includegraphics[scale=0.35]{micro/nvm-clflushopt-periodic-different.pdf}
 \end{figure}
+
+These results are shown in in Figure 
+\ref{micro:clflushopt:different}.
+
+There is a notable improvement in performance when the sfence operation period is decreased; for this test there is minimal improvement doing it less frequently than once per four write operations.
+
+\subsubsection{Same Cache Set}\label{impl:mb:clflushopt:sameset}
 
 \begin{figure}
     \centering
@@ -752,11 +1227,39 @@ Bandwidth results are more consistent for this workload.
     \includegraphics[scale=0.35]{micro/nvm-clflushopt-periodic-same.pdf}
 \end{figure}
 
+These results are shown in Figure \ref{micro:clflushopt:same}.
+
+There is a notable improvement in performance when the sfence operation period is decreased; for this test there is minimal improvement doing it less frequently than once per four write operations.
+
+
+\section{CLFUSH}\label{micro:sec:clflush}
+
+The \texttt{clflush} processor instruction on Intel CPUs
+causes a flush back of the specified cache line.  It is
+distinct from \texttt{clflushopt} in that it is serialized
+with respect to other \texttt{clflush} instructions on the same core.
+
+There are suggestions from observed behavior that some
+implementations of \texttt{clflush} may cause flushing of
+other cache contents as well.
+
+\subsection{Different Cache Set}
 \begin{figure}
     \centering
     \caption{NVM CLFLUSH (Different CPU Set)}\label{micro:clflush:different}
     \includegraphics[scale=0.35]{micro/nvm-clflush-periodic-different.pdf}
 \end{figure}
+
+These results are shown in Figure \ref{micro:clflush:different}.
+
+The behavior, shown in Figure \ref{micro:clflush:different},
+is similar to the behavior observed previously with the
+\texttt{clfushopt} instruction (\S \ref{micro:sec:clflushopt}).
+
+The behavior is not entirely smooth, unlike what I observed
+earlier with the \texttt{clflushopt} instruction (\S \ref{micro:sec:clflushopt}).
+
+\subsection{Same Cache Set}
 
 \begin{figure}
     \centering
@@ -764,6 +1267,36 @@ Bandwidth results are more consistent for this workload.
     \includegraphics[scale=0.35]{micro/nvm-clflush-periodic-same.pdf}
 \end{figure}
 
+These results are shown in Figure \ref{micro:clflush:same}.
+
+The interesting observation for this test is that it shows an improvement similar to what was seen with \texttt{clflushopt} (See \S \ref{micro:sec:clflushopt}).  However, unlike the
+previous result, this one is not as smooth or consistent. This
+may be a benefit of the parallel nature of the \texttt{clflushopt} instruction.
+
+The other interesting departure from the earlier results is that
+this shows a notable \textbf{penalty} for the large size set.
+The reason for this is not clear from this data; further work
+may be required.
+
+Finally, when comparing the two different cache set patterns, I
+observed that the best performance appears to be for the list
+of size eight. It is not clear to me why this would be the case.
+
+\section{CLWB}\label{micro:sec:clwb}
+
+The \texttt{clwb} instruction has been recently added in the 
+Intel Skylake Server class CPUs.  It enhances the behavior of
+the previous \texttt{clflushopt} instruction by not
+evicting the cache line from the set --- this \textit{writes}
+data back but does not cause it to be evicted from the cache.
+
+This instruction is useful for data structures that require
+updating over time, such as counters or various kinds of
+table structures.
+
+This instruction is expected to be present in future Intel processors.
+
+\subsection{Different Cache Set}
 
 \begin{figure}
     \centering
@@ -771,11 +1304,39 @@ Bandwidth results are more consistent for this workload.
     \includegraphics[scale=0.35]{micro/nvm-clwb-periodic-different.pdf}
 \end{figure}
 
+These results are shown in Figure \ref{micro:clwb:different}.
+
+The performance here is similar to that which I observed
+using the other flush operations --- \texttt{clflushopt} (\S \ref{micro:sec:clflushopt}) and \texttt{clflush} (\S \ref{micro:sec:clflush}).
+
+There are some interesting observations from this data: the 64 entry long linked list set shows very poor performance when combined with aggressive fence operations, but converges towards the mean for less aggressive fence operations.
+
+Much like I previously noted (\S \ref{micro:sec:clflush}),
+it is interesting that the list of length 8 again has consistently better performance for most periodic fencing operation counts.
+
+\subsection{Same Cache Set}
+
 \begin{figure}
     \centering
     \caption{NVM CLWB (Same CPU Set)}\label{micro:clwb:same}
     \includegraphics[scale=0.35]{micro/nvm-clwb-periodic-same.pdf}
 \end{figure}
+
+These results are shown in Figure \ref{micro:clwb:same}.
+
+Two observations: every linked list set \textit{other than} the
+eight entry list converges to the same performance (approximately 19 clock ticks).  The 8 entry list converges just under 16 ticks.  This 20\% difference (which I observed previously, see \S \ref{micro:sec:clflush} and \S \ref{micro:sec:clflushopt}) seems to
+be fairly consistent throughout the various tests. 
+
+\section{Linked List}
+
+The basis for these micro-benchmarks is a circular doubly
+linked list structure.  In this section I have evaluated the
+performance of those without utilizing cache flushing primitives,
+though I have incorporated fencing operations in these
+measurements.
+
+\subsection{No Flush}\label{ll:sec:noflush}
 
 \begin{figure}
     \centering
@@ -783,17 +1344,73 @@ Bandwidth results are more consistent for this workload.
     \includegraphics[scale=0.35]{micro/nvm-linked-list-baseline-no-flush.pdf}
 \end{figure}
 
+The results for the linked list test without flushing is
+shown in Figure \ref{micro:llbaseline:noflush}.
+
+Note that these tests are all from the same cache set.
+
+The test looks at five different scenarios:
+
+\begin{description}
+    \item[initialize] --- this is the performance of the list initialization code.  It takes the first 64 byte block of each page given and initializes it to be in a linked list with a zero value for the counter.
+    \item[walk] --- this is the cost of walking the list and incrementing the counter.
+    \item[walk + prefetch] --- this is where the code prefetches the next pointer value, and walks the list.
+    \item[walk + sfence write] --- the code in this case walks, but uses the \texttt{sfence} instruction after each write.
+    \item[walk + sfence run] --- the code in this case walks and updates the counter, performing an \texttt{sfence} operation at the end of the entire run (so once per list traversal).
+\end{description}
+
+The best overall walk performance came from using an 
+\texttt{sfence} operation at the end of each run.  The worst
+walk performance was from using an \texttt{sfence} operation
+after each write.
+
+These were early results and encouraged me to look at further
+cache/flush behaviors.
+
+\subsection{Flush}
+
 \begin{figure}
     \centering
     \caption{NVM Linked List Baseline (With Flush)}\label{micro:llbaseline:flush}
     \includegraphics[scale=0.35]{micro/nvm-linked-list-baseline-with-flush.pdf}
 \end{figure}
 
+The results for the linked list test with flushing is
+shown in Figure \ref{micro:llbaseline:noflush}.
+
+Note that these tests are all from the same cache set.
+
+In addition to the five scenarios described in \S 
+\ref{ll:sec:noflush} I added two flushing scenarios.  The
+results are shown in Figure \ref{micro:llbaseline:flush}.
+
+The additional scenarios are:
+
+\begin{description}
+    \item[walk + clflush] --- the code walks the list and incrementing the counter, with a \texttt{clflush} after each write.
+    \item[walk + prefetch + clflush] --- this is where the code prefetches the next pointer value, and walks the list, incrementing the counter, with a \texttt{clflush} after each write.
+\end{description}
+
+These results surprised me because the cost associated with
+doing a cache flush seemed to be difficult to predict or control. While all seven tests are represented, the cost associated with the flushing operations causes them to be
+lost.
+
+\subsection{Periodic Fence}
+
+Evolving from the simple fencing, I broadened my analysis to include periodic fencing.  This section describes those measurements.  In this case there is no flushing.  This helps understand the cost of fence operations. 
+
+
+
+\subsubsection{Different Cache Set}
+
 \begin{figure}
     \centering
     \caption{NVM Periodic Fence, No Flush, Different Cache Set}\label{micro:sfence:noflush:different}
     \includegraphics[scale=0.35]{micro/nvm-noflush-periodic-different.pdf}
 \end{figure}
+
+
+\subsubsection{Same Cache Set}
 
 \begin{figure}
     \centering
