@@ -56,6 +56,6 @@ AC_FUNC_STRERROR_R
 AC_CHECK_FUNCS([clock_gettime dup2 gettimeofday nl_langinfo setlocale strcasecmp strerror strtoul])
 
 
-AC_CONFIG_FILES([ Makefile cache/Makefile])
+AC_CONFIG_FILES([ Makefile cache/Makefile stream/Makefile])
 #AC_CONFIG_SUBDIRS([])
 AC_OUTPUT

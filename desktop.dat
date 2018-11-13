@@ -1,0 +1,1230 @@
+Starting
+RTM: Yes
+HLE: Yes
+CLFLUSHOPT: No
+CLWB: No
+CLFLUSH cache line: 0x40
+Ticks per second: 0x100
+elapsed time is 100232
+Finished
+index is 0
+index is 1
+index is 2
+index is 3
+004,    1,       45512.00,    test_cache_behavior_1, initialize first record of each page
+004,  100,          39.74,    test_cache_behavior_1, walk list
+004,  100,          52.52,    test_cache_behavior_1, walk list + prefetch next entry
+004,  100,         742.12,    test_cache_behavior_1, walk list + prefetch next entry + clflush after each write
+004,  100,         723.40,    test_cache_behavior_1, walk list + clflush after each write
+004,  100,          60.86,    test_cache_behavior_1, walk list + sfence after each write
+004,  100,          41.44,    test_cache_behavior_1, walk list + sfence after each run
+004,  100,        8278.88,    test_cache_behavior_2, initialize all blocks
+004,  100,        1694.04,    test_cache_behavior_2, run one cache line with fence at end
+004,  100,        1345.76,    test_cache_behavior_2, run two cache lines with fence at end
+004,  100,        1758.56,    test_cache_behavior_2, run four cache lines with fence at end
+004,  100,        2586.60,    test_cache_behavior_2, run eight cache lines with fence at end
+004,  100,        1839.24,    test_cache_behavior_2, run stride 1
+004,  100,        1922.80,    test_cache_behavior_2, run stride 2
+004,  100,        1985.84,    test_cache_behavior_2, run stride 3
+004,  100,        1775.56,    test_cache_behavior_2, run stride 4
+004,  100,        1533.44,    test_cache_behavior_2, run stride 5
+004,  100,        1502.24,    test_cache_behavior_2, run stride 6
+004,  100,        1443.56,    test_cache_behavior_2, run stride 7
+004,  100,        1512.52,    test_cache_behavior_2, run stride 8
+004,  100,        1201.52,    test_cache_behavior_2, run stride 9
+004,  100,        1274.76,    test_cache_behavior_2, run stride 10
+004,  100,        1159.32,    test_cache_behavior_2, run stride 11
+004,  100,        1207.76,    test_cache_behavior_2, run stride 12
+004,  100,        1206.72,    test_cache_behavior_2, run stride 13
+004,  100,        1167.48,    test_cache_behavior_2, run stride 14
+004,  100,         975.04,    test_cache_behavior_2, run stride 15
+004,  100,        1463.48,    test_cache_behavior_2, run stride 16
+004,  100,        1367.12,    test_cache_behavior_2, run stride 17
+004,  100,        1341.60,    test_cache_behavior_2, run stride 18
+004,  100,        1541.84,    test_cache_behavior_2, run stride 19
+004,  100,        1178.84,    test_cache_behavior_2, run stride 20
+004,  100,        1298.16,    test_cache_behavior_2, run stride 21
+004,  100,        1556.88,    test_cache_behavior_2, run stride 22
+004,  100,         954.48,    test_cache_behavior_2, run stride 23
+004,  100,        1352.92,    test_cache_behavior_2, run stride 24
+004,  100,        1342.40,    test_cache_behavior_2, run stride 25
+004,  100,        1179.84,    test_cache_behavior_2, run stride 26
+004,  100,        1246.00,    test_cache_behavior_2, run stride 27
+004,  100,        1577.44,    test_cache_behavior_2, run stride 28
+004,  100,        1537.60,    test_cache_behavior_2, run stride 29
+004,  100,        2013.36,    test_cache_behavior_2, run stride 30
+004,  100,        1449.32,    test_cache_behavior_2, run stride 31
+004,  100,        1081.00,    test_cache_behavior_2, run stride 32
+004,  100,        1453.68,    test_cache_behavior_2, run stride 33
+004,  100,        1454.92,    test_cache_behavior_2, run stride 34
+004,  100,        1585.24,    test_cache_behavior_2, run stride 35
+004,  100,        1925.60,    test_cache_behavior_2, run stride 36
+004,  100,        1487.92,    test_cache_behavior_2, run stride 37
+004,  100,        1392.32,    test_cache_behavior_2, run stride 38
+004,  100,         708.16,    test_cache_behavior_2, run stride 39
+004,  100,        1478.36,    test_cache_behavior_2, run stride 40
+004,  100,        1239.56,    test_cache_behavior_2, run stride 41
+004,  100,        1458.88,    test_cache_behavior_2, run stride 42
+004,  100,        1253.12,    test_cache_behavior_2, run stride 43
+004,  100,        1390.48,    test_cache_behavior_2, run stride 44
+004,  100,        1702.56,    test_cache_behavior_2, run stride 45
+004,  100,        1865.48,    test_cache_behavior_2, run stride 46
+004,  100,        1327.12,    test_cache_behavior_2, run stride 47
+004,  100,        1088.08,    test_cache_behavior_2, run stride 48
+004,  100,         993.28,    test_cache_behavior_2, run stride 49
+004,  100,        1419.40,    test_cache_behavior_2, run stride 50
+004,  100,         902.72,    test_cache_behavior_2, run stride 51
+004,  100,        1313.16,    test_cache_behavior_2, run stride 52
+004,  100,        1786.20,    test_cache_behavior_2, run stride 53
+004,  100,        1924.84,    test_cache_behavior_2, run stride 54
+004,  100,        1910.20,    test_cache_behavior_2, run stride 55
+004,  100,        2052.00,    test_cache_behavior_2, run stride 56
+004,  100,        1699.32,    test_cache_behavior_2, run stride 57
+004,  100,        1645.68,    test_cache_behavior_2, run stride 58
+004,  100,        1592.72,    test_cache_behavior_2, run stride 59
+004,  100,        1295.52,    test_cache_behavior_2, run stride 60
+004,  100,        1782.04,    test_cache_behavior_2, run stride 61
+004,  100,        1611.68,    test_cache_behavior_2, run stride 62
+004,  100,        1541.28,    test_cache_behavior_2, run stride 63
+004,  100,        2052.00,    test_cache_behavior_2, run min 708.160000 (39) max 2052.000000 (56)
+004,    1,           1.00,    test_cache_behavior_3, run nop 1 billion times
+008,    1,       70784.00,    test_cache_behavior_1, initialize first record of each page
+008,  100,          72.28,    test_cache_behavior_1, walk list
+008,  100,          77.36,    test_cache_behavior_1, walk list + prefetch next entry
+008,  100,        1148.04,    test_cache_behavior_1, walk list + prefetch next entry + clflush after each write
+008,  100,        1119.28,    test_cache_behavior_1, walk list + clflush after each write
+008,  100,          94.52,    test_cache_behavior_1, walk list + sfence after each write
+008,  100,          67.52,    test_cache_behavior_1, walk list + sfence after each run
+008,  100,        9241.80,    test_cache_behavior_2, initialize all blocks
+008,  100,        1519.92,    test_cache_behavior_2, run one cache line with fence at end
+008,  100,        2369.19,    test_cache_behavior_2, run two cache lines with fence at end
+008,  100,        2955.72,    test_cache_behavior_2, run four cache lines with fence at end
+008,  100,        3820.60,    test_cache_behavior_2, run eight cache lines with fence at end
+008,  100,        2257.20,    test_cache_behavior_2, run stride 1
+008,  100,        2327.20,    test_cache_behavior_2, run stride 2
+008,  100,        2168.08,    test_cache_behavior_2, run stride 3
+008,  100,        2269.00,    test_cache_behavior_2, run stride 4
+008,  100,        2303.00,    test_cache_behavior_2, run stride 5
+008,  100,        2640.68,    test_cache_behavior_2, run stride 6
+008,  100,        2379.64,    test_cache_behavior_2, run stride 7
+008,  100,        2147.28,    test_cache_behavior_2, run stride 8
+008,  100,        2289.88,    test_cache_behavior_2, run stride 9
+008,  100,        2321.36,    test_cache_behavior_2, run stride 10
+008,  100,        2150.12,    test_cache_behavior_2, run stride 11
+008,  100,        2065.48,    test_cache_behavior_2, run stride 12
+008,  100,        2207.84,    test_cache_behavior_2, run stride 13
+008,  100,        2449.04,    test_cache_behavior_2, run stride 14
+008,  100,        2447.28,    test_cache_behavior_2, run stride 15
+008,  100,        2156.84,    test_cache_behavior_2, run stride 16
+008,  100,        2039.76,    test_cache_behavior_2, run stride 17
+008,  100,        2004.56,    test_cache_behavior_2, run stride 18
+008,  100,        2012.20,    test_cache_behavior_2, run stride 19
+008,  100,        2092.64,    test_cache_behavior_2, run stride 20
+008,  100,        2130.48,    test_cache_behavior_2, run stride 21
+008,  100,        2100.72,    test_cache_behavior_2, run stride 22
+008,  100,        2217.20,    test_cache_behavior_2, run stride 23
+008,  100,        1976.96,    test_cache_behavior_2, run stride 24
+008,  100,        2225.32,    test_cache_behavior_2, run stride 25
+008,  100,        2392.88,    test_cache_behavior_2, run stride 26
+008,  100,        2258.00,    test_cache_behavior_2, run stride 27
+008,  100,        2042.92,    test_cache_behavior_2, run stride 28
+008,  100,        1986.52,    test_cache_behavior_2, run stride 29
+008,  100,        2097.84,    test_cache_behavior_2, run stride 30
+008,  100,        1993.56,    test_cache_behavior_2, run stride 31
+008,  100,        2043.88,    test_cache_behavior_2, run stride 32
+008,  100,        2107.36,    test_cache_behavior_2, run stride 33
+008,  100,        2469.60,    test_cache_behavior_2, run stride 34
+008,  100,        2285.12,    test_cache_behavior_2, run stride 35
+008,  100,        2157.36,    test_cache_behavior_2, run stride 36
+008,  100,        2618.40,    test_cache_behavior_2, run stride 37
+008,  100,        2183.80,    test_cache_behavior_2, run stride 38
+008,  100,        2245.84,    test_cache_behavior_2, run stride 39
+008,  100,        2250.64,    test_cache_behavior_2, run stride 40
+008,  100,        2284.00,    test_cache_behavior_2, run stride 41
+008,  100,        2356.08,    test_cache_behavior_2, run stride 42
+008,  100,        1992.00,    test_cache_behavior_2, run stride 43
+008,  100,        2022.60,    test_cache_behavior_2, run stride 44
+008,  100,        2258.32,    test_cache_behavior_2, run stride 45
+008,  100,        2134.84,    test_cache_behavior_2, run stride 46
+008,  100,        2155.76,    test_cache_behavior_2, run stride 47
+008,  100,        2064.48,    test_cache_behavior_2, run stride 48
+008,  100,        1979.12,    test_cache_behavior_2, run stride 49
+008,  100,        2098.48,    test_cache_behavior_2, run stride 50
+008,  100,        2192.16,    test_cache_behavior_2, run stride 51
+008,  100,        2139.28,    test_cache_behavior_2, run stride 52
+008,  100,        2142.16,    test_cache_behavior_2, run stride 53
+008,  100,        2305.04,    test_cache_behavior_2, run stride 54
+008,  100,        2207.24,    test_cache_behavior_2, run stride 55
+008,  100,        2390.56,    test_cache_behavior_2, run stride 56
+008,  100,        2075.28,    test_cache_behavior_2, run stride 57
+008,  100,        1956.80,    test_cache_behavior_2, run stride 58
+008,  100,        1857.68,    test_cache_behavior_2, run stride 59
+008,  100,        2090.52,    test_cache_behavior_2, run stride 60
+008,  100,        2150.08,    test_cache_behavior_2, run stride 61
+008,  100,        1932.32,    test_cache_behavior_2, run stride 62
+008,  100,        2064.52,    test_cache_behavior_2, run stride 63
+008,  100,        2640.68,    test_cache_behavior_2, run min 1857.680000 (59) max 2640.680000 (6)
+012,    1,       85172.00,    test_cache_behavior_1, initialize first record of each page
+012,  100,         202.80,    test_cache_behavior_1, walk list
+012,  100,         398.48,    test_cache_behavior_1, walk list + prefetch next entry
+012,  100,        1647.20,    test_cache_behavior_1, walk list + prefetch next entry + clflush after each write
+012,  100,        1630.12,    test_cache_behavior_1, walk list + clflush after each write
+012,  100,         337.60,    test_cache_behavior_1, walk list + sfence after each write
+012,  100,         222.40,    test_cache_behavior_1, walk list + sfence after each run
+012,  100,       15830.72,    test_cache_behavior_2, initialize all blocks
+012,  100,        2820.60,    test_cache_behavior_2, run one cache line with fence at end
+012,  100,        2882.88,    test_cache_behavior_2, run two cache lines with fence at end
+012,  100,        3580.36,    test_cache_behavior_2, run four cache lines with fence at end
+012,  100,        5069.00,    test_cache_behavior_2, run eight cache lines with fence at end
+012,  100,        3753.08,    test_cache_behavior_2, run stride 1
+012,  100,        3091.58,    test_cache_behavior_2, run stride 2
+012,  100,        2929.20,    test_cache_behavior_2, run stride 3
+012,  100,        2866.28,    test_cache_behavior_2, run stride 4
+012,  100,        3025.12,    test_cache_behavior_2, run stride 5
+012,  100,        2918.36,    test_cache_behavior_2, run stride 6
+012,  100,        2861.84,    test_cache_behavior_2, run stride 7
+012,  100,        3016.84,    test_cache_behavior_2, run stride 8
+012,  100,        3050.08,    test_cache_behavior_2, run stride 9
+012,  100,        3071.44,    test_cache_behavior_2, run stride 10
+012,  100,        3025.76,    test_cache_behavior_2, run stride 11
+012,  100,        2980.24,    test_cache_behavior_2, run stride 12
+012,  100,        3062.12,    test_cache_behavior_2, run stride 13
+012,  100,        2986.76,    test_cache_behavior_2, run stride 14
+012,  100,        2847.92,    test_cache_behavior_2, run stride 15
+012,  100,        3051.72,    test_cache_behavior_2, run stride 16
+012,  100,        3141.56,    test_cache_behavior_2, run stride 17
+012,  100,        2952.24,    test_cache_behavior_2, run stride 18
+012,  100,        3323.40,    test_cache_behavior_2, run stride 19
+012,  100,        3131.48,    test_cache_behavior_2, run stride 20
+012,  100,        3172.84,    test_cache_behavior_2, run stride 21
+012,  100,        3373.72,    test_cache_behavior_2, run stride 22
+012,  100,        2926.68,    test_cache_behavior_2, run stride 23
+012,  100,        2767.12,    test_cache_behavior_2, run stride 24
+012,  100,        3201.64,    test_cache_behavior_2, run stride 25
+012,  100,        3176.88,    test_cache_behavior_2, run stride 26
+012,  100,        3222.12,    test_cache_behavior_2, run stride 27
+012,  100,        3252.44,    test_cache_behavior_2, run stride 28
+012,  100,        3352.40,    test_cache_behavior_2, run stride 29
+012,  100,        3292.04,    test_cache_behavior_2, run stride 30
+012,  100,        3266.92,    test_cache_behavior_2, run stride 31
+012,  100,        3435.92,    test_cache_behavior_2, run stride 32
+012,  100,        3257.44,    test_cache_behavior_2, run stride 33
+012,  100,        3049.20,    test_cache_behavior_2, run stride 34
+012,  100,        3036.44,    test_cache_behavior_2, run stride 35
+012,  100,        3211.48,    test_cache_behavior_2, run stride 36
+012,  100,        2951.28,    test_cache_behavior_2, run stride 37
+012,  100,        2967.84,    test_cache_behavior_2, run stride 38
+012,  100,        2991.92,    test_cache_behavior_2, run stride 39
+012,  100,        3066.36,    test_cache_behavior_2, run stride 40
+012,  100,        2722.12,    test_cache_behavior_2, run stride 41
+012,  100,        3154.12,    test_cache_behavior_2, run stride 42
+012,  100,        3318.64,    test_cache_behavior_2, run stride 43
+012,  100,        2966.84,    test_cache_behavior_2, run stride 44
+012,  100,        2964.52,    test_cache_behavior_2, run stride 45
+012,  100,        2459.32,    test_cache_behavior_2, run stride 46
+012,  100,        2383.24,    test_cache_behavior_2, run stride 47
+012,  100,        2475.92,    test_cache_behavior_2, run stride 48
+012,  100,        2758.24,    test_cache_behavior_2, run stride 49
+012,  100,        2618.92,    test_cache_behavior_2, run stride 50
+012,  100,        2391.08,    test_cache_behavior_2, run stride 51
+012,  100,        2390.36,    test_cache_behavior_2, run stride 52
+012,  100,        2410.16,    test_cache_behavior_2, run stride 53
+012,  100,        2548.44,    test_cache_behavior_2, run stride 54
+012,  100,        2639.52,    test_cache_behavior_2, run stride 55
+012,  100,        2958.76,    test_cache_behavior_2, run stride 56
+012,  100,        2849.56,    test_cache_behavior_2, run stride 57
+012,  100,        3079.96,    test_cache_behavior_2, run stride 58
+012,  100,        2750.48,    test_cache_behavior_2, run stride 59
+012,  100,        2911.72,    test_cache_behavior_2, run stride 60
+012,  100,        2888.00,    test_cache_behavior_2, run stride 61
+012,  100,        3146.56,    test_cache_behavior_2, run stride 62
+012,  100,        3110.52,    test_cache_behavior_2, run stride 63
+012,  100,        3753.08,    test_cache_behavior_2, run min 2383.240000 (47) max 3753.080000 (1)
+016,    1,      108540.00,    test_cache_behavior_1, initialize first record of each page
+016,  100,         318.16,    test_cache_behavior_1, walk list
+016,  100,         450.16,    test_cache_behavior_1, walk list + prefetch next entry
+016,  100,        2189.16,    test_cache_behavior_1, walk list + prefetch next entry + clflush after each write
+016,  100,        2131.40,    test_cache_behavior_1, walk list + clflush after each write
+016,  100,         663.44,    test_cache_behavior_1, walk list + sfence after each write
+016,  100,         313.16,    test_cache_behavior_1, walk list + sfence after each run
+016,  100,       17549.20,    test_cache_behavior_2, initialize all blocks
+016,  100,        3334.08,    test_cache_behavior_2, run one cache line with fence at end
+016,  100,        3748.76,    test_cache_behavior_2, run two cache lines with fence at end
+016,  100,        4160.08,    test_cache_behavior_2, run four cache lines with fence at end
+016,  100,        4762.36,    test_cache_behavior_2, run eight cache lines with fence at end
+016,  100,        3983.88,    test_cache_behavior_2, run stride 1
+016,  100,        3718.32,    test_cache_behavior_2, run stride 2
+016,  100,        3894.96,    test_cache_behavior_2, run stride 3
+016,  100,        3819.12,    test_cache_behavior_2, run stride 4
+016,  100,        3782.76,    test_cache_behavior_2, run stride 5
+016,  100,        3635.32,    test_cache_behavior_2, run stride 6
+016,  100,        3855.60,    test_cache_behavior_2, run stride 7
+016,  100,        3897.08,    test_cache_behavior_2, run stride 8
+016,  100,        3973.96,    test_cache_behavior_2, run stride 9
+016,  100,        3787.24,    test_cache_behavior_2, run stride 10
+016,  100,        3658.28,    test_cache_behavior_2, run stride 11
+016,  100,        4454.28,    test_cache_behavior_2, run stride 12
+016,  100,        3942.80,    test_cache_behavior_2, run stride 13
+016,  100,        3706.80,    test_cache_behavior_2, run stride 14
+016,  100,        4202.08,    test_cache_behavior_2, run stride 15
+016,  100,        3994.52,    test_cache_behavior_2, run stride 16
+016,  100,        3863.08,    test_cache_behavior_2, run stride 17
+016,  100,        4053.12,    test_cache_behavior_2, run stride 18
+016,  100,        4020.96,    test_cache_behavior_2, run stride 19
+016,  100,        3872.28,    test_cache_behavior_2, run stride 20
+016,  100,        3578.80,    test_cache_behavior_2, run stride 21
+016,  100,        4113.72,    test_cache_behavior_2, run stride 22
+016,  100,        3836.24,    test_cache_behavior_2, run stride 23
+016,  100,        3768.04,    test_cache_behavior_2, run stride 24
+016,  100,        3610.56,    test_cache_behavior_2, run stride 25
+016,  100,        3859.44,    test_cache_behavior_2, run stride 26
+016,  100,        4450.58,    test_cache_behavior_2, run stride 27
+016,  100,        5198.76,    test_cache_behavior_2, run stride 28
+016,  100,        5136.60,    test_cache_behavior_2, run stride 29
+016,  100,        5109.20,    test_cache_behavior_2, run stride 30
+016,  100,        5198.16,    test_cache_behavior_2, run stride 31
+016,  100,        5021.32,    test_cache_behavior_2, run stride 32
+016,  100,        3971.53,    test_cache_behavior_2, run stride 33
+016,  100,        4069.52,    test_cache_behavior_2, run stride 34
+016,  100,        3777.36,    test_cache_behavior_2, run stride 35
+016,  100,        4162.28,    test_cache_behavior_2, run stride 36
+016,  100,        3738.24,    test_cache_behavior_2, run stride 37
+016,  100,        3785.16,    test_cache_behavior_2, run stride 38
+016,  100,        3880.64,    test_cache_behavior_2, run stride 39
+016,  100,        3967.84,    test_cache_behavior_2, run stride 40
+016,  100,        3930.96,    test_cache_behavior_2, run stride 41
+016,  100,        4057.12,    test_cache_behavior_2, run stride 42
+016,  100,        3733.84,    test_cache_behavior_2, run stride 43
+016,  100,        4197.80,    test_cache_behavior_2, run stride 44
+016,  100,        4090.68,    test_cache_behavior_2, run stride 45
+016,  100,        4200.00,    test_cache_behavior_2, run stride 46
+016,  100,        3852.68,    test_cache_behavior_2, run stride 47
+016,  100,        4560.44,    test_cache_behavior_2, run stride 48
+016,  100,        4061.28,    test_cache_behavior_2, run stride 49
+016,  100,        3899.56,    test_cache_behavior_2, run stride 50
+016,  100,        3946.40,    test_cache_behavior_2, run stride 51
+016,  100,        3802.76,    test_cache_behavior_2, run stride 52
+016,  100,        3738.72,    test_cache_behavior_2, run stride 53
+016,  100,        4159.60,    test_cache_behavior_2, run stride 54
+016,  100,        4009.28,    test_cache_behavior_2, run stride 55
+016,  100,        3858.96,    test_cache_behavior_2, run stride 56
+016,  100,        4312.96,    test_cache_behavior_2, run stride 57
+016,  100,        4153.48,    test_cache_behavior_2, run stride 58
+016,  100,        3708.96,    test_cache_behavior_2, run stride 59
+016,  100,        4288.48,    test_cache_behavior_2, run stride 60
+016,  100,        3841.52,    test_cache_behavior_2, run stride 61
+016,  100,        3841.40,    test_cache_behavior_2, run stride 62
+016,  100,        3956.40,    test_cache_behavior_2, run stride 63
+016,  100,        5198.76,    test_cache_behavior_2, run min 3578.800000 (21) max 5198.760000 (28)
+032,    1,      187692.00,    test_cache_behavior_1, initialize first record of each page
+032,  100,         832.52,    test_cache_behavior_1, walk list
+032,  100,        1174.24,    test_cache_behavior_1, walk list + prefetch next entry
+032,  100,        5388.00,    test_cache_behavior_1, walk list + prefetch next entry + clflush after each write
+032,  100,        4377.60,    test_cache_behavior_1, walk list + clflush after each write
+032,  100,         923.76,    test_cache_behavior_1, walk list + sfence after each write
+032,  100,         743.36,    test_cache_behavior_1, walk list + sfence after each run
+032,  100,       29446.92,    test_cache_behavior_2, initialize all blocks
+032,  100,        7566.60,    test_cache_behavior_2, run one cache line with fence at end
+032,  100,        7122.08,    test_cache_behavior_2, run two cache lines with fence at end
+032,  100,        7754.36,    test_cache_behavior_2, run four cache lines with fence at end
+032,  100,        8751.60,    test_cache_behavior_2, run eight cache lines with fence at end
+032,  100,        7294.36,    test_cache_behavior_2, run stride 1
+032,  100,        7385.24,    test_cache_behavior_2, run stride 2
+032,  100,        7772.60,    test_cache_behavior_2, run stride 3
+032,  100,        7158.04,    test_cache_behavior_2, run stride 4
+032,  100,        7648.60,    test_cache_behavior_2, run stride 5
+032,  100,        7228.52,    test_cache_behavior_2, run stride 6
+032,  100,        6990.80,    test_cache_behavior_2, run stride 7
+032,  100,        7301.76,    test_cache_behavior_2, run stride 8
+032,  100,        7175.44,    test_cache_behavior_2, run stride 9
+032,  100,        7247.64,    test_cache_behavior_2, run stride 10
+032,  100,        7641.44,    test_cache_behavior_2, run stride 11
+032,  100,        7100.52,    test_cache_behavior_2, run stride 12
+032,  100,        7095.80,    test_cache_behavior_2, run stride 13
+032,  100,        7974.48,    test_cache_behavior_2, run stride 14
+032,  100,        7304.48,    test_cache_behavior_2, run stride 15
+032,  100,        7383.68,    test_cache_behavior_2, run stride 16
+032,  100,        7340.36,    test_cache_behavior_2, run stride 17
+032,  100,        7222.92,    test_cache_behavior_2, run stride 18
+032,  100,        7349.36,    test_cache_behavior_2, run stride 19
+032,  100,        7231.92,    test_cache_behavior_2, run stride 20
+032,  100,        7043.96,    test_cache_behavior_2, run stride 21
+032,  100,        7241.92,    test_cache_behavior_2, run stride 22
+032,  100,        7194.16,    test_cache_behavior_2, run stride 23
+032,  100,        7171.16,    test_cache_behavior_2, run stride 24
+032,  100,        7563.44,    test_cache_behavior_2, run stride 25
+032,  100,        7262.64,    test_cache_behavior_2, run stride 26
+032,  100,        7139.40,    test_cache_behavior_2, run stride 27
+032,  100,        8091.76,    test_cache_behavior_2, run stride 28
+032,  100,        7312.48,    test_cache_behavior_2, run stride 29
+032,  100,        7256.48,    test_cache_behavior_2, run stride 30
+032,  100,        7524.56,    test_cache_behavior_2, run stride 31
+032,  100,        7086.04,    test_cache_behavior_2, run stride 32
+032,  100,        7078.92,    test_cache_behavior_2, run stride 33
+032,  100,        7559.68,    test_cache_behavior_2, run stride 34
+032,  100,        7454.60,    test_cache_behavior_2, run stride 35
+032,  100,        7118.36,    test_cache_behavior_2, run stride 36
+032,  100,        7342.16,    test_cache_behavior_2, run stride 37
+032,  100,        7228.32,    test_cache_behavior_2, run stride 38
+032,  100,        7858.24,    test_cache_behavior_2, run stride 39
+032,  100,        7940.44,    test_cache_behavior_2, run stride 40
+032,  100,        7328.24,    test_cache_behavior_2, run stride 41
+032,  100,        7080.64,    test_cache_behavior_2, run stride 42
+032,  100,        7488.40,    test_cache_behavior_2, run stride 43
+032,  100,        7355.76,    test_cache_behavior_2, run stride 44
+032,  100,        7277.16,    test_cache_behavior_2, run stride 45
+032,  100,        7616.72,    test_cache_behavior_2, run stride 46
+032,  100,        7189.64,    test_cache_behavior_2, run stride 47
+032,  100,        7198.20,    test_cache_behavior_2, run stride 48
+032,  100,        7384.72,    test_cache_behavior_2, run stride 49
+032,  100,        7191.00,    test_cache_behavior_2, run stride 50
+032,  100,        7422.96,    test_cache_behavior_2, run stride 51
+032,  100,        7678.96,    test_cache_behavior_2, run stride 52
+032,  100,        7220.80,    test_cache_behavior_2, run stride 53
+032,  100,        7241.44,    test_cache_behavior_2, run stride 54
+032,  100,        7464.60,    test_cache_behavior_2, run stride 55
+032,  100,        7219.44,    test_cache_behavior_2, run stride 56
+032,  100,        7126.60,    test_cache_behavior_2, run stride 57
+032,  100,        7135.32,    test_cache_behavior_2, run stride 58
+032,  100,        7294.40,    test_cache_behavior_2, run stride 59
+032,  100,        7093.52,    test_cache_behavior_2, run stride 60
+032,  100,        7048.60,    test_cache_behavior_2, run stride 61
+032,  100,        7031.60,    test_cache_behavior_2, run stride 62
+032,  100,        7193.84,    test_cache_behavior_2, run stride 63
+032,  100,        8091.76,    test_cache_behavior_2, run min 6990.800000 (7) max 8091.760000 (28)
+064,    1,      363556.00,    test_cache_behavior_1, initialize first record of each page
+064,  100,        2491.68,    test_cache_behavior_1, walk list
+064,  100,        3078.04,    test_cache_behavior_1, walk list + prefetch next entry
+064,  100,       10870.76,    test_cache_behavior_1, walk list + prefetch next entry + clflush after each write
+064,  100,       10630.00,    test_cache_behavior_1, walk list + clflush after each write
+064,  100,        2527.20,    test_cache_behavior_1, walk list + sfence after each write
+064,  100,        2204.12,    test_cache_behavior_1, walk list + sfence after each run
+064,  100,       60825.16,    test_cache_behavior_2, initialize all blocks
+064,  100,       14129.84,    test_cache_behavior_2, run one cache line with fence at end
+064,  100,       14071.80,    test_cache_behavior_2, run two cache lines with fence at end
+064,  100,       14638.36,    test_cache_behavior_2, run four cache lines with fence at end
+064,  100,       15413.20,    test_cache_behavior_2, run eight cache lines with fence at end
+064,  100,       14648.84,    test_cache_behavior_2, run stride 1
+064,  100,       14149.96,    test_cache_behavior_2, run stride 2
+064,  100,       14364.76,    test_cache_behavior_2, run stride 3
+064,  100,       14611.56,    test_cache_behavior_2, run stride 4
+064,  100,       14005.88,    test_cache_behavior_2, run stride 5
+064,  100,       14296.72,    test_cache_behavior_2, run stride 6
+064,  100,       14496.60,    test_cache_behavior_2, run stride 7
+064,  100,       15213.64,    test_cache_behavior_2, run stride 8
+064,  100,       14858.52,    test_cache_behavior_2, run stride 9
+064,  100,       14379.84,    test_cache_behavior_2, run stride 10
+064,  100,       14204.40,    test_cache_behavior_2, run stride 11
+064,  100,       14076.72,    test_cache_behavior_2, run stride 12
+064,  100,       14272.40,    test_cache_behavior_2, run stride 13
+064,  100,       13923.80,    test_cache_behavior_2, run stride 14
+064,  100,       13907.32,    test_cache_behavior_2, run stride 15
+064,  100,       14189.80,    test_cache_behavior_2, run stride 16
+064,  100,       14029.84,    test_cache_behavior_2, run stride 17
+064,  100,       14302.72,    test_cache_behavior_2, run stride 18
+064,  100,       14491.60,    test_cache_behavior_2, run stride 19
+064,  100,       14205.76,    test_cache_behavior_2, run stride 20
+064,  100,       13920.72,    test_cache_behavior_2, run stride 21
+064,  100,       14053.68,    test_cache_behavior_2, run stride 22
+064,  100,       13929.16,    test_cache_behavior_2, run stride 23
+064,  100,       13825.84,    test_cache_behavior_2, run stride 24
+064,  100,       14205.32,    test_cache_behavior_2, run stride 25
+064,  100,       13715.20,    test_cache_behavior_2, run stride 26
+064,  100,       13952.00,    test_cache_behavior_2, run stride 27
+064,  100,       13674.56,    test_cache_behavior_2, run stride 28
+064,  100,       13786.00,    test_cache_behavior_2, run stride 29
+064,  100,       14144.56,    test_cache_behavior_2, run stride 30
+064,  100,       13729.48,    test_cache_behavior_2, run stride 31
+064,  100,       13907.80,    test_cache_behavior_2, run stride 32
+064,  100,       14224.56,    test_cache_behavior_2, run stride 33
+064,  100,       14322.96,    test_cache_behavior_2, run stride 34
+064,  100,       13744.04,    test_cache_behavior_2, run stride 35
+064,  100,       14505.16,    test_cache_behavior_2, run stride 36
+064,  100,       13937.00,    test_cache_behavior_2, run stride 37
+064,  100,       14226.80,    test_cache_behavior_2, run stride 38
+064,  100,       14481.44,    test_cache_behavior_2, run stride 39
+064,  100,       13993.40,    test_cache_behavior_2, run stride 40
+064,  100,       13919.36,    test_cache_behavior_2, run stride 41
+064,  100,       14334.60,    test_cache_behavior_2, run stride 42
+064,  100,       14420.88,    test_cache_behavior_2, run stride 43
+064,  100,       14184.60,    test_cache_behavior_2, run stride 44
+064,  100,       14466.28,    test_cache_behavior_2, run stride 45
+064,  100,       14470.92,    test_cache_behavior_2, run stride 46
+064,  100,       13902.20,    test_cache_behavior_2, run stride 47
+064,  100,       13922.68,    test_cache_behavior_2, run stride 48
+064,  100,       13837.40,    test_cache_behavior_2, run stride 49
+064,  100,       13902.64,    test_cache_behavior_2, run stride 50
+064,  100,       14077.84,    test_cache_behavior_2, run stride 51
+064,  100,       13845.72,    test_cache_behavior_2, run stride 52
+064,  100,       13798.00,    test_cache_behavior_2, run stride 53
+064,  100,       14206.64,    test_cache_behavior_2, run stride 54
+064,  100,       14338.08,    test_cache_behavior_2, run stride 55
+064,  100,       14168.40,    test_cache_behavior_2, run stride 56
+064,  100,       13946.16,    test_cache_behavior_2, run stride 57
+064,  100,       13729.08,    test_cache_behavior_2, run stride 58
+064,  100,       13854.24,    test_cache_behavior_2, run stride 59
+064,  100,       13869.76,    test_cache_behavior_2, run stride 60
+064,  100,       13873.08,    test_cache_behavior_2, run stride 61
+064,  100,       13784.20,    test_cache_behavior_2, run stride 62
+064,  100,       14248.00,    test_cache_behavior_2, run stride 63
+064,  100,       15213.64,    test_cache_behavior_2, run min 13674.560000 (28) max 15213.640000 (8)
+128,    1,      639684.00,    test_cache_behavior_1, initialize first record of each page
+128,  100,        7889.32,    test_cache_behavior_1, walk list
+128,  100,        7675.20,    test_cache_behavior_1, walk list + prefetch next entry
+128,  100,       22896.40,    test_cache_behavior_1, walk list + prefetch next entry + clflush after each write
+128,  100,       22513.36,    test_cache_behavior_1, walk list + clflush after each write
+128,  100,        7668.96,    test_cache_behavior_1, walk list + sfence after each write
+128,  100,        7640.84,    test_cache_behavior_1, walk list + sfence after each run
+128,  100,      116136.72,    test_cache_behavior_2, initialize all blocks
+128,  100,       29397.56,    test_cache_behavior_2, run one cache line with fence at end
+128,  100,       28771.92,    test_cache_behavior_2, run two cache lines with fence at end
+128,  100,       28262.28,    test_cache_behavior_2, run four cache lines with fence at end
+128,  100,       29535.44,    test_cache_behavior_2, run eight cache lines with fence at end
+128,  100,       28469.20,    test_cache_behavior_2, run stride 1
+128,  100,       29029.00,    test_cache_behavior_2, run stride 2
+128,  100,       29877.00,    test_cache_behavior_2, run stride 3
+128,  100,       28164.16,    test_cache_behavior_2, run stride 4
+128,  100,       28169.76,    test_cache_behavior_2, run stride 5
+128,  100,       29504.12,    test_cache_behavior_2, run stride 6
+128,  100,       28206.36,    test_cache_behavior_2, run stride 7
+128,  100,       28682.04,    test_cache_behavior_2, run stride 8
+128,  100,       28671.52,    test_cache_behavior_2, run stride 9
+128,  100,       28184.72,    test_cache_behavior_2, run stride 10
+128,  100,       29174.36,    test_cache_behavior_2, run stride 11
+128,  100,       28331.80,    test_cache_behavior_2, run stride 12
+128,  100,       28402.24,    test_cache_behavior_2, run stride 13
+128,  100,       28992.04,    test_cache_behavior_2, run stride 14
+128,  100,       28198.16,    test_cache_behavior_2, run stride 15
+128,  100,       28425.12,    test_cache_behavior_2, run stride 16
+128,  100,       29494.32,    test_cache_behavior_2, run stride 17
+128,  100,       28316.40,    test_cache_behavior_2, run stride 18
+128,  100,       28830.48,    test_cache_behavior_2, run stride 19
+128,  100,       30319.36,    test_cache_behavior_2, run stride 20
+128,  100,       30075.96,    test_cache_behavior_2, run stride 21
+128,  100,       28566.64,    test_cache_behavior_2, run stride 22
+128,  100,       28045.92,    test_cache_behavior_2, run stride 23
+128,  100,       29748.72,    test_cache_behavior_2, run stride 24
+128,  100,       28454.32,    test_cache_behavior_2, run stride 25
+128,  100,       27977.28,    test_cache_behavior_2, run stride 26
+128,  100,       28749.44,    test_cache_behavior_2, run stride 27
+128,  100,       28923.92,    test_cache_behavior_2, run stride 28
+128,  100,       28945.52,    test_cache_behavior_2, run stride 29
+128,  100,       30073.92,    test_cache_behavior_2, run stride 30
+128,  100,       29332.72,    test_cache_behavior_2, run stride 31
+128,  100,       29747.52,    test_cache_behavior_2, run stride 32
+128,  100,       29486.40,    test_cache_behavior_2, run stride 33
+128,  100,       29157.20,    test_cache_behavior_2, run stride 34
+128,  100,       29049.92,    test_cache_behavior_2, run stride 35
+128,  100,       29282.16,    test_cache_behavior_2, run stride 36
+128,  100,       28448.32,    test_cache_behavior_2, run stride 37
+128,  100,       28668.28,    test_cache_behavior_2, run stride 38
+128,  100,       28981.76,    test_cache_behavior_2, run stride 39
+128,  100,       28344.16,    test_cache_behavior_2, run stride 40
+128,  100,       28690.60,    test_cache_behavior_2, run stride 41
+128,  100,       29141.64,    test_cache_behavior_2, run stride 42
+128,  100,       29271.68,    test_cache_behavior_2, run stride 43
+128,  100,       29386.20,    test_cache_behavior_2, run stride 44
+128,  100,       29075.84,    test_cache_behavior_2, run stride 45
+128,  100,       29433.00,    test_cache_behavior_2, run stride 46
+128,  100,       28622.96,    test_cache_behavior_2, run stride 47
+128,  100,       29479.32,    test_cache_behavior_2, run stride 48
+128,  100,       29178.56,    test_cache_behavior_2, run stride 49
+128,  100,       28438.52,    test_cache_behavior_2, run stride 50
+128,  100,       28949.12,    test_cache_behavior_2, run stride 51
+128,  100,       28675.52,    test_cache_behavior_2, run stride 52
+128,  100,       28382.00,    test_cache_behavior_2, run stride 53
+128,  100,       28641.96,    test_cache_behavior_2, run stride 54
+128,  100,       29182.52,    test_cache_behavior_2, run stride 55
+128,  100,       28861.80,    test_cache_behavior_2, run stride 56
+128,  100,       29421.04,    test_cache_behavior_2, run stride 57
+128,  100,       28884.08,    test_cache_behavior_2, run stride 58
+128,  100,       28440.76,    test_cache_behavior_2, run stride 59
+128,  100,       28264.64,    test_cache_behavior_2, run stride 60
+128,  100,       28303.92,    test_cache_behavior_2, run stride 61
+128,  100,       28262.44,    test_cache_behavior_2, run stride 62
+128,  100,       28700.12,    test_cache_behavior_2, run stride 63
+128,  100,       30319.36,    test_cache_behavior_2, run min 27977.280000 (26) max 30319.360000 (20)
+256,    1,     1228560.00,    test_cache_behavior_1, initialize first record of each page
+256,  100,       15508.20,    test_cache_behavior_1, walk list
+256,  100,       15294.32,    test_cache_behavior_1, walk list + prefetch next entry
+256,  100,       44477.40,    test_cache_behavior_1, walk list + prefetch next entry + clflush after each write
+256,  100,       44383.92,    test_cache_behavior_1, walk list + clflush after each write
+256,  100,       15249.08,    test_cache_behavior_1, walk list + sfence after each write
+256,  100,       15213.04,    test_cache_behavior_1, walk list + sfence after each run
+256,  100,      222914.80,    test_cache_behavior_2, initialize all blocks
+256,  100,       56396.16,    test_cache_behavior_2, run one cache line with fence at end
+256,  100,       55030.48,    test_cache_behavior_2, run two cache lines with fence at end
+256,  100,       56613.36,    test_cache_behavior_2, run four cache lines with fence at end
+256,  100,       56204.12,    test_cache_behavior_2, run eight cache lines with fence at end
+256,  100,       55115.20,    test_cache_behavior_2, run stride 1
+256,  100,       54694.88,    test_cache_behavior_2, run stride 2
+256,  100,       55030.40,    test_cache_behavior_2, run stride 3
+256,  100,       54606.00,    test_cache_behavior_2, run stride 4
+256,  100,       54739.44,    test_cache_behavior_2, run stride 5
+256,  100,       54795.12,    test_cache_behavior_2, run stride 6
+256,  100,       54858.20,    test_cache_behavior_2, run stride 7
+256,  100,       55201.60,    test_cache_behavior_2, run stride 8
+256,  100,       55517.20,    test_cache_behavior_2, run stride 9
+256,  100,       55599.04,    test_cache_behavior_2, run stride 10
+256,  100,       55725.84,    test_cache_behavior_2, run stride 11
+256,  100,       55051.92,    test_cache_behavior_2, run stride 12
+256,  100,       55425.24,    test_cache_behavior_2, run stride 13
+256,  100,       56465.44,    test_cache_behavior_2, run stride 14
+256,  100,       55862.28,    test_cache_behavior_2, run stride 15
+256,  100,       55079.28,    test_cache_behavior_2, run stride 16
+256,  100,       55647.40,    test_cache_behavior_2, run stride 17
+256,  100,       55063.12,    test_cache_behavior_2, run stride 18
+256,  100,       55666.12,    test_cache_behavior_2, run stride 19
+256,  100,       55693.60,    test_cache_behavior_2, run stride 20
+256,  100,       55596.72,    test_cache_behavior_2, run stride 21
+256,  100,       55414.48,    test_cache_behavior_2, run stride 22
+256,  100,       55763.40,    test_cache_behavior_2, run stride 23
+256,  100,       55096.32,    test_cache_behavior_2, run stride 24
+256,  100,       55593.92,    test_cache_behavior_2, run stride 25
+256,  100,       55160.36,    test_cache_behavior_2, run stride 26
+256,  100,       54949.96,    test_cache_behavior_2, run stride 27
+256,  100,       55355.32,    test_cache_behavior_2, run stride 28
+256,  100,       55868.36,    test_cache_behavior_2, run stride 29
+256,  100,       56678.64,    test_cache_behavior_2, run stride 30
+256,  100,       55241.32,    test_cache_behavior_2, run stride 31
+256,  100,       54922.72,    test_cache_behavior_2, run stride 32
+256,  100,       55210.64,    test_cache_behavior_2, run stride 33
+256,  100,       54977.32,    test_cache_behavior_2, run stride 34
+256,  100,       55960.24,    test_cache_behavior_2, run stride 35
+256,  100,       55899.44,    test_cache_behavior_2, run stride 36
+256,  100,       55274.52,    test_cache_behavior_2, run stride 37
+256,  100,       55119.44,    test_cache_behavior_2, run stride 38
+256,  100,       55299.36,    test_cache_behavior_2, run stride 39
+256,  100,       55943.92,    test_cache_behavior_2, run stride 40
+256,  100,       56512.84,    test_cache_behavior_2, run stride 41
+256,  100,       55816.24,    test_cache_behavior_2, run stride 42
+256,  100,       55101.76,    test_cache_behavior_2, run stride 43
+256,  100,       62339.52,    test_cache_behavior_2, run stride 44
+256,  100,       55822.88,    test_cache_behavior_2, run stride 45
+256,  100,       56094.08,    test_cache_behavior_2, run stride 46
+256,  100,       56377.72,    test_cache_behavior_2, run stride 47
+256,  100,       56520.80,    test_cache_behavior_2, run stride 48
+256,  100,       55655.16,    test_cache_behavior_2, run stride 49
+256,  100,       56103.80,    test_cache_behavior_2, run stride 50
+256,  100,       55580.52,    test_cache_behavior_2, run stride 51
+256,  100,       55939.20,    test_cache_behavior_2, run stride 52
+256,  100,       55707.96,    test_cache_behavior_2, run stride 53
+256,  100,       55567.48,    test_cache_behavior_2, run stride 54
+256,  100,       55865.28,    test_cache_behavior_2, run stride 55
+256,  100,       55695.08,    test_cache_behavior_2, run stride 56
+256,  100,       56058.56,    test_cache_behavior_2, run stride 57
+256,  100,       55462.28,    test_cache_behavior_2, run stride 58
+256,  100,       57347.60,    test_cache_behavior_2, run stride 59
+256,  100,       55798.16,    test_cache_behavior_2, run stride 60
+256,  100,       56270.72,    test_cache_behavior_2, run stride 61
+256,  100,       55895.12,    test_cache_behavior_2, run stride 62
+256,  100,       56616.36,    test_cache_behavior_2, run stride 63
+256,  100,       62339.52,    test_cache_behavior_2, run min 54606.000000 (4) max 62339.520000 (44)
+512,    1,     2443708.00,    test_cache_behavior_1, initialize first record of each page
+512,  100,       30568.72,    test_cache_behavior_1, walk list
+512,  100,       30758.60,    test_cache_behavior_1, walk list + prefetch next entry
+512,  100,       90278.88,    test_cache_behavior_1, walk list + prefetch next entry + clflush after each write
+512,  100,       89556.48,    test_cache_behavior_1, walk list + clflush after each write
+512,  100,       30705.76,    test_cache_behavior_1, walk list + sfence after each write
+512,  100,       30728.48,    test_cache_behavior_1, walk list + sfence after each run
+512,  100,      442548.56,    test_cache_behavior_2, initialize all blocks
+512,  100,      109078.64,    test_cache_behavior_2, run one cache line with fence at end
+512,  100,      107478.36,    test_cache_behavior_2, run two cache lines with fence at end
+512,  100,      109778.76,    test_cache_behavior_2, run four cache lines with fence at end
+512,  100,      111202.20,    test_cache_behavior_2, run eight cache lines with fence at end
+512,  100,      109046.76,    test_cache_behavior_2, run stride 1
+512,  100,      107968.40,    test_cache_behavior_2, run stride 2
+512,  100,      107505.32,    test_cache_behavior_2, run stride 3
+512,  100,      108536.28,    test_cache_behavior_2, run stride 4
+512,  100,      108236.20,    test_cache_behavior_2, run stride 5
+512,  100,      110449.20,    test_cache_behavior_2, run stride 6
+512,  100,      111048.28,    test_cache_behavior_2, run stride 7
+512,  100,      109949.36,    test_cache_behavior_2, run stride 8
+512,  100,      108914.00,    test_cache_behavior_2, run stride 9
+512,  100,      108877.56,    test_cache_behavior_2, run stride 10
+512,  100,      107837.04,    test_cache_behavior_2, run stride 11
+512,  100,      108169.68,    test_cache_behavior_2, run stride 12
+512,  100,      109496.04,    test_cache_behavior_2, run stride 13
+512,  100,      107748.80,    test_cache_behavior_2, run stride 14
+512,  100,      108786.64,    test_cache_behavior_2, run stride 15
+512,  100,      108978.36,    test_cache_behavior_2, run stride 16
+512,  100,      107939.84,    test_cache_behavior_2, run stride 17
+512,  100,      109651.48,    test_cache_behavior_2, run stride 18
+512,  100,      109249.64,    test_cache_behavior_2, run stride 19
+512,  100,      108663.56,    test_cache_behavior_2, run stride 20
+512,  100,      109720.84,    test_cache_behavior_2, run stride 21
+512,  100,      108056.92,    test_cache_behavior_2, run stride 22
+512,  100,      108892.64,    test_cache_behavior_2, run stride 23
+512,  100,      108197.56,    test_cache_behavior_2, run stride 24
+512,  100,      109832.12,    test_cache_behavior_2, run stride 25
+512,  100,      107923.84,    test_cache_behavior_2, run stride 26
+512,  100,      108090.08,    test_cache_behavior_2, run stride 27
+512,  100,      108591.16,    test_cache_behavior_2, run stride 28
+512,  100,      108180.36,    test_cache_behavior_2, run stride 29
+512,  100,      108534.56,    test_cache_behavior_2, run stride 30
+512,  100,      108092.56,    test_cache_behavior_2, run stride 31
+512,  100,      109349.48,    test_cache_behavior_2, run stride 32
+512,  100,      107838.36,    test_cache_behavior_2, run stride 33
+512,  100,      109410.88,    test_cache_behavior_2, run stride 34
+512,  100,      108913.32,    test_cache_behavior_2, run stride 35
+512,  100,      108481.12,    test_cache_behavior_2, run stride 36
+512,  100,      108600.80,    test_cache_behavior_2, run stride 37
+512,  100,      108292.32,    test_cache_behavior_2, run stride 38
+512,  100,      108694.40,    test_cache_behavior_2, run stride 39
+512,  100,      108260.44,    test_cache_behavior_2, run stride 40
+512,  100,      108336.00,    test_cache_behavior_2, run stride 41
+512,  100,      108344.96,    test_cache_behavior_2, run stride 42
+512,  100,      108195.20,    test_cache_behavior_2, run stride 43
+512,  100,      107684.64,    test_cache_behavior_2, run stride 44
+512,  100,      108306.24,    test_cache_behavior_2, run stride 45
+512,  100,      109372.00,    test_cache_behavior_2, run stride 46
+512,  100,      108203.76,    test_cache_behavior_2, run stride 47
+512,  100,      108126.72,    test_cache_behavior_2, run stride 48
+512,  100,      108578.08,    test_cache_behavior_2, run stride 49
+512,  100,      110806.64,    test_cache_behavior_2, run stride 50
+512,  100,      108826.88,    test_cache_behavior_2, run stride 51
+512,  100,      109016.92,    test_cache_behavior_2, run stride 52
+512,  100,      108454.52,    test_cache_behavior_2, run stride 53
+512,  100,      109262.08,    test_cache_behavior_2, run stride 54
+512,  100,      108785.32,    test_cache_behavior_2, run stride 55
+512,  100,      109161.48,    test_cache_behavior_2, run stride 56
+512,  100,      108853.32,    test_cache_behavior_2, run stride 57
+512,  100,      110058.88,    test_cache_behavior_2, run stride 58
+512,  100,      110352.04,    test_cache_behavior_2, run stride 59
+512,  100,      111398.32,    test_cache_behavior_2, run stride 60
+512,  100,      110115.68,    test_cache_behavior_2, run stride 61
+512,  100,      109080.16,    test_cache_behavior_2, run stride 62
+512,  100,      109422.04,    test_cache_behavior_2, run stride 63
+512,  100,      111398.32,    test_cache_behavior_2, run min 107505.320000 (3) max 111398.320000 (60)
+1024,    1,     4750872.00,    test_cache_behavior_1, initialize first record of each page
+1024,  100,       61813.88,    test_cache_behavior_1, walk list
+1024,  100,       61717.44,    test_cache_behavior_1, walk list + prefetch next entry
+1024,  100,      179468.80,    test_cache_behavior_1, walk list + prefetch next entry + clflush after each write
+1024,  100,      178287.92,    test_cache_behavior_1, walk list + clflush after each write
+1024,  100,       61419.64,    test_cache_behavior_1, walk list + sfence after each write
+1024,  100,       62739.84,    test_cache_behavior_1, walk list + sfence after each run
+1024,  100,      873638.60,    test_cache_behavior_2, initialize all blocks
+1024,  100,      220764.40,    test_cache_behavior_2, run one cache line with fence at end
+1024,  100,      217148.56,    test_cache_behavior_2, run two cache lines with fence at end
+1024,  100,      219185.16,    test_cache_behavior_2, run four cache lines with fence at end
+1024,  100,      219634.72,    test_cache_behavior_2, run eight cache lines with fence at end
+1024,  100,      215711.36,    test_cache_behavior_2, run stride 1
+1024,  100,      215088.20,    test_cache_behavior_2, run stride 2
+1024,  100,      212817.20,    test_cache_behavior_2, run stride 3
+1024,  100,      215805.32,    test_cache_behavior_2, run stride 4
+1024,  100,      219412.40,    test_cache_behavior_2, run stride 5
+1024,  100,      215259.36,    test_cache_behavior_2, run stride 6
+1024,  100,      215581.20,    test_cache_behavior_2, run stride 7
+1024,  100,      215553.80,    test_cache_behavior_2, run stride 8
+1024,  100,      216355.88,    test_cache_behavior_2, run stride 9
+1024,  100,      217155.96,    test_cache_behavior_2, run stride 10
+1024,  100,      217780.48,    test_cache_behavior_2, run stride 11
+1024,  100,      216352.76,    test_cache_behavior_2, run stride 12
+1024,  100,      215657.56,    test_cache_behavior_2, run stride 13
+1024,  100,      215750.00,    test_cache_behavior_2, run stride 14
+1024,  100,      216679.40,    test_cache_behavior_2, run stride 15
+1024,  100,      216559.40,    test_cache_behavior_2, run stride 16
+1024,  100,      218731.56,    test_cache_behavior_2, run stride 17
+1024,  100,      218912.60,    test_cache_behavior_2, run stride 18
+1024,  100,      219079.56,    test_cache_behavior_2, run stride 19
+1024,  100,      219008.96,    test_cache_behavior_2, run stride 20
+1024,  100,      219888.04,    test_cache_behavior_2, run stride 21
+1024,  100,      217960.32,    test_cache_behavior_2, run stride 22
+1024,  100,      219566.80,    test_cache_behavior_2, run stride 23
+1024,  100,      218013.24,    test_cache_behavior_2, run stride 24
+1024,  100,      217197.52,    test_cache_behavior_2, run stride 25
+1024,  100,      214017.76,    test_cache_behavior_2, run stride 26
+1024,  100,      215151.72,    test_cache_behavior_2, run stride 27
+1024,  100,      214338.88,    test_cache_behavior_2, run stride 28
+1024,  100,      216838.40,    test_cache_behavior_2, run stride 29
+1024,  100,      217974.84,    test_cache_behavior_2, run stride 30
+1024,  100,      216146.16,    test_cache_behavior_2, run stride 31
+1024,  100,      217306.56,    test_cache_behavior_2, run stride 32
+1024,  100,      215095.32,    test_cache_behavior_2, run stride 33
+1024,  100,      214472.28,    test_cache_behavior_2, run stride 34
+1024,  100,      219874.36,    test_cache_behavior_2, run stride 35
+1024,  100,      221198.60,    test_cache_behavior_2, run stride 36
+1024,  100,      215957.40,    test_cache_behavior_2, run stride 37
+1024,  100,      220356.32,    test_cache_behavior_2, run stride 38
+1024,  100,      218715.12,    test_cache_behavior_2, run stride 39
+1024,  100,      216756.84,    test_cache_behavior_2, run stride 40
+1024,  100,      212601.08,    test_cache_behavior_2, run stride 41
+1024,  100,      213631.40,    test_cache_behavior_2, run stride 42
+1024,  100,      214300.00,    test_cache_behavior_2, run stride 43
+1024,  100,      219194.80,    test_cache_behavior_2, run stride 44
+1024,  100,      216808.52,    test_cache_behavior_2, run stride 45
+1024,  100,      217931.12,    test_cache_behavior_2, run stride 46
+1024,  100,      217318.44,    test_cache_behavior_2, run stride 47
+1024,  100,      213749.68,    test_cache_behavior_2, run stride 48
+1024,  100,      216976.68,    test_cache_behavior_2, run stride 49
+1024,  100,      219091.44,    test_cache_behavior_2, run stride 50
+1024,  100,      218143.92,    test_cache_behavior_2, run stride 51
+1024,  100,      214841.80,    test_cache_behavior_2, run stride 52
+1024,  100,      218483.12,    test_cache_behavior_2, run stride 53
+1024,  100,      214419.32,    test_cache_behavior_2, run stride 54
+1024,  100,      215459.24,    test_cache_behavior_2, run stride 55
+1024,  100,      216194.36,    test_cache_behavior_2, run stride 56
+1024,  100,      217580.96,    test_cache_behavior_2, run stride 57
+1024,  100,      215925.20,    test_cache_behavior_2, run stride 58
+1024,  100,      218329.04,    test_cache_behavior_2, run stride 59
+1024,  100,      216015.44,    test_cache_behavior_2, run stride 60
+1024,  100,      216292.32,    test_cache_behavior_2, run stride 61
+1024,  100,      218733.12,    test_cache_behavior_2, run stride 62
+1024,  100,      215786.80,    test_cache_behavior_2, run stride 63
+1024,  100,      221198.60,    test_cache_behavior_2, run min 212601.080000 (41) max 221198.600000 (36)
+2048,    1,     9439104.00,    test_cache_behavior_1, initialize first record of each page
+2048,  100,      127840.00,    test_cache_behavior_1, walk list
+2048,  100,      126278.60,    test_cache_behavior_1, walk list + prefetch next entry
+2048,  100,      373236.76,    test_cache_behavior_1, walk list + prefetch next entry + clflush after each write
+2048,  100,      374752.96,    test_cache_behavior_1, walk list + clflush after each write
+2048,  100,      125342.16,    test_cache_behavior_1, walk list + sfence after each write
+2048,  100,      124886.52,    test_cache_behavior_1, walk list + sfence after each run
+2048,  100,     1985131.80,    test_cache_behavior_2, initialize all blocks
+2048,  100,      440800.52,    test_cache_behavior_2, run one cache line with fence at end
+2048,  100,      438108.16,    test_cache_behavior_2, run two cache lines with fence at end
+2048,  100,      448489.24,    test_cache_behavior_2, run four cache lines with fence at end
+2048,  100,      439482.72,    test_cache_behavior_2, run eight cache lines with fence at end
+2048,  100,      465944.28,    test_cache_behavior_2, run stride 1
+2048,  100,      614901.37,    test_cache_behavior_2, run stride 2
+2048,  100,      434291.36,    test_cache_behavior_2, run stride 3
+2048,  100,      628345.55,    test_cache_behavior_2, run stride 4
+2048,  100,      656676.47,    test_cache_behavior_2, run stride 5
+2048,  100,      452696.41,    test_cache_behavior_2, run stride 6
+2048,  100,      428631.72,    test_cache_behavior_2, run stride 7
+2048,  100,      434319.60,    test_cache_behavior_2, run stride 8
+2048,  100,      439123.08,    test_cache_behavior_2, run stride 9
+2048,  100,      435720.40,    test_cache_behavior_2, run stride 10
+2048,  100,      438846.56,    test_cache_behavior_2, run stride 11
+2048,  100,      428553.64,    test_cache_behavior_2, run stride 12
+2048,  100,      429718.68,    test_cache_behavior_2, run stride 13
+2048,  100,      426760.76,    test_cache_behavior_2, run stride 14
+2048,  100,      431269.20,    test_cache_behavior_2, run stride 15
+2048,  100,      434956.04,    test_cache_behavior_2, run stride 16
+2048,  100,      427393.24,    test_cache_behavior_2, run stride 17
+2048,  100,      436882.20,    test_cache_behavior_2, run stride 18
+2048,  100,      433433.80,    test_cache_behavior_2, run stride 19
+2048,  100,      429571.60,    test_cache_behavior_2, run stride 20
+2048,  100,      434509.16,    test_cache_behavior_2, run stride 21
+2048,  100,      431834.44,    test_cache_behavior_2, run stride 22
+2048,  100,      424343.20,    test_cache_behavior_2, run stride 23
+2048,  100,      431515.68,    test_cache_behavior_2, run stride 24
+2048,  100,      432600.72,    test_cache_behavior_2, run stride 25
+2048,  100,      428993.20,    test_cache_behavior_2, run stride 26
+2048,  100,      433848.44,    test_cache_behavior_2, run stride 27
+2048,  100,      433190.12,    test_cache_behavior_2, run stride 28
+2048,  100,      429888.20,    test_cache_behavior_2, run stride 29
+2048,  100,      437238.20,    test_cache_behavior_2, run stride 30
+2048,  100,      444853.68,    test_cache_behavior_2, run stride 31
+2048,  100,      432309.16,    test_cache_behavior_2, run stride 32
+2048,  100,      434039.08,    test_cache_behavior_2, run stride 33
+2048,  100,      434419.64,    test_cache_behavior_2, run stride 34
+2048,  100,      433681.04,    test_cache_behavior_2, run stride 35
+2048,  100,      432672.92,    test_cache_behavior_2, run stride 36
+2048,  100,      429789.96,    test_cache_behavior_2, run stride 37
+2048,  100,      433755.08,    test_cache_behavior_2, run stride 38
+2048,  100,      427880.00,    test_cache_behavior_2, run stride 39
+2048,  100,      431110.04,    test_cache_behavior_2, run stride 40
+2048,  100,      434080.68,    test_cache_behavior_2, run stride 41
+2048,  100,      432028.24,    test_cache_behavior_2, run stride 42
+2048,  100,      427790.28,    test_cache_behavior_2, run stride 43
+2048,  100,      433330.32,    test_cache_behavior_2, run stride 44
+2048,  100,      430900.68,    test_cache_behavior_2, run stride 45
+2048,  100,      426675.68,    test_cache_behavior_2, run stride 46
+2048,  100,      433325.04,    test_cache_behavior_2, run stride 47
+2048,  100,      430025.88,    test_cache_behavior_2, run stride 48
+2048,  100,      427514.20,    test_cache_behavior_2, run stride 49
+2048,  100,      428491.32,    test_cache_behavior_2, run stride 50
+2048,  100,      426707.12,    test_cache_behavior_2, run stride 51
+2048,  100,      429111.04,    test_cache_behavior_2, run stride 52
+2048,  100,      432066.28,    test_cache_behavior_2, run stride 53
+2048,  100,      430141.84,    test_cache_behavior_2, run stride 54
+2048,  100,      428872.20,    test_cache_behavior_2, run stride 55
+2048,  100,      429970.04,    test_cache_behavior_2, run stride 56
+2048,  100,      426600.84,    test_cache_behavior_2, run stride 57
+2048,  100,      428936.88,    test_cache_behavior_2, run stride 58
+2048,  100,      427498.76,    test_cache_behavior_2, run stride 59
+2048,  100,      427099.56,    test_cache_behavior_2, run stride 60
+2048,  100,      429843.44,    test_cache_behavior_2, run stride 61
+2048,  100,      432435.76,    test_cache_behavior_2, run stride 62
+2048,  100,      426914.96,    test_cache_behavior_2, run stride 63
+2048,  100,      656676.47,    test_cache_behavior_2, run min 424343.200000 (23) max 656676.470000 (5)
+4096,    1,    19157868.00,    test_cache_behavior_1, initialize first record of each page
+4096,  100,      540452.56,    test_cache_behavior_1, walk list
+4096,  100,      537932.56,    test_cache_behavior_1, walk list + prefetch next entry
+4096,  100,      757833.72,    test_cache_behavior_1, walk list + prefetch next entry + clflush after each write
+4096,  100,      752255.16,    test_cache_behavior_1, walk list + clflush after each write
+4096,  100,      538073.96,    test_cache_behavior_1, walk list + sfence after each write
+4096,  100,      519192.36,    test_cache_behavior_1, walk list + sfence after each run
+4096,  100,     6728571.20,    test_cache_behavior_2, initialize all blocks
+4096,  100,      873102.12,    test_cache_behavior_2, run one cache line with fence at end
+4096,  100,      865647.28,    test_cache_behavior_2, run two cache lines with fence at end
+4096,  100,      863883.24,    test_cache_behavior_2, run four cache lines with fence at end
+4096,  100,      872734.08,    test_cache_behavior_2, run eight cache lines with fence at end
+4096,  100,      858860.44,    test_cache_behavior_2, run stride 1
+4096,  100,      851099.04,    test_cache_behavior_2, run stride 2
+4096,  100,      868179.00,    test_cache_behavior_2, run stride 3
+4096,  100,      868410.92,    test_cache_behavior_2, run stride 4
+4096,  100,      865959.44,    test_cache_behavior_2, run stride 5
+4096,  100,      863843.16,    test_cache_behavior_2, run stride 6
+4096,  100,      852485.12,    test_cache_behavior_2, run stride 7
+4096,  100,      866877.12,    test_cache_behavior_2, run stride 8
+4096,  100,      855580.24,    test_cache_behavior_2, run stride 9
+4096,  100,      862623.76,    test_cache_behavior_2, run stride 10
+4096,  100,      859307.72,    test_cache_behavior_2, run stride 11
+4096,  100,      851065.64,    test_cache_behavior_2, run stride 12
+4096,  100,      858576.28,    test_cache_behavior_2, run stride 13
+4096,  100,      866074.40,    test_cache_behavior_2, run stride 14
+4096,  100,      850950.72,    test_cache_behavior_2, run stride 15
+4096,  100,      860326.52,    test_cache_behavior_2, run stride 16
+4096,  100,      850980.08,    test_cache_behavior_2, run stride 17
+4096,  100,      861229.52,    test_cache_behavior_2, run stride 18
+4096,  100,      852871.16,    test_cache_behavior_2, run stride 19
+4096,  100,      850638.08,    test_cache_behavior_2, run stride 20
+4096,  100,      869972.88,    test_cache_behavior_2, run stride 21
+4096,  100,      857951.32,    test_cache_behavior_2, run stride 22
+4096,  100,      857930.84,    test_cache_behavior_2, run stride 23
+4096,  100,      857173.32,    test_cache_behavior_2, run stride 24
+4096,  100,      851756.04,    test_cache_behavior_2, run stride 25
+4096,  100,      861801.88,    test_cache_behavior_2, run stride 26
+4096,  100,      850191.84,    test_cache_behavior_2, run stride 27
+4096,  100,      854591.92,    test_cache_behavior_2, run stride 28
+4096,  100,      867415.72,    test_cache_behavior_2, run stride 29
+4096,  100,      855820.28,    test_cache_behavior_2, run stride 30
+4096,  100,      857294.28,    test_cache_behavior_2, run stride 31
+4096,  100,      852271.12,    test_cache_behavior_2, run stride 32
+4096,  100,      850939.12,    test_cache_behavior_2, run stride 33
+4096,  100,      869769.36,    test_cache_behavior_2, run stride 34
+4096,  100,      859135.68,    test_cache_behavior_2, run stride 35
+4096,  100,      858495.88,    test_cache_behavior_2, run stride 36
+4096,  100,      871315.40,    test_cache_behavior_2, run stride 37
+4096,  100,      860583.28,    test_cache_behavior_2, run stride 38
+4096,  100,      857542.76,    test_cache_behavior_2, run stride 39
+4096,  100,      869131.92,    test_cache_behavior_2, run stride 40
+4096,  100,      862176.96,    test_cache_behavior_2, run stride 41
+4096,  100,      856110.32,    test_cache_behavior_2, run stride 42
+4096,  100,      865559.08,    test_cache_behavior_2, run stride 43
+4096,  100,      867923.08,    test_cache_behavior_2, run stride 44
+4096,  100,      856560.60,    test_cache_behavior_2, run stride 45
+4096,  100,      865960.16,    test_cache_behavior_2, run stride 46
+4096,  100,      866610.96,    test_cache_behavior_2, run stride 47
+4096,  100,      852341.12,    test_cache_behavior_2, run stride 48
+4096,  100,      863239.68,    test_cache_behavior_2, run stride 49
+4096,  100,      850686.20,    test_cache_behavior_2, run stride 50
+4096,  100,      856585.64,    test_cache_behavior_2, run stride 51
+4096,  100,      863319.68,    test_cache_behavior_2, run stride 52
+4096,  100,      850698.52,    test_cache_behavior_2, run stride 53
+4096,  100,      860402.88,    test_cache_behavior_2, run stride 54
+4096,  100,      869189.04,    test_cache_behavior_2, run stride 55
+4096,  100,      862877.36,    test_cache_behavior_2, run stride 56
+4096,  100,      869290.44,    test_cache_behavior_2, run stride 57
+4096,  100,      859939.64,    test_cache_behavior_2, run stride 58
+4096,  100,      857951.04,    test_cache_behavior_2, run stride 59
+4096,  100,      861437.00,    test_cache_behavior_2, run stride 60
+4096,  100,      853517.88,    test_cache_behavior_2, run stride 61
+4096,  100,      859746.88,    test_cache_behavior_2, run stride 62
+4096,  100,      850018.48,    test_cache_behavior_2, run stride 63
+4096,  100,      871315.40,    test_cache_behavior_2, run min 850018.480000 (63) max 871315.400000 (37)
+8192,    1,    37782516.00,    test_cache_behavior_1, initialize first record of each page
+8192,  100,     1586984.80,    test_cache_behavior_1, walk list
+8192,  100,     1576551.92,    test_cache_behavior_1, walk list + prefetch next entry
+8192,  100,     1506140.72,    test_cache_behavior_1, walk list + prefetch next entry + clflush after each write
+8192,  100,     1480661.04,    test_cache_behavior_1, walk list + clflush after each write
+8192,  100,     1580130.44,    test_cache_behavior_1, walk list + sfence after each write
+8192,  100,     1573292.60,    test_cache_behavior_1, walk list + sfence after each run
+8192,  100,    15102685.36,    test_cache_behavior_2, initialize all blocks
+8192,  100,     1753911.84,    test_cache_behavior_2, run one cache line with fence at end
+8192,  100,     1726458.96,    test_cache_behavior_2, run two cache lines with fence at end
+8192,  100,     1730840.96,    test_cache_behavior_2, run four cache lines with fence at end
+8192,  100,     1728882.44,    test_cache_behavior_2, run eight cache lines with fence at end
+8192,  100,     1701383.68,    test_cache_behavior_2, run stride 1
+8192,  100,     1725542.04,    test_cache_behavior_2, run stride 2
+8192,  100,     1706354.64,    test_cache_behavior_2, run stride 3
+8192,  100,     1709586.04,    test_cache_behavior_2, run stride 4
+8192,  100,     1731088.20,    test_cache_behavior_2, run stride 5
+8192,  100,     1713702.08,    test_cache_behavior_2, run stride 6
+8192,  100,     1725382.92,    test_cache_behavior_2, run stride 7
+8192,  100,     1718031.32,    test_cache_behavior_2, run stride 8
+8192,  100,     1719749.92,    test_cache_behavior_2, run stride 9
+8192,  100,     1727887.88,    test_cache_behavior_2, run stride 10
+8192,  100,     1728592.28,    test_cache_behavior_2, run stride 11
+8192,  100,     1728113.28,    test_cache_behavior_2, run stride 12
+8192,  100,     1707398.76,    test_cache_behavior_2, run stride 13
+8192,  100,     1723198.64,    test_cache_behavior_2, run stride 14
+8192,  100,     1703383.56,    test_cache_behavior_2, run stride 15
+8192,  100,     1710490.60,    test_cache_behavior_2, run stride 16
+8192,  100,     1730452.44,    test_cache_behavior_2, run stride 17
+8192,  100,     1701322.12,    test_cache_behavior_2, run stride 18
+8192,  100,     1721214.04,    test_cache_behavior_2, run stride 19
+8192,  100,     1702856.16,    test_cache_behavior_2, run stride 20
+8192,  100,     1714098.88,    test_cache_behavior_2, run stride 21
+8192,  100,     1724931.68,    test_cache_behavior_2, run stride 22
+8192,  100,     1706625.20,    test_cache_behavior_2, run stride 23
+8192,  100,     1731393.16,    test_cache_behavior_2, run stride 24
+8192,  100,     1735351.28,    test_cache_behavior_2, run stride 25
+8192,  100,     1734638.12,    test_cache_behavior_2, run stride 26
+8192,  100,     1722953.16,    test_cache_behavior_2, run stride 27
+8192,  100,     1706082.48,    test_cache_behavior_2, run stride 28
+8192,  100,     1733426.00,    test_cache_behavior_2, run stride 29
+8192,  100,     1725600.32,    test_cache_behavior_2, run stride 30
+8192,  100,     1702707.00,    test_cache_behavior_2, run stride 31
+8192,  100,     1736797.32,    test_cache_behavior_2, run stride 32
+8192,  100,     1727480.28,    test_cache_behavior_2, run stride 33
+8192,  100,     1702174.84,    test_cache_behavior_2, run stride 34
+8192,  100,     1730721.80,    test_cache_behavior_2, run stride 35
+8192,  100,     1711795.52,    test_cache_behavior_2, run stride 36
+8192,  100,     1726618.24,    test_cache_behavior_2, run stride 37
+8192,  100,     1703786.64,    test_cache_behavior_2, run stride 38
+8192,  100,     1705517.56,    test_cache_behavior_2, run stride 39
+8192,  100,     1732561.32,    test_cache_behavior_2, run stride 40
+8192,  100,     1731785.08,    test_cache_behavior_2, run stride 41
+8192,  100,     1714621.16,    test_cache_behavior_2, run stride 42
+8192,  100,     1729934.36,    test_cache_behavior_2, run stride 43
+8192,  100,     1721858.32,    test_cache_behavior_2, run stride 44
+8192,  100,     1705631.52,    test_cache_behavior_2, run stride 45
+8192,  100,     1730587.92,    test_cache_behavior_2, run stride 46
+8192,  100,     1708961.32,    test_cache_behavior_2, run stride 47
+8192,  100,     1724610.56,    test_cache_behavior_2, run stride 48
+8192,  100,     1720151.36,    test_cache_behavior_2, run stride 49
+8192,  100,     1703284.84,    test_cache_behavior_2, run stride 50
+8192,  100,     1728512.12,    test_cache_behavior_2, run stride 51
+8192,  100,     1717522.48,    test_cache_behavior_2, run stride 52
+8192,  100,     1721912.60,    test_cache_behavior_2, run stride 53
+8192,  100,     1732871.00,    test_cache_behavior_2, run stride 54
+8192,  100,     1706626.16,    test_cache_behavior_2, run stride 55
+8192,  100,     1725303.92,    test_cache_behavior_2, run stride 56
+8192,  100,     1731382.48,    test_cache_behavior_2, run stride 57
+8192,  100,     1713907.40,    test_cache_behavior_2, run stride 58
+8192,  100,     1719517.40,    test_cache_behavior_2, run stride 59
+8192,  100,     1728356.72,    test_cache_behavior_2, run stride 60
+8192,  100,     1702459.40,    test_cache_behavior_2, run stride 61
+8192,  100,     1734249.00,    test_cache_behavior_2, run stride 62
+8192,  100,     1703560.92,    test_cache_behavior_2, run stride 63
+8192,  100,     1736797.32,    test_cache_behavior_2, run min 1701322.120000 (18) max 1736797.320000 (32)
+16384,    1,    75186500.00,    test_cache_behavior_1, initialize first record of each page
+16384,  100,     3200128.76,    test_cache_behavior_1, walk list
+16384,  100,     3224984.80,    test_cache_behavior_1, walk list + prefetch next entry
+16384,  100,     3057717.32,    test_cache_behavior_1, walk list + prefetch next entry + clflush after each write
+16384,  100,     3004419.48,    test_cache_behavior_1, walk list + clflush after each write
+16384,  100,     3215630.84,    test_cache_behavior_1, walk list + sfence after each write
+16384,  100,     3115406.12,    test_cache_behavior_1, walk list + sfence after each run
+16384,  100,    30088691.68,    test_cache_behavior_2, initialize all blocks
+16384,  100,     3476083.44,    test_cache_behavior_2, run one cache line with fence at end
+16384,  100,     3448071.16,    test_cache_behavior_2, run two cache lines with fence at end
+16384,  100,     3448049.00,    test_cache_behavior_2, run four cache lines with fence at end
+16384,  100,     3481452.36,    test_cache_behavior_2, run eight cache lines with fence at end
+16384,  100,     3416888.64,    test_cache_behavior_2, run stride 1
+16384,  100,     3430242.80,    test_cache_behavior_2, run stride 2
+16384,  100,     3396009.32,    test_cache_behavior_2, run stride 3
+16384,  100,     3428043.96,    test_cache_behavior_2, run stride 4
+16384,  100,     3398233.04,    test_cache_behavior_2, run stride 5
+16384,  100,     3426045.88,    test_cache_behavior_2, run stride 6
+16384,  100,     3393776.68,    test_cache_behavior_2, run stride 7
+16384,  100,     3423210.40,    test_cache_behavior_2, run stride 8
+16384,  100,     3394903.56,    test_cache_behavior_2, run stride 9
+16384,  100,     3430849.04,    test_cache_behavior_2, run stride 10
+16384,  100,     3401192.80,    test_cache_behavior_2, run stride 11
+16384,  100,     3440763.04,    test_cache_behavior_2, run stride 12
+16384,  100,     3420472.44,    test_cache_behavior_2, run stride 13
+16384,  100,     3424604.16,    test_cache_behavior_2, run stride 14
+16384,  100,     3437571.20,    test_cache_behavior_2, run stride 15
+16384,  100,     3410363.44,    test_cache_behavior_2, run stride 16
+16384,  100,     3411121.40,    test_cache_behavior_2, run stride 17
+16384,  100,     3408131.80,    test_cache_behavior_2, run stride 18
+16384,  100,     3420866.84,    test_cache_behavior_2, run stride 19
+16384,  100,     3401631.36,    test_cache_behavior_2, run stride 20
+16384,  100,     3413959.28,    test_cache_behavior_2, run stride 21
+16384,  100,     3404410.68,    test_cache_behavior_2, run stride 22
+16384,  100,     3414110.92,    test_cache_behavior_2, run stride 23
+16384,  100,     3399687.40,    test_cache_behavior_2, run stride 24
+16384,  100,     3449583.36,    test_cache_behavior_2, run stride 25
+16384,  100,     3400474.76,    test_cache_behavior_2, run stride 26
+16384,  100,     3457580.60,    test_cache_behavior_2, run stride 27
+16384,  100,     3401505.12,    test_cache_behavior_2, run stride 28
+16384,  100,     3425277.40,    test_cache_behavior_2, run stride 29
+16384,  100,     3398114.08,    test_cache_behavior_2, run stride 30
+16384,  100,     3430116.52,    test_cache_behavior_2, run stride 31
+16384,  100,     3394469.12,    test_cache_behavior_2, run stride 32
+16384,  100,     3431960.36,    test_cache_behavior_2, run stride 33
+16384,  100,     3393454.52,    test_cache_behavior_2, run stride 34
+16384,  100,     3462149.48,    test_cache_behavior_2, run stride 35
+16384,  100,     3460037.60,    test_cache_behavior_2, run stride 36
+16384,  100,     3458507.92,    test_cache_behavior_2, run stride 37
+16384,  100,     3431713.96,    test_cache_behavior_2, run stride 38
+16384,  100,     3431260.24,    test_cache_behavior_2, run stride 39
+16384,  100,     3453684.76,    test_cache_behavior_2, run stride 40
+16384,  100,     3423018.88,    test_cache_behavior_2, run stride 41
+16384,  100,     3423060.12,    test_cache_behavior_2, run stride 42
+16384,  100,     3398233.24,    test_cache_behavior_2, run stride 43
+16384,  100,     3420536.92,    test_cache_behavior_2, run stride 44
+16384,  100,     3396706.40,    test_cache_behavior_2, run stride 45
+16384,  100,     3468038.32,    test_cache_behavior_2, run stride 46
+16384,  100,     3422242.04,    test_cache_behavior_2, run stride 47
+16384,  100,     3450416.44,    test_cache_behavior_2, run stride 48
+16384,  100,     3444186.36,    test_cache_behavior_2, run stride 49
+16384,  100,     3425879.44,    test_cache_behavior_2, run stride 50
+16384,  100,     3457352.96,    test_cache_behavior_2, run stride 51
+16384,  100,     3411963.44,    test_cache_behavior_2, run stride 52
+16384,  100,     3425219.44,    test_cache_behavior_2, run stride 53
+16384,  100,     3393726.12,    test_cache_behavior_2, run stride 54
+16384,  100,     3434468.68,    test_cache_behavior_2, run stride 55
+16384,  100,     3396008.44,    test_cache_behavior_2, run stride 56
+16384,  100,     3429817.04,    test_cache_behavior_2, run stride 57
+16384,  100,     3405102.36,    test_cache_behavior_2, run stride 58
+16384,  100,     3409982.96,    test_cache_behavior_2, run stride 59
+16384,  100,     3441250.20,    test_cache_behavior_2, run stride 60
+16384,  100,     3392033.64,    test_cache_behavior_2, run stride 61
+16384,  100,     3430171.96,    test_cache_behavior_2, run stride 62
+16384,  100,     3395687.40,    test_cache_behavior_2, run stride 63
+16384,  100,     3468038.32,    test_cache_behavior_2, run min 3392033.640000 (61) max 3468038.320000 (46)
+32768,    1,   161134376.00,    test_cache_behavior_1, initialize first record of each page
+32768,  100,     7690024.04,    test_cache_behavior_1, walk list
+32768,  100,     7635126.60,    test_cache_behavior_1, walk list + prefetch next entry
+32768,  100,     7239652.00,    test_cache_behavior_1, walk list + prefetch next entry + clflush after each write
+32768,  100,     7134224.24,    test_cache_behavior_1, walk list + clflush after each write
+32768,  100,     7632365.28,    test_cache_behavior_1, walk list + sfence after each write
+32768,  100,     7498077.52,    test_cache_behavior_1, walk list + sfence after each run
+32768,  100,    85512914.76,    test_cache_behavior_2, initialize all blocks
+32768,  100,     8459352.20,    test_cache_behavior_2, run one cache line with fence at end
+32768,  100,     8277782.28,    test_cache_behavior_2, run two cache lines with fence at end
+32768,  100,     8438734.04,    test_cache_behavior_2, run four cache lines with fence at end
+32768,  100,     8457557.36,    test_cache_behavior_2, run eight cache lines with fence at end
+32768,  100,     8279119.48,    test_cache_behavior_2, run stride 1
+32768,  100,     8290168.64,    test_cache_behavior_2, run stride 2
+32768,  100,     8426730.88,    test_cache_behavior_2, run stride 3
+32768,  100,     8383796.96,    test_cache_behavior_2, run stride 4
+32768,  100,     8312695.12,    test_cache_behavior_2, run stride 5
+32768,  100,     8513707.04,    test_cache_behavior_2, run stride 6
+32768,  100,     8352078.00,    test_cache_behavior_2, run stride 7
+32768,  100,     8176035.72,    test_cache_behavior_2, run stride 8
+32768,  100,     8339723.24,    test_cache_behavior_2, run stride 9
+32768,  100,     8319292.44,    test_cache_behavior_2, run stride 10
+32768,  100,     8459263.76,    test_cache_behavior_2, run stride 11
+32768,  100,     8344375.16,    test_cache_behavior_2, run stride 12
+32768,  100,     8340586.40,    test_cache_behavior_2, run stride 13
+32768,  100,     8346864.56,    test_cache_behavior_2, run stride 14
+32768,  100,     8280274.92,    test_cache_behavior_2, run stride 15
+32768,  100,     8185983.68,    test_cache_behavior_2, run stride 16
+32768,  100,     8411320.36,    test_cache_behavior_2, run stride 17
+32768,  100,     8278610.76,    test_cache_behavior_2, run stride 18
+32768,  100,     8288535.24,    test_cache_behavior_2, run stride 19
+32768,  100,     8408110.56,    test_cache_behavior_2, run stride 20
+32768,  100,     8332758.40,    test_cache_behavior_2, run stride 21
+32768,  100,     8389204.80,    test_cache_behavior_2, run stride 22
+32768,  100,     8394294.92,    test_cache_behavior_2, run stride 23
+32768,  100,     8531434.52,    test_cache_behavior_2, run stride 24
+32768,  100,     8409861.40,    test_cache_behavior_2, run stride 25
+32768,  100,     8459271.36,    test_cache_behavior_2, run stride 26
+32768,  100,     8445671.44,    test_cache_behavior_2, run stride 27
+32768,  100,     8335261.80,    test_cache_behavior_2, run stride 28
+32768,  100,     8172147.36,    test_cache_behavior_2, run stride 29
+32768,  100,     8489958.84,    test_cache_behavior_2, run stride 30
+32768,  100,     8333097.88,    test_cache_behavior_2, run stride 31
+32768,  100,     8174513.84,    test_cache_behavior_2, run stride 32
+32768,  100,     8482926.04,    test_cache_behavior_2, run stride 33
+32768,  100,     8310590.60,    test_cache_behavior_2, run stride 34
+32768,  100,     8188525.40,    test_cache_behavior_2, run stride 35
+32768,  100,     8528527.76,    test_cache_behavior_2, run stride 36
+32768,  100,     8257266.96,    test_cache_behavior_2, run stride 37
+32768,  100,     8394060.12,    test_cache_behavior_2, run stride 38
+32768,  100,     8423625.32,    test_cache_behavior_2, run stride 39
+32768,  100,     8295748.20,    test_cache_behavior_2, run stride 40
+32768,  100,     8391247.60,    test_cache_behavior_2, run stride 41
+32768,  100,     8362331.96,    test_cache_behavior_2, run stride 42
+32768,  100,     8313818.08,    test_cache_behavior_2, run stride 43
+32768,  100,     8301332.64,    test_cache_behavior_2, run stride 44
+32768,  100,     8349226.04,    test_cache_behavior_2, run stride 45
+32768,  100,     8332783.64,    test_cache_behavior_2, run stride 46
+32768,  100,     8504654.68,    test_cache_behavior_2, run stride 47
+32768,  100,     8289230.00,    test_cache_behavior_2, run stride 48
+32768,  100,     8389582.20,    test_cache_behavior_2, run stride 49
+32768,  100,     8444057.28,    test_cache_behavior_2, run stride 50
+32768,  100,     8319264.60,    test_cache_behavior_2, run stride 51
+32768,  100,     8413129.72,    test_cache_behavior_2, run stride 52
+32768,  100,     8352432.84,    test_cache_behavior_2, run stride 53
+32768,  100,     8547756.52,    test_cache_behavior_2, run stride 54
+32768,  100,     8346776.52,    test_cache_behavior_2, run stride 55
+32768,  100,     8516554.00,    test_cache_behavior_2, run stride 56
+32768,  100,     8343465.92,    test_cache_behavior_2, run stride 57
+32768,  100,     8501477.04,    test_cache_behavior_2, run stride 58
+32768,  100,     8403460.60,    test_cache_behavior_2, run stride 59
+32768,  100,     8518830.56,    test_cache_behavior_2, run stride 60
+32768,  100,     8379774.12,    test_cache_behavior_2, run stride 61
+32768,  100,     8573898.36,    test_cache_behavior_2, run stride 62
+32768,  100,     8262463.28,    test_cache_behavior_2, run stride 63
+32768,  100,     8573898.36,    test_cache_behavior_2, run min 8172147.360000 (29) max 8573898.360000 (62)
+65536,    1,   336816476.00,    test_cache_behavior_1, initialize first record of each page
+65536,  100,    16644413.20,    test_cache_behavior_1, walk list
+65536,  100,    16943938.72,    test_cache_behavior_1, walk list + prefetch next entry
+65536,  100,    15824407.32,    test_cache_behavior_1, walk list + prefetch next entry + clflush after each write
+65536,  100,    16444747.40,    test_cache_behavior_1, walk list + clflush after each write
+65536,  100,    16659644.52,    test_cache_behavior_1, walk list + sfence after each write
+65536,  100,    16813548.28,    test_cache_behavior_1, walk list + sfence after each run
+65536,  100,   179285498.00,    test_cache_behavior_2, initialize all blocks
+65536,  100,    18047023.56,    test_cache_behavior_2, run one cache line with fence at end
+65536,  100,    17782662.04,    test_cache_behavior_2, run two cache lines with fence at end
+65536,  100,    18045898.60,    test_cache_behavior_2, run four cache lines with fence at end
+65536,  100,    17707635.96,    test_cache_behavior_2, run eight cache lines with fence at end
+65536,  100,    17770013.84,    test_cache_behavior_2, run stride 1
+65536,  100,    17884822.04,    test_cache_behavior_2, run stride 2
+65536,  100,    17781256.76,    test_cache_behavior_2, run stride 3
+65536,  100,    17788034.60,    test_cache_behavior_2, run stride 4
+65536,  100,    17744039.60,    test_cache_behavior_2, run stride 5
+65536,  100,    17549787.92,    test_cache_behavior_2, run stride 6
+65536,  100,    17747959.32,    test_cache_behavior_2, run stride 7
+65536,  100,    17485243.68,    test_cache_behavior_2, run stride 8
+65536,  100,    17845165.44,    test_cache_behavior_2, run stride 9
+65536,  100,    17481056.64,    test_cache_behavior_2, run stride 10
+65536,  100,    17889710.12,    test_cache_behavior_2, run stride 11
+65536,  100,    17493045.64,    test_cache_behavior_2, run stride 12
+65536,  100,    17884458.60,    test_cache_behavior_2, run stride 13
+65536,  100,    17859080.48,    test_cache_behavior_2, run stride 14
+65536,  100,    17775872.64,    test_cache_behavior_2, run stride 15
+65536,  100,    17801945.20,    test_cache_behavior_2, run stride 16
+65536,  100,    17710477.88,    test_cache_behavior_2, run stride 17
+65536,  100,    17715475.52,    test_cache_behavior_2, run stride 18
+65536,  100,    17863909.96,    test_cache_behavior_2, run stride 19
+65536,  100,    17722679.40,    test_cache_behavior_2, run stride 20
+65536,  100,    17488760.76,    test_cache_behavior_2, run stride 21
+65536,  100,    17692865.56,    test_cache_behavior_2, run stride 22
+65536,  100,    17453337.28,    test_cache_behavior_2, run stride 23
+65536,  100,    17477603.96,    test_cache_behavior_2, run stride 24
+65536,  100,    17754949.76,    test_cache_behavior_2, run stride 25
+65536,  100,    17485005.68,    test_cache_behavior_2, run stride 26
+65536,  100,    17781854.24,    test_cache_behavior_2, run stride 27
+65536,  100,    17696285.72,    test_cache_behavior_2, run stride 28
+65536,  100,    17686342.72,    test_cache_behavior_2, run stride 29
+65536,  100,    17719860.88,    test_cache_behavior_2, run stride 30
+65536,  100,    17911761.00,    test_cache_behavior_2, run stride 31
+65536,  100,    17376542.84,    test_cache_behavior_2, run stride 32
+65536,  100,    18009299.16,    test_cache_behavior_2, run stride 33
+65536,  100,    17756991.28,    test_cache_behavior_2, run stride 34
+65536,  100,    17711572.20,    test_cache_behavior_2, run stride 35
+65536,  100,    17542498.16,    test_cache_behavior_2, run stride 36
+65536,  100,    17513064.40,    test_cache_behavior_2, run stride 37
+65536,  100,    17775981.56,    test_cache_behavior_2, run stride 38
+65536,  100,    17873647.56,    test_cache_behavior_2, run stride 39
+65536,  100,    17562270.24,    test_cache_behavior_2, run stride 40
+65536,  100,    17716000.08,    test_cache_behavior_2, run stride 41
+65536,  100,    17878624.44,    test_cache_behavior_2, run stride 42
+65536,  100,    17686817.16,    test_cache_behavior_2, run stride 43
+65536,  100,    17772896.68,    test_cache_behavior_2, run stride 44
+65536,  100,    17931342.56,    test_cache_behavior_2, run stride 45
+65536,  100,    17802192.72,    test_cache_behavior_2, run stride 46
+65536,  100,    17697714.72,    test_cache_behavior_2, run stride 47
+65536,  100,    17764221.12,    test_cache_behavior_2, run stride 48
+65536,  100,    17758130.04,    test_cache_behavior_2, run stride 49
+65536,  100,    17765478.64,    test_cache_behavior_2, run stride 50
+65536,  100,    17723429.52,    test_cache_behavior_2, run stride 51
+65536,  100,    17778838.76,    test_cache_behavior_2, run stride 52
+65536,  100,    17827577.96,    test_cache_behavior_2, run stride 53
+65536,  100,    17534644.76,    test_cache_behavior_2, run stride 54
+65536,  100,    17849012.16,    test_cache_behavior_2, run stride 55
+65536,  100,    17732005.96,    test_cache_behavior_2, run stride 56
+65536,  100,    17863045.44,    test_cache_behavior_2, run stride 57
+65536,  100,    17503220.16,    test_cache_behavior_2, run stride 58
+65536,  100,    17535196.00,    test_cache_behavior_2, run stride 59
+65536,  100,    17516465.24,    test_cache_behavior_2, run stride 60
+65536,  100,    17931174.96,    test_cache_behavior_2, run stride 61
+65536,  100,    17559533.52,    test_cache_behavior_2, run stride 62
+65536,  100,    17568934.04,    test_cache_behavior_2, run stride 63
+65536,  100,    18009299.16,    test_cache_behavior_2, run min 17376542.840000 (32) max 18009299.160000 (33)
