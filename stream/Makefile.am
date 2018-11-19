@@ -2,7 +2,7 @@
 
 SUBDIRS = .
 
-AM_CFLAGS = -Werror -Wall -g3 -O0
+AM_CFLAGS = -Werror -Wall # -g3 -O0
 
 stream_progs = copy_progs
 noinst_PROGRAMS = $(stream_progs)

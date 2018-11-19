@@ -67,6 +67,8 @@ options:           \n\
 \t-p    Socket for primary test [default=0]\n\
 \t-s    Socket for secondary test [default=0]\n\
 \t-i    Number of test iterations [default=1]\n\
+\t-a    Number of instances to run primary test [default=1]\n\
+\t-b    Number of instances to run secondary test [default=1]\n\
 ";
 
 // options information
@@ -79,6 +81,8 @@ static struct option gLongOptions[] = {
     {"secondary",  optional_argument, NULL, 's'},
     {"test", no_argument, NULL, 't'},
     {"iterations", optional_argument, NULL, 'i'},
+    {"primary-threads", optional_argument, NULL, 'a'},
+    {"secondary-threads", optional_argument, NULL, 'b'},
     {NULL, 0, NULL, 0} // marks end of the array
 };
 
@@ -236,6 +240,7 @@ void *stream_worker(void *context)
     assert(config->buffer);
     assert(config->buffer_length > 0);
     assert(config->iterations > 0);
+    assert(config->which_cpu == sched_getcpu());
 
     // thread blocks and waits for the ready signal
     worker_wait();
@@ -283,6 +288,18 @@ static void *create_test_memory(const unsigned pagecount, const char *file_name)
      return memory;
 }
 
+static const char *test_buf_name_string = "%s-%u.dat";
+
+static void *create_test_buffer(const unsigned pagecount, const char *file_name, unsigned index)
+{
+    char namebuf[128];
+
+    snprintf(namebuf, sizeof(namebuf), test_buf_name_string, file_name, index);
+    assert(strlen(namebuf) < sizeof(namebuf) - 1);
+    return create_test_memory(pagecount, namebuf);
+}
+
+
 static void cleanup_test_memory(void *memory, const unsigned pagecount, const char *file_name)
 {
     const size_t pagesize = sysconf(_SC_PAGESIZE);
@@ -299,7 +316,14 @@ static void cleanup_test_memory(void *memory, const unsigned pagecount, const ch
     return;
 }
 
+static void cleanup_test_buffer(void *memory, const unsigned pagecount, const char *file_name)
+{
+    char namebuf[128];
 
+    snprintf(namebuf, sizeof(namebuf), test_buf_name_string, file_name, index);
+    assert(strlen(namebuf) < sizeof(namebuf) - 1);
+    return  cleanup_test_memory(memory, pagecount, namebuf);
+}
 
 int main(int argc, char **argv) 
 {
@@ -329,7 +353,6 @@ int main(int argc, char **argv)
     unsigned long long iterations = 1; // low number for testing purposes
     int test_mode = 0;
     int code;
-    test_config_t test_config[2];
     struct {
         const char *name;
         write_test_t test;
@@ -339,14 +362,17 @@ int main(int argc, char **argv)
         {"backwards_write", backwards_write},
         {NULL, NULL}
     };
+    test_config_t *full_test_config = NULL;
     pthread_attr_t thread_attr;
     const size_t pagesize = sysconf(_SC_PAGESIZE);
     unsigned current_cpu, current_node;
+    unsigned primary_thread_count=1, secondary_thread_count=1;
+    size_t pagecount = buffer_size / pagesize;
 
     setbuf(stdout, NULL);
     logfile = stderr;
 
-    while (-1 != (option_char = getopt_long(argc, argv, "tf:n:hl:p:s:i:", gLongOptions, NULL))) {
+    while (-1 != (option_char = getopt_long(argc, argv, "tf:n:hl:p:s:i:a:b:", gLongOptions, NULL))) {
         switch(option_char) {
             default:
                 printf( "Unknown option -%c\n", option_char);
@@ -375,6 +401,12 @@ int main(int argc, char **argv)
             case 'i': //iteration count
                 iterations = (unsigned)atoi(optarg);
                 break;
+            case 'a': // primary thread count
+                primary_thread_count = (unsigned)atoi(optarg);
+                break;
+            case 'b': // secondary thread count
+                secondary_thread_count = (unsigned)atoi(optarg);
+                break;
         }
     }
 
@@ -398,10 +430,10 @@ int main(int argc, char **argv)
 
     cpu_init();
 
-    if (test_mode) {
-        
+    if (test_mode) {    
         cpu_set_t cpuset;
         pthread_attr_t thread_attr;
+        test_config_t test_config[2];
 
 
         test_config[0].which_cpu = primary_core;
@@ -460,9 +492,83 @@ int main(int argc, char **argv)
 
     printf("using %u for primary core and %u for secondary core\n", primary_core, secondary_core);
 
+    full_test_config = (test_config_t *)malloc(sizeof(test_config_t) * (primary_thread_count + secondary_thread_count + 1));
+    assert(NULL != full_test_config);
+
+    for (unsigned test = 0; test_data[test].test; test++) {
+        unsigned index;
+
+        
+        for (index = 0; index < primary_thread_count; index++) {
+            full_test_config[index].which_cpu = primary_core + index;
+            full_test_config[index].write_test = test_data[test].test;
+            full_test_config[index].buffer = create_test_buffer(pagecount, primary_file, index);
+            assert(NULL != full_test_config[index].buffer);
+            full_test_config[index].buffer_length = buffer_size;
+            full_test_config[index].iterations = iterations;
+            full_test_config[index].clock_ticks = 0;
+        }
+
+        for (; index < primary_thread_count+secondary_thread_count; index++) {
+            full_test_config[index].which_cpu = secondary_core + index - primary_thread_count;
+            full_test_config[index].write_test = test_data[test].test;
+            full_test_config[index].buffer = create_test_buffer(pagecount, secondary_file, index);
+            assert(NULL != full_test_config[index].buffer);
+            full_test_config[index].buffer_length = buffer_size;
+            full_test_config[index].iterations = iterations;
+            full_test_config[index].clock_ticks = 0;
+
+        }
+        memset(&full_test_config[index], 0, sizeof(test_config_t)); // zero final entry
+
+        worker_block();
+        // spin up some threads
+        for (index = 0; index < primary_thread_count + secondary_thread_count; index++) {
+            pthread_attr_init(&thread_attr);
+            CPU_ZERO(&cpuset);
+            CPU_SET(full_test_config[index].which_cpu, &cpuset);
+            code = pthread_attr_setaffinity_np(&thread_attr, sizeof(cpu_set_t), &cpuset);
+            assert(0 == code);
+            code = pthread_create(&full_test_config[index].which_thread, &thread_attr, stream_worker, &full_test_config[index]);
+            assert(0 == code);
+        }
+
+        // unblock the blocked worker threads
+        worker_unblock();
+
+        // wait for them all to finish
+        for (index = 0; index < primary_thread_count + secondary_thread_count; index++) {
+            code = pthread_join(full_test_config[index].which_thread, NULL);
+            assert(0 == code);
+        }
+
+        // gather the results
+        for (index = 0; index < primary_thread_count + secondary_thread_count; index++) {
+            printf("(%s, %c, %u, %lu)\n", test_data[test].name, index < primary_thread_count ? 'p' : 's',
+                    full_test_config[index].which_cpu, full_test_config[index].clock_ticks);            
+        }
+
+        // cleanup
+        for (index = 0; index < primary_thread_count; index++) {
+            cleanup_test_buffer(full_test_config[index].buffer, buffer_size, primary_file);
+            full_test_config[index].buffer = NULL;
+        }
+
+        for (; index < primary_thread_count + secondary_thread_count; index++) {
+            cleanup_test_buffer(full_test_config[index].buffer, buffer_size, secondary_file);
+            full_test_config[index].buffer = NULL;
+        }
+    }
+
+    free(full_test_config);
+    full_test_config = NULL;
+
+
+#if 0
     for (unsigned index = 0; test_data[index].test; index++) {
         cpu_set_t cpuset;
         pthread_attr_t thread_attr;
+
 
         test_config[0].which_cpu = primary_core;
         test_config[0].write_test = test_data[index].test;
@@ -511,6 +617,7 @@ int main(int argc, char **argv)
         test_config[1].buffer = NULL;
 
     }
+#endif // 0
 
     return 0;
 }
