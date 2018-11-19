@@ -1,0 +1,59 @@
+
+Initial run.  Default is to run against DRAM.
+[tony@intelsdp1044]~/projects/perc/stream% ./copy_progs
+using 1 for primary core and 95 for secondary core
+(sequential_write, 1511851170, 981482672)
+(random_write, 146872669516, 147862294202)
+(backwards_write, 4287926492, 1421761466)
+
+Single core test.
+[tony@intelsdp1044]~/projects/perc/stream% ./copy_progs -t
+single core test run, core 26, copy size 1073741824, iterations 1
+random write time is 139939673994
+sequential write time is 882071258
+backwards write time is 695290992
+
+Two core test (different sockets).
+Note: may need to allocate node affined memory.
+intelsdp1044@~/projects/tony/perc/stream ∴ ./copy_progs -p 1 -s 24
+using 1 for primary core and 24 for secondary core
+(sequential_write, 1513294276, 974266288)
+(random_write, 146238573072, 141912042292)
+(backwards_write, 3516910210, 1873591310)
+
+
+Two core test (same sockets).
+Note: I suspect that the malloc is node aware, so allocating on one node and running on the other probably isnt so good.
+intelsdp1044@~/projects/tony/perc/stream ∴ ./copy_progs -p 1 -s 2
+using 1 for primary core and 2 for secondary core
+(sequential_write, 1526374494, 1513552992)
+(random_write, 146472428480, 146468221718)
+(backwards_write, 4079552626, 4037303638)
+
+It looks to me like these numbers are ~2x, which suggests that hammering the memory controller is slowing things down.
+
+intelsdp1044@~/projects/tony/perc/stream ∴ ./copy_progs -p 1 -s 2 -f /mnt/pmem0/copy-test.dat
+using 1 for primary core and 2 for secondary core
+(sequential_write, 2317001096, 1514135528)
+(random_write, 141879586666, 148510779888)
+(backwards_write, 2993100398, 3637665796)
+
+intelsdp1044@~/projects/tony/perc/stream ∴ ./copy_progs -p 1 -s 2 -f /mnt/pmem0/copy-test.dat -n /mnt/pmem1/copy-test.dat
+using 1 for primary core and 2 for secondary core
+(sequential_write, 2399952068, 2347742078)
+(random_write, 141861737052, 142986185604)
+(backwards_write, 2583689632, 2617846148)
+
+intelsdp1044@~/projects/tony/perc/stream ∴ ./copy_progs -p 1 -s 2 -f /mnt/pmem0/copy-test-1.dat -n /mnt/pmem0/copy-test-2.dat
+using 1 for primary core and 2 for secondary core
+(sequential_write, 2351809714, 2341750442)
+(random_write, 141566508060, 143090624660)
+(backwards_write, 2535601606, 2613126938)
+
+intelsdp1044@~/projects/tony/perc/stream ∴ hwloc-bind node:0 ./copy_progs -t -f /mnt/pmem0/copy-test.dat
+single core test run, core 48, copy size 1073741824, iterations 1
+random write time is 140977946488
+sequential write time is 814547446
+backwards write time is 713848624
+Note: fix the program so it binds to the requested CPU on the command line (I used hwloc to work around it, but the logic is all there so why not use it?)
+
