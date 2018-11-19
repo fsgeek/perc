@@ -1,0 +1,65 @@
+
+Note: revised program (so not directly comparable with prior notes)
+
+So this is a single core test run against DRAM.
+[tony@intelsdp1044]~/projects/perc/stream% ./copy_progs -t -p 2
+single core test run, core 2, copy size 1073741824, iterations 1
+sequential write time is  1,493,664,456
+random write time is     11,833,493,526
+backwards write time is   1,420,689,966
+
+Now this is a single core test run against NVM.
+intelsdp1044@~/projects/tony/perc/stream ∴ ./copy_progs -p 2 -t -f /mnt/pmem0/copy-test.dat
+single core test run, core 2, copy size 1073741824, iterations 1
+sequential write time is   2,321,486,984
+random write time is       8,752,879,896
+backwards write time is    1,031,060,608
+
+intelsdp1044@~/projects/tony/perc/stream ∴ ./copy_progs -p 2 -t
+single core test run, core 2, copy size 1073741824, iterations 1
+sequential write time is  1,487,974,680
+random write time is 	 11,832,833,640
+backwards write time is   1,420,355,602
+
+intelsdp1044@~/projects/tony/perc/stream ∴ ./copy_progs -p 25 -t -f /mnt/pmem6/copy-test.dat
+single core test run, core 25, copy size 1,073,741,824, iterations 1
+sequential write time is 2,225,125,136
+random write time is 8,646,838,412
+backwards write time is 1,146,922,850
+
+intelsdp1044@~/projects/tony/perc/stream ∴ ./copy_progs -p 2 -s 5 -f /mnt/pmem0/copy-test-1.dat -n /mnt/pmem0/copy-test-2.dat
+using 2 for primary core and 5 for secondary core
+(sequential_write, 2336877948, 2361381674)
+(random_write, 10692216992, 10916337878)
+(backwards_write, 2685247686, 2665445742)
+
+intelsdp1044@~/projects/tony/perc/stream ∴ ./copy_progs -p 2 -s 5 -f /mnt/pmem0/copy-test-1.dat
+using 2 for primary core and 5 for secondary core
+(sequential_write, 2,292,868,526, 1,518,913,334)
+(random_write, 10,635,402,008, 12,708,610,578)
+(backwards_write, 2966535946, 3558855984)
+
+intelsdp1044@~/projects/tony/perc/stream ∴  ./copy_progs -p 2 -f /mnt/pmem0/copy-test.dat -s 25 -n /mnt/pmem6/copy-test.dat
+using 2 for primary core and 25 for secondary core
+(sequential_write, 2520686850, 2562363210)
+(random_write, 10676000546, 10572481956)
+(backwards_write, 2852757450, 2683243862)
+
+intelsdp1044@~/projects/tony/perc/stream ∴  ./copy_progs -p 2  -s 25
+using 2 for primary core and 25 for secondary core
+(sequential_write, 1514224914, 969830208)
+(random_write, 13617482718, 9184394808)
+(backwards_write, 2416005514, 1162799044)
+
+intelsdp1044@~/projects/tony/perc/stream ∴  ./copy_progs -p 25  -s 2                                                                                                       <<<
+using 25 for primary core and 2 for secondary core
+(sequential_write, 969360446, 1515284510)
+(random_write, 9011148648, 13150775272)
+(backwards_write, 1045762628, 2182783376)
+
+intelsdp1044@~/projects/tony/perc/stream ∴ ./copy_progs -p 25 -f /mnt/pmem0/copy-test.dat -s 2 -n /mnt/pmem6/copy-test.dat
+using 25 for primary core and 2 for secondary core
+(sequential_write, 2733519578, 2655627018)
+(random_write, 10728300202, 10867460478)
+(backwards_write, 2859252956, 2987889664)
+
