@@ -1,5 +1,22 @@
 #define _GNU_SOURCE
 #include <stdio.h>
+#if !defined(_Float128)
+#define _Float128 __float128
+#endif
+#if !defined(_Float64)
+#define _Float64 long double
+#endif
+#if !defined(_Float64x)
+#define _Float64x long double
+#endif
+#if !defined(_Float32)
+#define _Float32 float
+#endif
+#if !defined(_Float32x)
+#define _Float32x double
+#endif
+
+//-D_Float128=__float128
 #include <stdlib.h>
 #include <getopt.h>
 #include <unistd.h>
