@@ -144,43 +144,48 @@ static unsigned __int64 random_write(void *destination, size_t length, unsigned 
     unsigned __int64 start, end, total;
     unsigned __int64 random_data;
     char *target = (char *)destination;
+    size_t bytes_copied;
 
     total = 0;
-    for (unsigned long long index = 0; index < ((length / sizeof(unsigned __int64)) * iterations); index++) {
+    for (unsigned long long index = 0; index < iterations; index++) {
 
-        retries = 0;
-        while(0 == _rdrand64_step((unsigned __int64 *)&offset)) {
-            retries++;
-            /* try again */
-            assert(retries < 100);
+        bytes_copied = 0;
+        while (bytes_copied < length) {
+            retries = 0;
+            while(0 == _rdrand64_step((unsigned __int64 *)&offset)) {
+                retries++;
+                /* try again */
+                assert(retries < 100);
+            }
+            offset %= (length-128);
+
+            while (0 == _rdrand64_step((unsigned __int64 *)&random_data)) {
+                assert(0);
+            }
+
+            sink = ((__int64 *)destination) + (offset / sizeof(__int64));
+            start = __rdtsc();
+            _mm_stream_si64(sink++, random_data); // 1 
+            _mm_stream_si64(sink++, random_data); // 2
+            _mm_stream_si64(sink++, random_data); // 3
+            _mm_stream_si64(sink++, random_data); // 4
+            _mm_stream_si64(sink++, random_data); // 5
+            _mm_stream_si64(sink++, random_data); // 6
+            _mm_stream_si64(sink++, random_data); // 7
+            _mm_stream_si64(sink++, random_data); // 8 - 64 bytes total
+            _mm_stream_si64(sink++, random_data); // 9
+            _mm_stream_si64(sink++, random_data); // 10
+            _mm_stream_si64(sink++, random_data); // 11
+            _mm_stream_si64(sink++, random_data); // 12
+            _mm_stream_si64(sink++, random_data); // 13
+            _mm_stream_si64(sink++, random_data); // 14
+            _mm_stream_si64(sink++, random_data); // 15
+            _mm_stream_si64(sink, random_data); // 16 - 128 bytes total
+            //_mm_mfence();
+            end = _rdtsc();
+            total += end - start;
+            bytes_copied += 128;
         }
-        offset %= (length-128);
-
-        while (0 == _rdrand64_step((unsigned __int64 *)&random_data)) {
-            assert(0);
-        }
-
-        sink = ((__int64 *)destination) + (offset / sizeof(__int64));
-        start = __rdtsc();
-        _mm_stream_si64(sink++, random_data); // 1 
-        _mm_stream_si64(sink++, random_data); // 2
-        _mm_stream_si64(sink++, random_data); // 3
-        _mm_stream_si64(sink++, random_data); // 4
-        _mm_stream_si64(sink++, random_data); // 5
-        _mm_stream_si64(sink++, random_data); // 6
-        _mm_stream_si64(sink++, random_data); // 7
-        _mm_stream_si64(sink++, random_data); // 8 - 64 bytes total
-        _mm_stream_si64(sink++, random_data); // 9
-        _mm_stream_si64(sink++, random_data); // 10
-        _mm_stream_si64(sink++, random_data); // 11
-        _mm_stream_si64(sink++, random_data); // 12
-        _mm_stream_si64(sink++, random_data); // 13
-        _mm_stream_si64(sink++, random_data); // 14
-        _mm_stream_si64(sink++, random_data); // 15
-        _mm_stream_si64(sink, random_data); // 16 - 128 bytes total
-        //_mm_mfence();
-        end = _rdtsc();
-        total += end - start;
     }
 
     return total;
@@ -394,22 +399,60 @@ int main(int argc, char **argv)
     cpu_init();
 
     if (test_mode) {
+        
+        cpu_set_t cpuset;
+        pthread_attr_t thread_attr;
 
-        printf("single core test run, core %u, copy size %zu, iterations %lu\n", sched_getcpu(), buffer_size, iterations);
-        primary_memory = create_test_memory(buffer_size / pagesize, primary_file);
-        assert(NULL != primary_memory);
 
-        /* initial pass is small numbers for testing purposes */
-        primary_time = random_write(primary_memory, buffer_size, iterations);
-        printf("random write time is %lu\n", primary_time);
+        test_config[0].which_cpu = primary_core;
+        test_config[0].buffer = create_test_memory(buffer_size / pagesize, primary_file);
+        test_config[0].buffer_length = buffer_size;
+        test_config[0].iterations = iterations;
+        test_config[0].clock_ticks = 0;
 
-        primary_time = sequential_write(primary_memory, buffer_size, iterations);
+        printf("single core test run, core %u, copy size %zu, iterations %lu\n", test_config[0].which_cpu, buffer_size, iterations);
+
+        worker_block();
+        pthread_attr_init(&thread_attr);
+        CPU_ZERO(&cpuset);
+        CPU_SET(test_config[0].which_cpu, &cpuset);
+        code = pthread_attr_setaffinity_np(&thread_attr, sizeof(cpu_set_t), &cpuset);
+        assert(0 == code);
+
+        test_config[0].write_test = sequential_write;
+        code = pthread_create(&test_config[0].which_thread, &thread_attr, stream_worker, &test_config[0]);
+        assert(0 == code);
+        // unblock the blocked worker threads
+        worker_unblock();
+
+        code = pthread_join(test_config[0].which_thread, NULL);
+        assert(0 == code);
+        primary_time = test_config[0].clock_ticks; 
         printf("sequential write time is %lu\n", primary_time);
 
-        primary_time = backwards_write(primary_memory, buffer_size, iterations);
+        worker_block();
+        test_config[0].write_test = random_write;
+        code = pthread_create(&test_config[0].which_thread, &thread_attr, stream_worker, &test_config[0]);
+        assert(0 == code);
+        // unblock the blocked worker threads
+        worker_unblock();
+        code = pthread_join(test_config[0].which_thread, NULL);
+        assert(0 == code);
+        primary_time = test_config[0].clock_ticks; 
+        printf("random write time is %lu\n", primary_time);
+
+        worker_block();
+        test_config[0].write_test = backwards_write;
+        code = pthread_create(&test_config[0].which_thread, &thread_attr, stream_worker, &test_config[0]);
+        assert(0 == code);
+        // unblock the blocked worker threads
+        worker_unblock();
+        code = pthread_join(test_config[0].which_thread, NULL);
+        assert(0 == code);
+        primary_time = test_config[0].clock_ticks; 
         printf("backwards write time is %lu\n", primary_time);
 
-        cleanup_test_memory(primary_memory, buffer_size / pagesize, primary_file);
+        cleanup_test_memory(test_config[0].buffer, buffer_size / pagesize, primary_file);
         primary_memory = NULL;
 
         return (0);
