@@ -64,8 +64,8 @@ options:           \n\
 \t-n    Next file, used by secondary [default=DRAM]\n\
 \t-h    Show this help message.\n\
 \t-l    Write output to the specified log file. [default=stdout]\n\
-\t-p    Socket for primary test [default=0]\n\
-\t-s    Socket for secondary test [default=0]\n\
+\t-p    Starting processor number for primary test group [default=0]\n\
+\t-s    Starting processor number for secondary test [default=0]\n\
 \t-i    Number of test iterations [default=1]\n\
 \t-a    Number of instances to run primary test [default=1]\n\
 \t-b    Number of instances to run secondary test [default=1]\n\
@@ -325,6 +325,29 @@ static void cleanup_test_buffer(void *memory, const unsigned pagecount, const ch
     return  cleanup_test_memory(memory, pagecount, namebuf);
 }
 
+const char *gettimestamp(char *buffer, size_t buffer_length) 
+{
+    time_t ltime = time(NULL);
+    struct tm timeptr;
+    static char wday_name[7][3] = {
+        "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
+    };
+    static char mon_name[12][3] = {
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    };
+
+    localtime_r(&ltime, &timeptr);
+
+    snprintf(buffer, buffer_length, "%.3s %.3s%3d %.2d:%.2d:%.2d %d",
+        wday_name[timeptr.tm_wday],
+        mon_name[timeptr.tm_mon],
+        timeptr.tm_mday, timeptr.tm_hour,
+        timeptr.tm_min, timeptr.tm_sec,
+        1900 + timeptr.tm_year);
+    return buffer;
+}
+
 int main(int argc, char **argv) 
 {
     int option_char = '\0';
@@ -368,9 +391,12 @@ int main(int argc, char **argv)
     unsigned current_cpu, current_node;
     unsigned primary_thread_count=1, secondary_thread_count=1;
     size_t pagecount = buffer_size / pagesize;
+    time_t ltime;
+    struct tm result;
+    char stime[32];
 
     setbuf(stdout, NULL);
-    logfile = stderr;
+    logfile = stdout;
 
     while (-1 != (option_char = getopt_long(argc, argv, "tf:n:hl:p:s:i:a:b:", gLongOptions, NULL))) {
         switch(option_char) {
@@ -381,7 +407,11 @@ int main(int argc, char **argv)
                 exit(EXIT_FAILURE);
                 break;
             case 'l': // logfile
-                logfname = strdup(optarg);
+                logfile = fopen(optarg, "a+");
+                if (NULL == logfile) {
+                    printf("could not open %s, fallback to stdout\n", optarg);
+                    logfile = stdout;
+                }
                 break;
             case 'f': // first mapping file
                 primary_file = strdup(optarg);
@@ -434,6 +464,11 @@ int main(int argc, char **argv)
         cpu_set_t cpuset;
         pthread_attr_t thread_attr;
         test_config_t test_config[2];
+        char *fname = primary_file;
+
+        if (NULL == fname) {
+            fname = "DRAM";
+        }
 
 
         test_config[0].which_cpu = primary_core;
@@ -459,8 +494,9 @@ int main(int argc, char **argv)
 
         code = pthread_join(test_config[0].which_thread, NULL);
         assert(0 == code);
-        primary_time = test_config[0].clock_ticks; 
-        printf("sequential write time is %lu\n", primary_time);
+        fprintf(logfile, "%s, sequential_write, %s, t, %u, %lu\n", gettimestamp(stime, sizeof(result)),
+            fname,
+            test_config[0].which_cpu, test_config[0].clock_ticks);
 
         worker_block();
         test_config[0].write_test = random_write;
@@ -471,7 +507,8 @@ int main(int argc, char **argv)
         code = pthread_join(test_config[0].which_thread, NULL);
         assert(0 == code);
         primary_time = test_config[0].clock_ticks; 
-        printf("random write time is %lu\n", primary_time);
+        fprintf(logfile, "%s, random_write, %s, t, %u, %lu\n", gettimestamp(stime, sizeof(result)), 
+            fname, test_config[0].which_cpu, test_config[0].clock_ticks);
 
         worker_block();
         test_config[0].write_test = backwards_write;
@@ -481,8 +518,10 @@ int main(int argc, char **argv)
         worker_unblock();
         code = pthread_join(test_config[0].which_thread, NULL);
         assert(0 == code);
-        primary_time = test_config[0].clock_ticks; 
-        printf("backwards write time is %lu\n", primary_time);
+        ltime = time(NULL);
+        gettimestamp(stime, sizeof(result));
+        fprintf(logfile, "%s, backwards_write, %s, t, %u, %lu\n", gettimestamp(stime, sizeof(result)), 
+            fname, test_config[0].which_cpu, test_config[0].clock_ticks);
 
         cleanup_test_memory(test_config[0].buffer, buffer_size / pagesize, primary_file);
         primary_memory = NULL;
@@ -544,8 +583,16 @@ int main(int argc, char **argv)
 
         // gather the results
         for (index = 0; index < primary_thread_count + secondary_thread_count; index++) {
-            printf("(%s, %c, %u, %lu)\n", test_data[test].name, index < primary_thread_count ? 'p' : 's',
-                    full_test_config[index].which_cpu, full_test_config[index].clock_ticks);            
+            char *fname = index < primary_thread_count ? primary_file : secondary_file;
+
+            if (NULL == fname) {
+                fname = "DRAM";
+            }
+            fprintf(logfile, "%s, %s, %s, %c, %u, %lu\n", gettimestamp(stime, sizeof(result)), 
+                test_data[test].name, 
+                fname,
+                index < primary_thread_count ? 'p' : 's',
+                full_test_config[index].which_cpu, full_test_config[index].clock_ticks);            
         }
 
         // cleanup
