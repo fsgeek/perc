@@ -294,6 +294,10 @@ static void *create_test_buffer(const unsigned pagecount, const char *file_name,
 {
     char namebuf[128];
 
+    if (NULL == file_name) {
+        return create_test_memory(pagecount, NULL);        
+    }
+
     snprintf(namebuf, sizeof(namebuf), test_buf_name_string, file_name, index);
     assert(strlen(namebuf) < sizeof(namebuf) - 1);
     return create_test_memory(pagecount, namebuf);
