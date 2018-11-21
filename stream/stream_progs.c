@@ -320,7 +320,7 @@ static void cleanup_test_memory(void *memory, const unsigned pagecount, const ch
     return;
 }
 
-static void cleanup_test_buffer(void *memory, const unsigned pagecount, const char *file_name)
+static void cleanup_test_buffer(void *memory, const unsigned pagecount, const char *file_name, unsigned index)
 {
     char namebuf[128];
 
@@ -601,12 +601,12 @@ int main(int argc, char **argv)
 
         // cleanup
         for (index = 0; index < primary_thread_count; index++) {
-            cleanup_test_buffer(full_test_config[index].buffer, buffer_size, primary_file);
+            cleanup_test_buffer(full_test_config[index].buffer, buffer_size, primary_file, index);
             full_test_config[index].buffer = NULL;
         }
 
         for (; index < primary_thread_count + secondary_thread_count; index++) {
-            cleanup_test_buffer(full_test_config[index].buffer, buffer_size, secondary_file);
+            cleanup_test_buffer(full_test_config[index].buffer, buffer_size, secondary_file, index);
             full_test_config[index].buffer = NULL;
         }
     }
