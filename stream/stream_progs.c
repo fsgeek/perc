@@ -201,10 +201,12 @@ typedef struct {
     unsigned            which_cpu;
     pthread_t           which_thread;
     write_test_t        write_test;
-    void               *buffer;
-    size_t              buffer_length;
+    // void               *buffer;
+    // size_t              buffer_length;
+    size_t              pagecount;
     unsigned long long  iterations;
     unsigned long long  clock_ticks; // filled upon completion
+    char *              file_name;
 } test_config_t;
 
 static pthread_cond_t worker_wait_cond = PTHREAD_COND_INITIALIZER;
@@ -229,25 +231,6 @@ void worker_unblock(void) {
     worker_run = 1;
     pthread_mutex_unlock(&worker_wait_mutex);
     pthread_cond_broadcast(&worker_wait_cond);
-}
-
-void *stream_worker(void *context)
-{
-    test_config_t *config = (test_config_t *)context;
-
-    // sanity checks
-    assert(config->write_test);
-    assert(config->buffer);
-    assert(config->buffer_length > 0);
-    assert(config->iterations > 0);
-    assert(config->which_cpu == sched_getcpu());
-
-    // thread blocks and waits for the ready signal
-    worker_wait();
-
-    config->clock_ticks = config->write_test(config->buffer, config->buffer_length, config->iterations);
-
-    pthread_exit(config);    
 }
 
 static void *create_test_memory(const unsigned pagecount, const char *file_name)
@@ -329,6 +312,36 @@ static void cleanup_test_buffer(void *memory, const unsigned pagecount, const ch
     return  cleanup_test_memory(memory, pagecount, namebuf);
 }
 
+void *stream_worker(void *context)
+{
+    test_config_t *config = (test_config_t *)context;
+    void *buffer = NULL;
+    const size_t pagesize = sysconf(_SC_PAGESIZE);
+    size_t buffer_length;
+
+    // sanity checks
+    assert(config->write_test);
+    assert(config->pagecount > 0);
+    assert(config->iterations > 0);
+    assert(config->which_cpu == sched_getcpu());
+
+    buffer = create_test_buffer(config->pagecount, config->file_name, config->which_cpu);
+    assert(NULL != buffer);
+    buffer_length = pagesize * config->pagecount;
+
+    // thread blocks and waits for the ready signal
+    worker_wait();
+
+    config->clock_ticks = config->write_test(buffer, buffer_length, config->iterations);
+
+    if (NULL != buffer) {
+        cleanup_test_buffer(buffer, config->pagecount, config->file_name, config->which_cpu);
+    }
+
+    pthread_exit(config);    
+}
+
+
 const char *gettimestamp(char *buffer, size_t buffer_length) 
 {
     time_t ltime = time(NULL);
@@ -373,8 +386,6 @@ int main(int argc, char **argv)
     unsigned secondary_core = ~0;
     char *primary_file = NULL;
     char *secondary_file = NULL;
-    void *primary_memory = NULL;
-    void *secondary_memory = NULL;
     size_t buffer_size = 1024 * 1024 * 1024; // 1GB
     static unsigned __int64 primary_time;
     unsigned long long iterations = 1; // low number for testing purposes
@@ -476,10 +487,10 @@ int main(int argc, char **argv)
 
 
         test_config[0].which_cpu = primary_core;
-        test_config[0].buffer = create_test_memory(buffer_size / pagesize, primary_file);
-        test_config[0].buffer_length = buffer_size;
+        test_config[0].pagecount = pagecount;
         test_config[0].iterations = iterations;
         test_config[0].clock_ticks = 0;
+        test_config[0].file_name = primary_file;
 
         printf("single core test run, core %u, copy size %zu, iterations %lu\n", test_config[0].which_cpu, buffer_size, iterations);
 
@@ -527,9 +538,6 @@ int main(int argc, char **argv)
         fprintf(logfile, "%s, backwards_write, %s, t, %u, %lu\n", gettimestamp(stime, sizeof(result)), 
             fname, test_config[0].which_cpu, test_config[0].clock_ticks);
 
-        cleanup_test_memory(test_config[0].buffer, buffer_size / pagesize, primary_file);
-        primary_memory = NULL;
-
         return (0);
     }
 
@@ -545,22 +553,19 @@ int main(int argc, char **argv)
         for (index = 0; index < primary_thread_count; index++) {
             full_test_config[index].which_cpu = primary_core + index;
             full_test_config[index].write_test = test_data[test].test;
-            full_test_config[index].buffer = create_test_buffer(pagecount, primary_file, index);
-            assert(NULL != full_test_config[index].buffer);
-            full_test_config[index].buffer_length = buffer_size;
+            full_test_config[index].pagecount = pagecount;
             full_test_config[index].iterations = iterations;
             full_test_config[index].clock_ticks = 0;
+            full_test_config[index].file_name = primary_file;
         }
 
         for (; index < primary_thread_count+secondary_thread_count; index++) {
             full_test_config[index].which_cpu = secondary_core + index - primary_thread_count;
             full_test_config[index].write_test = test_data[test].test;
-            full_test_config[index].buffer = create_test_buffer(pagecount, secondary_file, index);
-            assert(NULL != full_test_config[index].buffer);
-            full_test_config[index].buffer_length = buffer_size;
+            full_test_config[index].pagecount = pagecount;
             full_test_config[index].iterations = iterations;
             full_test_config[index].clock_ticks = 0;
-
+            full_test_config[index].file_name = secondary_file;
         }
         memset(&full_test_config[index], 0, sizeof(test_config_t)); // zero final entry
 
@@ -599,16 +604,6 @@ int main(int argc, char **argv)
                 full_test_config[index].which_cpu, full_test_config[index].clock_ticks);            
         }
 
-        // cleanup
-        for (index = 0; index < primary_thread_count; index++) {
-            cleanup_test_buffer(full_test_config[index].buffer, buffer_size, primary_file, index);
-            full_test_config[index].buffer = NULL;
-        }
-
-        for (; index < primary_thread_count + secondary_thread_count; index++) {
-            cleanup_test_buffer(full_test_config[index].buffer, buffer_size, secondary_file, index);
-            full_test_config[index].buffer = NULL;
-        }
     }
 
     free(full_test_config);
