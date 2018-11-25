@@ -1,0 +1,54 @@
+sequential_write, t, 1, 2483600461
+random_write, t, 1, 5982075168
+backwards_write, t, 1, 261795664
+sequential_write, p, 1, 14287420697
+sequential_write, s, 6, 13939901349
+random_write, p, 1, 14160315567
+random_write, s, 6, 14300693475
+backwards_write, p, 1, 25391203187
+backwards_write, s, 6, 17153863543
+Mon Nov 19 16:03:17 2018
+, sequential_write, p, 1, 21279138068
+Mon Nov 19 16:03:17 2018
+, sequential_write, s, 6, 21625418691
+Mon Nov 19 16:03:36 2018
+, random_write, p, 1, 17379930160
+Mon Nov 19 16:03:36 2018
+, random_write, s, 6, 17585223942
+Mon Nov 19 16:04:18 2018
+, backwards_write, p, 1, 22332142156
+Mon Nov 19 16:04:18 2018
+, backwards_write, s, 6, 15196953078
+Mon Nov 19 16:20:09 2018
+, sequential_write, p, 1, 12747172927
+Mon Nov 19 16:20:09 2018
+, sequential_write, s, 6, 12432926339
+Mon Nov 19 16:20:23 2018
+, random_write, p, 1, 11959280587
+Mon Nov 19 16:20:23 2018
+, random_write, s, 6, 12116679359
+Mon Nov 19 16:21:00 2018
+, backwards_write, p, 1, 26225566540
+Mon Nov 19 16:21:00 2018
+, backwards_write, s, 6, 23323750123
+Mon Nov 19 16:33:46 2018, sequential_write, p, 1, 16963626774
+Mon Nov 19 16:33:46 2018, sequential_write, s, 6, 16567046480
+Mon Nov 19 16:34:05 2018, random_write, p, 1, 18410192434
+Mon Nov 19 16:34:05 2018, random_write, s, 6, 18497461840
+Mon Nov 19 16:34:56 2018, backwards_write, p, 1, 33377365419
+Mon Nov 19 16:34:56 2018, backwards_write, s, 6, 23880712573
+Mon Nov 19 16:40:04 2018, sequential_write, /tmp/foo, p, 1, 16384487444
+Mon Nov 19 16:40:04 2018, sequential_write, /tmp/bar, s, 6, 16035595937
+Mon Nov 19 16:40:22 2018, random_write, /tmp/foo, p, 1, 15934543096
+Mon Nov 19 16:40:22 2018, random_write, /tmp/bar, s, 6, 15855318114
+Mon Nov 19 16:41:05 2018, backwards_write, /tmp/foo, p, 1, 22957400815
+Mon Nov 19 16:41:05 2018, backwards_write, /tmp/bar, s, 6, 15539873955
+Mon Nov 19 16:46:48 2018, sequential_write, (null), t, 1, 2549323508
+Mon Nov 19 16:46:52 2018, random_write, (null), t, 1, 6294388268
+Mon Nov 19 16:47:19 2018, backwards_write, (null), t, 1, 454178481
+Mon Nov 19 16:48:30 2018, sequential_write, DRAM, t, 1, 2598767433
+Mon Nov 19 16:48:36 2018, random_write, DRAM, t, 1, 6981277940
+Mon Nov 19 16:48:57 2018, backwards_write, DRAM, t, 1, 262339355
+Tue Nov 20 17:48:50 2018, sequential_write, DRAM, t, 1, 2740412981
+Tue Nov 20 17:48:54 2018, random_write, DRAM, t, 1, 6320704016
+Tue Nov 20 17:49:13 2018, backwards_write, DRAM, t, 1, 494974278
