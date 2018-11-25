@@ -13,8 +13,8 @@ done
 echo "Single DRAM run, multiple NVM runs"
 for i in {1..20}
 do
-   echo ./copy_progs -n /mnt/pmem0/copy-test -p 1 -s 23 -a $i -l $logfile
-   ./copy_progs -n /mnt/pmem0/copy-test -p 1 -s 23 -a $i -l $logfile
+   echo ./copy_progs -f /mnt/pmem0/copy-test -p 1 -s 23 -a $i -l $logfile
+   ./copy_progs -f /mnt/pmem0/copy-test -p 1 -s 23 -a $i -l $logfile
 done
 echo "Sanity: run DRAM in separate nodes"
 echo ./copy_progs -p 1 -s 25 -l $logfile
