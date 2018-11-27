@@ -562,6 +562,7 @@ int main(int argc, char **argv)
 
     /* for now I'm going to hard code this... */
     if (primary_core > get_nprocs()) {
+        printf("warning: primary core (%u) invalid, reset to 1\n", primary_core);
         primary_core = 1;
     }
 
@@ -641,8 +642,9 @@ int main(int argc, char **argv)
 
     if (interleaved) {
         struct mixed_write_parameters mwp;      
+        cpu_set_t cpuset;
 
-        printf("run interleaved tests\n");
+        printf("run interleaved tests on core %u\n", primary_core);
         mwp.memory1 = create_test_buffer(pagecount, primary_file, sched_getcpu());
         mwp.memory2 = create_test_buffer(pagecount, secondary_file, sched_getcpu());
         assert(NULL != mwp.memory1);
@@ -654,7 +656,10 @@ int main(int argc, char **argv)
         mwp.m2time = 0;
 
         // TODO: lock onto a single core!
-        
+        CPU_ZERO(&cpuset);
+        CPU_SET(primary_core, &cpuset);
+        assert(-1 != sched_setaffinity(getpid(), sizeof(cpuset), &cpuset));
+        assert(sched_getcpu() == primary_core);
         mixed_random_write(&mwp);
         fprintf(logfile, "%s, mixed_random_write, m, %s, %s, %u, %lu, %lu\n",
                 gettimestamp(stime, sizeof(result)),
