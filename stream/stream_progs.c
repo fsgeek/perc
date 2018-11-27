@@ -195,6 +195,68 @@ static unsigned __int64 random_write(void *destination, size_t length, unsigned 
     return total;
 }
 
+typedef struct mixed_write_parameters {
+    void *memory1;
+    void *memory2;
+    size_t length;
+    unsigned long long iterations;
+    unsigned __int64 m1time;
+    unsigned __int64 m2time;
+} *mixed_write_parameters_t;
+
+// mixed_sequential_write: single thread mixing access to two memory regions
+static void mixed_sequential_write(mixed_write_parameters_t parameters)
+{
+    assert(0); // not implemented yet
+    return;
+}
+
+// mixed_random_write: single thread mixing access to two memory regions
+static void mixed_random_write(mixed_write_parameters_t parameters)
+{
+    size_t offset;
+    unsigned long long retries = 0;
+    __int64 *source;
+    __int64 *m1_sink, *m2_sink;
+    unsigned __int64 start, end, m1total,m2total;
+    unsigned __int64 random_data;
+    size_t bytes_copied;
+
+    assert(NULL != parameters);
+    parameters->m1time = parameters->m2time = 0;
+    for (unsigned long long index = 0; index < parameters->iterations; index++) {
+
+        bytes_copied = 0;
+        while (bytes_copied < parameters->length) {
+            retries = 0;
+            while(0 == _rdrand64_step((unsigned __int64 *)&offset)) {
+                retries++;
+                /* try again */
+                assert(retries < 100);
+            }
+            offset %= (parameters->length-128);
+
+            while (0 == _rdrand64_step((unsigned __int64 *)&random_data)) {
+                assert(0);
+            }
+
+            m1_sink = ((__int64 *)parameters->memory1) + (offset / sizeof(__int64));
+            m2_sink = ((__int64 *)parameters->memory2) + (offset / sizeof(__int64));
+
+            for (unsigned l = 0; l < 16; l++) {
+                start = __rdtsc();
+                _mm_stream_si64(m1_sink++, random_data); // 1
+                parameters->m1time += __rdtsc() - start;
+                start = __rdtsc();
+                _mm_stream_si64(m2_sink++, random_data); 
+                parameters->m1time += __rdtsc() - start;               
+            }
+            //_mm_mfence();
+            bytes_copied += 128;
+        }
+    }
+
+}
 typedef unsigned __int64 (*write_test_t)(void *destination, size_t length, unsigned long long iterations);
 
 typedef struct {
