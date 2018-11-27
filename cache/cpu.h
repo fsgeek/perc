@@ -28,6 +28,8 @@ typedef struct {
 //
 // Some CPU functions
 //
+int cpu_has_avx2(void);
+int cpu_has_avx512(void);
 int cpu_has_rtm(void);
 int cpu_has_hle(void);
 int cpu_has_clflush(void);

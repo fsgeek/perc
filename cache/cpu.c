@@ -25,6 +25,8 @@
 typedef struct {
     int init:1; 
     int has_sse2:1;
+    int has_avx2:1;
+    int has_avx512:1;
     int has_rtm:1;
     int has_hle:1;
     int has_clflushopt:1;
@@ -89,6 +91,19 @@ static int cpu_test_level7_flag(unsigned flag)
     return retval;
 }
 
+static int cpu_test_level7_ecx_flag(unsigned flag)
+{
+    unsigned eax, ebx, ecx, edx;
+    int retval = 0;
+
+    if (__get_cpuid_max(0, NULL) >= 7) {
+        __cpuid_count(7, 0, eax, ebx, ecx, edx);
+        if (flag & ecx) {
+            retval = 1;
+        }
+    }
+    return retval;
+}
 
 static void real_init(void)
 {
@@ -106,6 +121,14 @@ static void real_init(void)
             }
         }
 
+        // both must be set
+        cpu_info.has_avx2 = cpu_test_level7_flag(bit_AVX2);
+        // these are the operations I care about.
+        cpu_info.has_avx512 = cpu_test_level7_flag(bit_AVX512BW) && 
+                              cpu_test_level7_flag(bit_AVX512VL) &&
+                              cpu_test_level7_ecx_flag(bit_AVX512BITALG) &&
+                              cpu_test_level7_ecx_flag(bit_AVX512VPOPCNTDQ)
+                                ;
         cpu_info.has_rtm = cpu_test_level7_flag(bit_RTM);
         cpu_info.has_hle = cpu_test_level7_flag(bit_HLE);
 
@@ -153,6 +176,15 @@ void cpu_mfence(void) {
     _mm_mfence();
 }
 
+int cpu_has_avx2(void)
+{
+    return cpu_info.has_avx2;
+}
+
+int cpu_has_avx512(void)
+{
+    return cpu_info.has_avx512;
+}
 
 int cpu_has_rtm(void)
 {
