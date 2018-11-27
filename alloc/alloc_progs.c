@@ -386,8 +386,20 @@ static unsigned count_set_bits_avx512(const uint8_t *data, const size_t size)
     return total;
 }
 
+static unsigned count_set_bits_lookup(const uint8_t *data, const size_t size)
+{
+    const size_t bytes = size/8;
+    unsigned result = 0;
+
+    for (size_t index = 0; index < bytes; index++) {
+        result += lookup8bit[data[index]];
+    }
+    return result;
+}
+
 static unsigned count_set_bits_avx2(const uint8_t* data, const size_t size) 
 {
+    const size_t bytes = size/8; // bits to bytes
 #define ITER { \
         const __m256i v = _mm256_loadu_si256((__m256i *)(data + index)); \
         result += _popcnt64(_mm256_extract_epi64(v, 0)); \
@@ -400,15 +412,13 @@ static unsigned count_set_bits_avx2(const uint8_t* data, const size_t size)
     size_t index = 0;
     uint64_t result = 0;
 
-    while (index + 4*32 <= size) {
+    while (index + 4*32 <= bytes) {
         ITER ITER ITER ITER
     }
 
 #undef ITER
 
-    for (/**/; index < size; index++) {
-        result += lookup8bit[data[index]];
-    }
+    result += count_set_bits_lookup(data + index, 8 * (bytes-index));
 
     return result;
 }
@@ -418,10 +428,12 @@ static unsigned count_set_bits_initializer(const uint8_t *data, const size_t siz
     if (cpu_has_avx512()) {
         count_set_bits = count_set_bits_avx512;
     }
-    else {
+    else if (cpu_has_avx2()) {
         // fall through case
-        assert(cpu_has_avx2());
         count_set_bits = count_set_bits_avx2;
+    }
+    else {
+        count_set_bits = count_set_bits_lookup;
     }
     return count_set_bits(data, size);
 }
@@ -581,6 +593,15 @@ static alloc_block_t create_alloc_map(const char *nvm_dir, size_t unit_size, uns
     return ab;
 }
 
+static void test_bitmap(void)
+{
+    unsigned long long t = ~0;
+
+    assert(64 == count_set_bits((const uint8_t *)&t, sizeof(t) * 8));
+    t = 0;
+    assert(0 == count_set_bits((const uint8_t *)&t, sizeof(t) * 8));
+}
+
 
 int main(int argc, char **argv) 
 {
@@ -640,6 +661,8 @@ int main(int argc, char **argv)
     if (cpu_has_avx512()) {
         printf("has avx512\n");
     }
+
+    test_bitmap();
 
     return 0;
 }
