@@ -1,5 +1,5 @@
 Makefile
 Makefile.in
-nvmalloc_procs
+nvmalloc_progs
 .deps
 *.o
