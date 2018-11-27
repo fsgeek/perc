@@ -90,7 +90,7 @@ static struct option gLongOptions[] = {
 
 static unsigned __int64 sequential_write(void *destination, size_t length, unsigned long long iterations)
 {
-    __int64 *random_data = malloc(length);
+    __int64 *random_data = aligned_alloc(PAGE_SIZE, length);
     unsigned retries = 0;
     unsigned __int64 start, end;
 
@@ -115,7 +115,7 @@ static unsigned __int64 sequential_write(void *destination, size_t length, unsig
 
 static unsigned __int64 backwards_write(void *destination, size_t length, unsigned long long iterations)
 {
-    __int64 *random_data = malloc(length);
+    __int64 *random_data = aligned_alloc(PAGE_SIZE, length);
     unsigned retries = 0;
     unsigned __int64 start, end;
     char *target = (char *)destination;
@@ -342,7 +342,7 @@ static void *create_test_memory(const unsigned pagecount, const char *file_name)
             exit(EXIT_FAILURE);
         }
 
-        zero = malloc(PAGE_SIZE);
+        zero = aligned_alloc(PAGE_SIZE, PAGE_SIZE);
         assert(NULL != zero);
         memset(zero, 0, PAGE_SIZE);
 
@@ -357,7 +357,7 @@ static void *create_test_memory(const unsigned pagecount, const char *file_name)
         fd = -1;
      }
      else {
-         memory = malloc(pagesize * pagecount);
+         memory = aligned_alloc(PAGE_SIZE, pagesize * pagecount);
          assert(NULL != memory);
          memset(memory, 0, pagesize * pagecount);
      }
@@ -645,21 +645,22 @@ int main(int argc, char **argv)
         cpu_set_t cpuset;
 
         printf("run interleaved tests on core %u\n", primary_core);
+        CPU_ZERO(&cpuset);
+        CPU_SET(primary_core, &cpuset);
+        assert(-1 != sched_setaffinity(getpid(), sizeof(cpuset), &cpuset));
+        assert(sched_getcpu() == primary_core);
+
         mwp.memory1 = create_test_buffer(pagecount, primary_file, sched_getcpu());
         mwp.memory2 = create_test_buffer(pagecount, secondary_file, sched_getcpu());
         assert(NULL != mwp.memory1);
         assert(NULL != mwp.memory2);
+        printf("m1 = 0x%p, m2 = 0x%p\n", mwp.memory1, mwp.memory2);
 
         mwp.length = pagecount * pagesize;
         mwp.iterations = iterations;
         mwp.m1time = 0;
         mwp.m2time = 0;
 
-        // TODO: lock onto a single core!
-        CPU_ZERO(&cpuset);
-        CPU_SET(primary_core, &cpuset);
-        assert(-1 != sched_setaffinity(getpid(), sizeof(cpuset), &cpuset));
-        assert(sched_getcpu() == primary_core);
         mixed_random_write(&mwp);
         fprintf(logfile, "%s, mixed_random_write, m, %s, %s, %u, %lu, %lu\n",
                 gettimestamp(stime, sizeof(result)),
@@ -675,6 +676,9 @@ int main(int argc, char **argv)
                 (NULL == secondary_file) ? "DRAM" : secondary_file, 
                 sched_getcpu(), 
                 mwp.m1time, mwp.m2time);
+
+        cleanup_test_buffer(mwp.memory1, pagecount, primary_file, sched_getcpu());
+        cleanup_test_buffer(mwp.memory2, pagecount, secondary_file, sched_getcpu());
 
         return (0);
     }
