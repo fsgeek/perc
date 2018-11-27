@@ -69,6 +69,7 @@ options:           \n\
 \t-i    Number of test iterations [default=1]\n\
 \t-a    Number of instances to run primary test [default=1]\n\
 \t-b    Number of instances to run secondary test [default=1]\n\
+\t-v    Run Interleaved tests\n\
 ";
 
 // options information
@@ -83,6 +84,7 @@ static struct option gLongOptions[] = {
     {"iterations", optional_argument, NULL, 'i'},
     {"primary-threads", optional_argument, NULL, 'a'},
     {"secondary-threads", optional_argument, NULL, 'b'},
+    {"interleaved", no_argument, NULL, 'v'},
     {NULL, 0, NULL, 0} // marks end of the array
 };
 
@@ -207,7 +209,37 @@ typedef struct mixed_write_parameters {
 // mixed_sequential_write: single thread mixing access to two memory regions
 static void mixed_sequential_write(mixed_write_parameters_t parameters)
 {
-    assert(0); // not implemented yet
+    __int64 *m1_sink, *m2_sink;
+    unsigned __int64 buffer[16];
+    unsigned __int64 random_data;
+    unsigned __int64 start;
+
+    assert(NULL != parameters);
+
+    m1_sink = (__int64 *)parameters->memory1;
+    m2_sink = (__int64 *)parameters->memory2;
+
+    parameters->m1time = parameters->m2time = 0;
+    for (unsigned index = 0; index < parameters->length; ) {
+
+           while (0 == _rdrand64_step(&random_data)) {
+                assert(0);
+            }
+
+            for (unsigned off = 0; off < sizeof(buffer) / sizeof(unsigned __int64); off++) {
+                buffer[off] = random_data;
+            }
+
+            start = __rdtsc();
+            memcpy(m1_sink, buffer, sizeof(buffer));
+            parameters->m1time += __rdtsc() - start;
+
+            start = __rdtsc();
+            memcpy(m2_sink, buffer, sizeof(buffer));
+            parameters->m2time += __rdtsc() - start;
+
+            index += sizeof(buffer);
+    }
     return;
 }
 
@@ -249,7 +281,7 @@ static void mixed_random_write(mixed_write_parameters_t parameters)
                 parameters->m1time += __rdtsc() - start;
                 start = __rdtsc();
                 _mm_stream_si64(m2_sink++, random_data); 
-                parameters->m1time += __rdtsc() - start;               
+                parameters->m2time += __rdtsc() - start;               
             }
             //_mm_mfence();
             bytes_copied += 128;
@@ -471,11 +503,12 @@ int main(int argc, char **argv)
     time_t ltime;
     struct tm result;
     char stime[32];
+    int interleaved = 0;
 
     setbuf(stdout, NULL);
     logfile = stdout;
 
-    while (-1 != (option_char = getopt_long(argc, argv, "tf:n:hl:p:s:i:a:b:", gLongOptions, NULL))) {
+    while (-1 != (option_char = getopt_long(argc, argv, "vtf:n:hl:p:s:i:a:b:", gLongOptions, NULL))) {
         switch(option_char) {
             default:
                 printf( "Unknown option -%c\n", option_char);
@@ -513,6 +546,9 @@ int main(int argc, char **argv)
                 break;
             case 'b': // secondary thread count
                 secondary_thread_count = (unsigned)atoi(optarg);
+                break;
+            case 'v': // interleaved test(s)
+                interleaved = 1;
                 break;
         }
     }
@@ -584,7 +620,7 @@ int main(int argc, char **argv)
         code = pthread_join(test_config[0].which_thread, NULL);
         assert(0 == code);
         primary_time = test_config[0].clock_ticks; 
-        fprintf(logfile, "%s, random_write, %s, t, %u, %lu\n", gettimestamp(stime, sizeof(result)), 
+        fprintf(logfile, "%s, random_write, t, %s, %u, %lu\n", gettimestamp(stime, sizeof(result)), 
             fname, test_config[0].which_cpu, test_config[0].clock_ticks);
 
         worker_block();
@@ -597,8 +633,43 @@ int main(int argc, char **argv)
         assert(0 == code);
         ltime = time(NULL);
         gettimestamp(stime, sizeof(result));
-        fprintf(logfile, "%s, backwards_write, %s, t, %u, %lu\n", gettimestamp(stime, sizeof(result)), 
+        fprintf(logfile, "%s, backwards_write, t, %s, %u, %lu\n", gettimestamp(stime, sizeof(result)), 
             fname, test_config[0].which_cpu, test_config[0].clock_ticks);
+
+        return (0);
+    }
+
+    if (interleaved) {
+        struct mixed_write_parameters mwp;      
+
+        printf("run interleaved tests\n");
+        mwp.memory1 = create_test_buffer(pagecount, primary_file, sched_getcpu());
+        mwp.memory2 = create_test_buffer(pagecount, secondary_file, sched_getcpu());
+        assert(NULL != mwp.memory1);
+        assert(NULL != mwp.memory2);
+
+        mwp.length = pagecount * pagesize;
+        mwp.iterations = iterations;
+        mwp.m1time = 0;
+        mwp.m2time = 0;
+
+        // TODO: lock onto a single core!
+        
+        mixed_random_write(&mwp);
+        fprintf(logfile, "%s, mixed_random_write, m, %s, %s, %u, %lu, %lu\n",
+                gettimestamp(stime, sizeof(result)),
+                (NULL == primary_file) ? "DRAM" : primary_file, 
+                (NULL == secondary_file) ? "DRAM" : secondary_file, 
+                sched_getcpu(), 
+                mwp.m1time, mwp.m2time);
+
+        mixed_sequential_write(&mwp);
+        fprintf(logfile, "%s, mixed_sequential_write, m, %s, %s, %u, %lu, %lu\n",
+                gettimestamp(stime, sizeof(result)),
+                (NULL == primary_file) ? "DRAM" : primary_file, 
+                (NULL == secondary_file) ? "DRAM" : secondary_file, 
+                sched_getcpu(), 
+                mwp.m1time, mwp.m2time);
 
         return (0);
     }
@@ -659,10 +730,10 @@ int main(int argc, char **argv)
             if (NULL == fname) {
                 fname = "DRAM";
             }
-            fprintf(logfile, "%s, %s, %s, %c, %u, %lu\n", gettimestamp(stime, sizeof(result)), 
+            fprintf(logfile, "%s, %s, %c, %s, %u, %lu\n", gettimestamp(stime, sizeof(result)), 
                 test_data[test].name, 
-                fname,
                 index < primary_thread_count ? 'p' : 's',
+                fname,
                 full_test_config[index].which_cpu, full_test_config[index].clock_ticks);            
         }
 
