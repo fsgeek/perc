@@ -38,27 +38,27 @@ if [ -f "/usr/bin/ipmctl" ]; then
 fi
 echo "****** TEST RESULTS *****" >> $LOG_FILE
 
-echo "./perc_progs" >> $LOG_FILE
-./perc_progs >> $BASE_FILE"-anonymous.json" 2>&1
+#echo "./perc_progs" >> $LOG_FILE
+#./perc_progs >> $BASE_FILE"-anonymous.json" 2>&1
 
-echo "./perc_progs -d /tmp/fsgeek-test.dat" >> $LOG_FILE
-./perc_progs -d /tmp/fsgeek-test.dat >> $BASE_FILE"-tmp.json" 2>&1
+#echo "./perc_progs -d /tmp/fsgeek-test.dat" >> $LOG_FILE
+#./perc_progs -d /tmp/fsgeek-test.dat >> $BASE_FILE"-tmp.json" 2>&1
 
 #echo "./perc_progs -d" `pwd`"/fsgeek-test.dat" >> $LOG_FILE
 #./perc_progs -d (`whoami`)/fsgeek-test.dat >> $BASE_FILE"-home.json" 2>&1
 
-target=`pwd`/"fsgeek-test.dat"
-echo "./perc_progs -d" $target >> $LOG_FILE
-./perc_progs -d $target >> $BASE_FILE"-cwd.json" 2>&1
+#target=`pwd`/"fsgeek-test.dat"
+#echo "./perc_progs -d" $target >> $LOG_FILE
+#./perc_progs -d $target >> $BASE_FILE"-cwd.json" 2>&1
 
-if [ -d "/mnt/pmem0p1" ]; then
-    echo "./perc_progs -d /mnt/pmem0p1/fsgeek-test.dat" >> $LOG_FILE 
-    ./perc_progs -d /mnt/pmem0p1/fsgeek-test.dat >> $BASE_FILE"-pmem0p1.json" 2>&1
+if [ -d "/mnt/pmem0" ]; then
+    echo "./perc_progs -d /mnt/pmem0/fsgeek-test.dat" >> $LOG_FILE 
+    ./perc_progs -d /mnt/pmem0/fsgeek-test.dat >> $BASE_FILE"-emulated-pmem0.json" 2>&1
 fi
 
-if [ -d "/mnt/pmem10" ]; then
-    echo "./perc_progs -d /mnt/pmem10/fsgeek-test.dat" >> $LOG_FILE 
-    ./perc_progs -d /mnt/pmem0p1/fsgeek-test.dat >> $BASE_FILE"-pmem10.json" 2>&1
+if [ -d "/mnt/pmem1" ]; then
+    echo "./perc_progs -d /mnt/pmem1/fsgeek-test.dat" >> $LOG_FILE 
+    ./perc_progs -d /mnt/pmem1/fsgeek-test.dat >> $BASE_FILE"-actual-pmem1.json" 2>&1
 fi
 
 
