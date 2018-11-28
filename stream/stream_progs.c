@@ -202,6 +202,8 @@ typedef struct mixed_write_parameters {
     void *memory2;
     size_t length;
     unsigned long long iterations;
+    size_t copysize;
+    size_t pagesize;
     unsigned __int64 m1time;
     unsigned __int64 m2time;
 } *mixed_write_parameters_t;
@@ -209,85 +211,92 @@ typedef struct mixed_write_parameters {
 // mixed_sequential_write: single thread mixing access to two memory regions
 static void mixed_sequential_write(mixed_write_parameters_t parameters)
 {
-    __int64 *m1_sink, *m2_sink;
-    unsigned __int64 buffer[16];
-    unsigned __int64 random_data;
+    char *m1_sink, *m2_sink;
+    char *rd1, *rd2;
     unsigned __int64 start;
+    unsigned index = 0;
 
     assert(NULL != parameters);
 
-    m1_sink = (__int64 *)parameters->memory1;
-    m2_sink = (__int64 *)parameters->memory2;
+    m1_sink = (char *)parameters->memory1;
+    m2_sink = (char *)parameters->memory2;
+
+    rd1 = (char *)aligned_alloc(parameters->pagesize, parameters->length);
+    rd2 = (char *)aligned_alloc(parameters->pagesize, parameters->length);
+    assert(NULL != rd1);
+    assert(NULL != rd2);
+
+    index = 0;
+    while (index < parameters->length) {
+        assert(0 != _rdrand64_step((unsigned __int64 *)&rd1[index]));       
+        assert(0 != _rdrand64_step((unsigned __int64 *)&rd2[index]));
+        index += sizeof(unsigned __int64);     
+    }
 
     parameters->m1time = parameters->m2time = 0;
-    for (unsigned index = 0; index < parameters->length; ) {
+    assert((parameters->length & ~(parameters->copysize - 1)) == parameters->length);
+    index = 0;
+    while (index < parameters->length) {
+        start = _rdtsc();
+        memcpy(&m1_sink[index], &rd1[index], parameters->copysize);
+        parameters->m1time += _rdtsc() - start;
 
-           while (0 == _rdrand64_step(&random_data)) {
-                assert(0);
-            }
+        start = _rdtsc();
+        memcpy(&m2_sink[index], &rd2[index], parameters->copysize);
+        parameters->m2time += _rdtsc() - start;
 
-            for (unsigned off = 0; off < sizeof(buffer) / sizeof(unsigned __int64); off++) {
-                buffer[off] = random_data;
-            }
-
-            start = __rdtsc();
-            memcpy(m1_sink, buffer, sizeof(buffer));
-            parameters->m1time += __rdtsc() - start;
-
-            start = __rdtsc();
-            memcpy(m2_sink, buffer, sizeof(buffer));
-            parameters->m2time += __rdtsc() - start;
-
-            index += sizeof(buffer);
+        index += parameters->copysize;
     }
+
     return;
 }
 
 // mixed_random_write: single thread mixing access to two memory regions
 static void mixed_random_write(mixed_write_parameters_t parameters)
 {
+    char *m1_sink, *m2_sink;
+    char *rd1, *rd2;
+    unsigned __int64 start;
+    unsigned index = 0;
     size_t offset;
-    unsigned long long retries = 0;
-    __int64 *source;
-    __int64 *m1_sink, *m2_sink;
-    unsigned __int64 start, end, m1total,m2total;
-    unsigned __int64 random_data;
-    size_t bytes_copied;
 
     assert(NULL != parameters);
-    parameters->m1time = parameters->m2time = 0;
-    for (unsigned long long index = 0; index < parameters->iterations; index++) {
 
-        bytes_copied = 0;
-        while (bytes_copied < parameters->length) {
-            retries = 0;
-            while(0 == _rdrand64_step((unsigned __int64 *)&offset)) {
-                retries++;
-                /* try again */
-                assert(retries < 100);
-            }
-            offset %= (parameters->length-128);
+    m1_sink = (char *)parameters->memory1;
+    m2_sink = (char *)parameters->memory2;
 
-            while (0 == _rdrand64_step((unsigned __int64 *)&random_data)) {
-                assert(0);
-            }
+    rd1 = (char *)aligned_alloc(parameters->pagesize, parameters->length);
+    rd2 = (char *)aligned_alloc(parameters->pagesize, parameters->length);
+    assert(NULL != rd1);
+    assert(NULL != rd2);
 
-            m1_sink = ((__int64 *)parameters->memory1) + (offset / sizeof(__int64));
-            m2_sink = ((__int64 *)parameters->memory2) + (offset / sizeof(__int64));
-
-            for (unsigned l = 0; l < 16; l++) {
-                start = __rdtsc();
-                _mm_stream_si64(m1_sink++, random_data); // 1
-                parameters->m1time += __rdtsc() - start;
-                start = __rdtsc();
-                _mm_stream_si64(m2_sink++, random_data); 
-                parameters->m2time += __rdtsc() - start;               
-            }
-            //_mm_mfence();
-            bytes_copied += 128;
-        }
+    index = 0;
+    while (index < parameters->length) {
+        assert(0 != _rdrand64_step((unsigned __int64 *)&rd1[index]));       
+        assert(0 != _rdrand64_step((unsigned __int64 *)&rd2[index]));
+        index += sizeof(unsigned __int64);     
     }
 
+    parameters->m1time = parameters->m2time = 0;
+    assert((parameters->length & ~(parameters->copysize - 1)) == parameters->length);
+    index = 0;
+    while (index < parameters->length) {
+        assert(0 != _rdrand64_step((unsigned __int64 *)&offset));
+
+        offset %= parameters->length;
+        offset &= ~(parameters->copysize-1);
+        start = _rdtsc();
+        memcpy(&m1_sink[offset], &rd1[offset], parameters->copysize);
+        parameters->m1time += _rdtsc() - start;
+
+        start = _rdtsc();
+        memcpy(&m2_sink[offset], &rd2[offset], parameters->copysize);
+        parameters->m2time += _rdtsc() - start;
+
+        index += parameters->copysize;
+    }
+
+    return;
 }
 typedef unsigned __int64 (*write_test_t)(void *destination, size_t length, unsigned long long iterations);
 
@@ -657,6 +666,8 @@ int main(int argc, char **argv)
         printf("m1 = 0x%p, m2 = 0x%p\n", mwp.memory1, mwp.memory2);
 
         mwp.length = pagecount * pagesize;
+        mwp.copysize = 256;
+        mwp.pagesize = pagesize;
         mwp.iterations = iterations;
         mwp.m1time = 0;
         mwp.m2time = 0;
