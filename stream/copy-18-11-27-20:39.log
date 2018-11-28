@@ -1,0 +1,5 @@
+Tue Nov 27 20:39:51 2018, sequential_write, DRAM, t, 17, 812950430
+Tue Nov 27 20:39:58 2018, random_write, t, DRAM, 17, 9008431520
+Tue Nov 27 20:40:17 2018, backwards_write, t, DRAM, 17, 707079198
+Tue Nov 27 20:40:56 2018, mixed_random_write, m, DRAM, DRAM, 17, 2133516632, 105315900
+Tue Nov 27 20:41:33 2018, mixed_sequential_write, m, DRAM, DRAM, 17, 118069612, 120484544
