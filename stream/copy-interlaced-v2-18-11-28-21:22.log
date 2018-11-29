@@ -1,0 +1,21 @@
+Wed Nov 28 21:22:22 2018, sequential_write, DRAM, t, 17, 1299633664
+Wed Nov 28 21:22:28 2018, random_write, t, DRAM, 17, 9636706052
+Wed Nov 28 21:22:49 2018, backwards_write, t, DRAM, 17, 5352148190
+Wed Nov 28 21:23:30 2018, mixed_random_write, m, DRAM, DRAM, 17, 1873063070, 138348750
+Wed Nov 28 21:24:08 2018, mixed_sequential_write, m, DRAM, DRAM, 17, 117915872, 134618558
+Wed Nov 28 21:24:50 2018, mixed_random_write, m, /mnt/pmem3/wam-test1.dat, DRAM, 17, 3235663990, 199232886
+Wed Nov 28 21:25:28 2018, mixed_sequential_write, m, /mnt/pmem3/wam-test1.dat, DRAM, 17, 115205474, 159195650
+Wed Nov 28 21:26:11 2018, mixed_random_write, m, /mnt/pmem0/wam-test1.dat, DRAM, 17, 3290294950, 200961284
+Wed Nov 28 21:26:48 2018, mixed_sequential_write, m, /mnt/pmem0/wam-test1.dat, DRAM, 17, 115863140, 130734598
+Wed Nov 28 21:27:30 2018, mixed_random_write, m, DRAM, /mnt/pmem3/wam-test1.dat, 17, 1820594486, 1598876064
+Wed Nov 28 21:28:08 2018, mixed_sequential_write, m, DRAM, /mnt/pmem3/wam-test1.dat, 17, 135120524, 129032348
+Wed Nov 28 21:28:51 2018, mixed_random_write, m, DRAM, /mnt/pmem0/wam-test1.dat, 17, 1841448722, 1714240220
+Wed Nov 28 21:29:29 2018, mixed_sequential_write, m, DRAM, /mnt/pmem0/wam-test1.dat, 17, 138142770, 134344998
+Wed Nov 28 21:30:11 2018, mixed_random_write, m, /mnt/pmem3/wam-test1.dat, /mnt/pmem3/wam-test2.dat, 17, 3273986532, 1601460194
+Wed Nov 28 21:30:49 2018, mixed_sequential_write, m, /mnt/pmem3/wam-test1.dat, /mnt/pmem3/wam-test2.dat, 17, 133301088, 135155012
+Wed Nov 28 21:31:32 2018, mixed_random_write, m, /mnt/pmem3/wam-test2.dat, /mnt/pmem3/wam-test1.dat, 17, 3273937462, 1620142556
+Wed Nov 28 21:32:09 2018, mixed_sequential_write, m, /mnt/pmem3/wam-test2.dat, /mnt/pmem3/wam-test1.dat, 17, 118175838, 130760290
+Wed Nov 28 21:32:53 2018, mixed_random_write, m, /mnt/pmem0/wam-test1.dat, /mnt/pmem3/wam-test2.dat, 17, 3320671258, 1622401516
+Wed Nov 28 21:33:31 2018, mixed_sequential_write, m, /mnt/pmem0/wam-test1.dat, /mnt/pmem3/wam-test2.dat, 17, 132620864, 137524370
+Wed Nov 28 21:34:14 2018, mixed_random_write, m, /mnt/pmem3/wam-test2.dat, /mnt/pmem0/wam-test1.dat, 17, 3261961046, 1683758352
+Wed Nov 28 21:34:52 2018, mixed_sequential_write, m, /mnt/pmem3/wam-test2.dat, /mnt/pmem0/wam-test1.dat, 17, 127300290, 138724316
