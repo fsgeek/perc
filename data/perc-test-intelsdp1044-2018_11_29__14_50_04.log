@@ -1,10 +1,10 @@
-Wed Nov 28 17:24:26 EST 2018
+Thu Nov 29 14:50:04 EST 2018
 git log -1
-commit 2b42e615948a0ad17b485eaafa5ec26495171e0c
+commit f097ce78c5426c0f9ecdb0e97f31ef5a1e9037fa
 Author: fsgeek <fsgeek@gatech.edu>
-Date:   Tue Nov 27 21:05:45 2018 -0500
+Date:   Thu Nov 29 00:10:44 2018 -0500
 
-    Fixed script, updated log file
+    Emulated NVM data
 uname -a
 Linux intelsdp1044 4.18.8-200.fc28.x86_64 #1 SMP Sun Sep 16 18:15:41 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
 lscpu
@@ -22,7 +22,7 @@ CPU family:          6
 Model:               85
 Model name:          Genuine Intel(R) CPU 0000%@
 Stepping:            5
-CPU MHz:             1000.057
+CPU MHz:             1000.054
 CPU max MHz:         3700.0000
 CPU min MHz:         1000.0000
 BogoMIPS:            4400.00
@@ -35,37 +35,37 @@ NUMA node0 CPU(s):   0-23,48-71
 NUMA node1 CPU(s):   24-47,72-95
 Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3 cdp_l3 invpcid_single intel_ppin ssbd mba ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm cqm mpx rdt_a avx512f avx512dq rdseed adx smap clflushopt clwb intel_pt avx512cd avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local dtherm ida arat pln pts hwp hwp_act_window hwp_epp hwp_pkg_req pku ospke flush_l1d arch_capabilities
 cat /proc/meminfo
-MemTotal:       386657084 kB
-MemFree:        381562084 kB
-MemAvailable:   380124968 kB
-Buffers:            3336 kB
-Cached:           245412 kB
+MemTotal:       370142048 kB
+MemFree:        363866860 kB
+MemAvailable:   362901936 kB
+Buffers:            7488 kB
+Cached:           899424 kB
 SwapCached:            0 kB
-Active:           155780 kB
-Inactive:         184984 kB
-Active(anon):      93244 kB
-Inactive(anon):     1908 kB
-Active(file):      62536 kB
-Inactive(file):   183076 kB
+Active:           274648 kB
+Inactive:         716720 kB
+Active(anon):      85400 kB
+Inactive(anon):     1884 kB
+Active(file):     189248 kB
+Inactive(file):   714836 kB
 Unevictable:           0 kB
 Mlocked:               0 kB
 SwapTotal:       4194300 kB
 SwapFree:        4194300 kB
-Dirty:               328 kB
+Dirty:                20 kB
 Writeback:             0 kB
-AnonPages:         92916 kB
-Mapped:           113112 kB
-Shmem:              2676 kB
-Slab:             381792 kB
-SReclaimable:      97332 kB
-SUnreclaim:       284460 kB
-KernelStack:       18896 kB
-PageTables:        10324 kB
+AnonPages:         84812 kB
+Mapped:           114812 kB
+Shmem:              2672 kB
+Slab:             522068 kB
+SReclaimable:     187408 kB
+SUnreclaim:       334660 kB
+KernelStack:       18848 kB
+PageTables:         9456 kB
 NFS_Unstable:          0 kB
 Bounce:                0 kB
 WritebackTmp:          0 kB
-CommitLimit:    197522840 kB
-Committed_AS:    1633232 kB
+CommitLimit:    189265324 kB
+Committed_AS:    1451108 kB
 VmallocTotal:   34359738367 kB
 VmallocUsed:           0 kB
 VmallocChunk:          0 kB
@@ -81,9 +81,9 @@ HugePages_Rsvd:        0
 HugePages_Surp:        0
 Hugepagesize:       2048 kB
 Hugetlb:               0 kB
-DirectMap4k:      450168 kB
-DirectMap2M:     9725952 kB
-DirectMap1G:    3035627520 kB
+DirectMap4k:      499356 kB
+DirectMap2M:    10725376 kB
+DirectMap1G:    3034578944 kB
 dmidecode --type 17
 # dmidecode 3.1
 Getting SMBIOS data from sysfs.
@@ -1047,7 +1047,7 @@ intelsdp1044
              clock: 33MHz
              capabilities: msix pciexpress pm bus_master cap_list
              configuration: driver=ioatdma latency=0
-             resources: iomemory:383f0-383ef irq:393 memory:383ffff28000-383ffff2bfff
+             resources: iomemory:383f0-383ef irq:392 memory:383ffff28000-383ffff2bfff
         *-generic:2
              description: System peripheral
              product: Sky Lake-E CBDMA Registers
@@ -1071,7 +1071,7 @@ intelsdp1044
              clock: 33MHz
              capabilities: msix pciexpress pm bus_master cap_list
              configuration: driver=ioatdma latency=0
-             resources: iomemory:383f0-383ef irq:393 memory:383ffff20000-383ffff23fff
+             resources: iomemory:383f0-383ef irq:392 memory:383ffff20000-383ffff23fff
         *-generic:4
              description: System peripheral
              product: Sky Lake-E CBDMA Registers
@@ -1095,7 +1095,7 @@ intelsdp1044
              clock: 33MHz
              capabilities: msix pciexpress pm bus_master cap_list
              configuration: driver=ioatdma latency=0
-             resources: iomemory:383f0-383ef irq:393 memory:383ffff18000-383ffff1bfff
+             resources: iomemory:383f0-383ef irq:392 memory:383ffff18000-383ffff1bfff
         *-generic:6
              description: System peripheral
              product: Sky Lake-E CBDMA Registers
@@ -1119,7 +1119,7 @@ intelsdp1044
              clock: 33MHz
              capabilities: msix pciexpress pm bus_master cap_list
              configuration: driver=ioatdma latency=0
-             resources: iomemory:383f0-383ef irq:393 memory:383ffff10000-383ffff13fff
+             resources: iomemory:383f0-383ef irq:392 memory:383ffff10000-383ffff13fff
         *-generic:8 UNCLAIMED
              description: System peripheral
              product: Sky Lake-E MM/Vt-d Configuration Registers
@@ -1255,7 +1255,7 @@ intelsdp1044
              clock: 33MHz
              capabilities: pm msi bus_master cap_list
              configuration: driver=mei_me latency=0
-             resources: iomemory:383f0-383ef irq:392 memory:383ffff33000-383ffff33fff
+             resources: iomemory:383f0-383ef irq:394 memory:383ffff33000-383ffff33fff
         *-communication:1 UNCLAIMED
              description: Communication controller
              product: C620 Series Chipset Family MEI Controller #2
@@ -2196,7 +2196,7 @@ intelsdp1044
                    clock: 33MHz
                    capabilities: pm msi msix pciexpress vpd bus_master cap_list rom ethernet physical tp 1000bt-fd 10000bt-fd autonegotiation
                    configuration: autonegotiation=on broadcast=yes driver=i40e driverversion=2.3.2-k duplex=full firmware=3.1d 0x800008f9 1.1580.0 ip=192.168.4.2 latency=0 link=yes multicast=yes port=twisted pair speed=1Gbit/s
-                   resources: irq:43 memory:ac000000-acffffff memory:ad808000-ad80ffff memory:ad980000-ad9fffff memory:ad400000-ad7fffff memory:ad890000-ad90ffff
+                   resources: irq:41 memory:ac000000-acffffff memory:ad808000-ad80ffff memory:ad980000-ad9fffff memory:ad400000-ad7fffff memory:ad890000-ad90ffff
               *-network:1
                    description: Ethernet interface
                    product: Ethernet Connection X722 for 10GBASE-T
@@ -2211,7 +2211,7 @@ intelsdp1044
                    clock: 33MHz
                    capabilities: pm msi msix pciexpress vpd bus_master cap_list ethernet physical 1000bt-fd 10000bt-fd autonegotiation
                    configuration: autonegotiation=off broadcast=yes driver=i40e driverversion=2.3.2-k firmware=3.1d 0x800008f9 1.1580.0 latency=0 link=no multicast=yes
-                   resources: irq:43 memory:ab000000-abffffff memory:ad800000-ad807fff memory:ad000000-ad3fffff memory:ad810000-ad88ffff
+                   resources: irq:41 memory:ab000000-abffffff memory:ad800000-ad807fff memory:ad000000-ad3fffff memory:ad810000-ad88ffff
      *-generic:70 UNCLAIMED
           description: System peripheral
           product: Intel Corporation
@@ -2990,7 +2990,7 @@ intelsdp1044
              clock: 33MHz
              capabilities: storage pm msix pciexpress nvm_express bus_master cap_list rom
              configuration: driver=nvme latency=0
-             resources: irq:41 memory:d3800000-d3803fff memory:d3810000-d381ffff
+             resources: irq:42 memory:d3800000-d3803fff memory:d3810000-d381ffff
      *-generic:135 UNCLAIMED
           description: System peripheral
           product: Intel Corporation
@@ -4327,7 +4327,7 @@ Codename:	TwentyEight
 mount
 sysfs on /sys type sysfs (rw,nosuid,nodev,noexec,relatime,seclabel)
 proc on /proc type proc (rw,nosuid,nodev,noexec,relatime)
-devtmpfs on /dev type devtmpfs (rw,nosuid,seclabel,size=193314612k,nr_inodes=48328653,mode=755)
+devtmpfs on /dev type devtmpfs (rw,nosuid,seclabel,size=185057092k,nr_inodes=46264273,mode=755)
 securityfs on /sys/kernel/security type securityfs (rw,nosuid,nodev,noexec,relatime)
 tmpfs on /dev/shm type tmpfs (rw,nosuid,nodev,seclabel)
 devpts on /dev/pts type devpts (rw,nosuid,noexec,relatime,seclabel,gid=5,mode=620,ptmxmode=000)
@@ -4338,41 +4338,41 @@ cgroup on /sys/fs/cgroup/systemd type cgroup (rw,nosuid,nodev,noexec,relatime,se
 pstore on /sys/fs/pstore type pstore (rw,nosuid,nodev,noexec,relatime,seclabel)
 efivarfs on /sys/firmware/efi/efivars type efivarfs (rw,nosuid,nodev,noexec,relatime)
 bpf on /sys/fs/bpf type bpf (rw,nosuid,nodev,noexec,relatime,mode=700)
-cgroup on /sys/fs/cgroup/hugetlb type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,hugetlb)
-cgroup on /sys/fs/cgroup/freezer type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,freezer)
-cgroup on /sys/fs/cgroup/pids type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,pids)
-cgroup on /sys/fs/cgroup/cpuset type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,cpuset)
 cgroup on /sys/fs/cgroup/net_cls,net_prio type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,net_cls,net_prio)
 cgroup on /sys/fs/cgroup/cpu,cpuacct type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,cpu,cpuacct)
 cgroup on /sys/fs/cgroup/memory type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,memory)
 cgroup on /sys/fs/cgroup/devices type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,devices)
+cgroup on /sys/fs/cgroup/cpuset type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,cpuset)
+cgroup on /sys/fs/cgroup/freezer type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,freezer)
 cgroup on /sys/fs/cgroup/blkio type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,blkio)
 cgroup on /sys/fs/cgroup/perf_event type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,perf_event)
+cgroup on /sys/fs/cgroup/pids type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,pids)
+cgroup on /sys/fs/cgroup/hugetlb type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,hugetlb)
 configfs on /sys/kernel/config type configfs (rw,relatime)
 /dev/mapper/fedora-root on / type xfs (rw,relatime,seclabel,attr2,inode64,noquota)
 selinuxfs on /sys/fs/selinux type selinuxfs (rw,relatime)
-systemd-1 on /proc/sys/fs/binfmt_misc type autofs (rw,relatime,fd=30,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=47926)
-debugfs on /sys/kernel/debug type debugfs (rw,relatime,seclabel)
-mqueue on /dev/mqueue type mqueue (rw,relatime,seclabel)
 hugetlbfs on /dev/hugepages type hugetlbfs (rw,relatime,seclabel,pagesize=2M)
+mqueue on /dev/mqueue type mqueue (rw,relatime,seclabel)
+debugfs on /sys/kernel/debug type debugfs (rw,relatime,seclabel)
+systemd-1 on /proc/sys/fs/binfmt_misc type autofs (rw,relatime,fd=35,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=61518)
 tmpfs on /tmp type tmpfs (rw,nosuid,nodev,seclabel)
-/dev/sda3 on /storage type xfs (rw,relatime,seclabel,attr2,inode64,noquota)
 /dev/nvme0n1p2 on /boot type ext4 (rw,relatime,seclabel)
+/dev/sda3 on /storage type xfs (rw,relatime,seclabel,attr2,inode64,noquota)
 /dev/nvme0n1p1 on /boot/efi type vfat (rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=ascii,shortname=winnt,errors=remount-ro)
 sunrpc on /var/lib/nfs/rpc_pipefs type rpc_pipefs (rw,relatime)
-tmpfs on /run/user/0 type tmpfs (rw,nosuid,nodev,relatime,seclabel,size=38665708k,mode=700)
-/dev/pmem0 on /mnt/pmem0 type ext4 (rw,relatime,seclabel,dax)
-tmpfs on /run/user/1000 type tmpfs (rw,nosuid,nodev,relatime,seclabel,size=38665708k,mode=700,uid=1000)
 /dev/pmem1 on /mnt/pmem1 type xfs (rw,relatime,seclabel,attr2,dax,inode64,noquota)
 /dev/pmem2p2 on /mnt/pmem2 type xfs (rw,relatime,seclabel,attr2,dax,inode64,sunit=2097152,swidth=2097152,noquota)
 /dev/pmem7 on /mnt/pmem7 type xfs (rw,relatime,seclabel,attr2,dax,inode64,noquota)
+/dev/pmem4p1 on /mnt/pmem3 type ext4 (rw,relatime,seclabel,dax,stripe=512)
+/dev/pmem0 on /mnt/pmem0 type ext4 (rw,relatime,seclabel,dax)
+tmpfs on /run/user/0 type tmpfs (rw,nosuid,nodev,relatime,seclabel,size=37014204k,mode=700)
 ndctl list --namespaces  --human
 [
   {
     "dev":"namespace0.0",
     "mode":"fsdax",
     "map":"mem",
-    "size":"8.00 GiB (8.59 GB)",
+    "size":"24.00 GiB (25.77 GB)",
     "blockdev":"pmem0"
   },
   {
@@ -4424,7 +4424,7 @@ ndctl list -B -D -R -X
     "regions":[
       {
         "dev":"region0",
-        "size":8589934592,
+        "size":25769803776,
         "available_size":0,
         "max_available_extent":0,
         "type":"pmem",
@@ -4435,7 +4435,7 @@ ndctl list -B -D -R -X
   {
     "provider":"ACPI.NFIT",
     "dev":"ndbus0",
-    "scrub_state":"active",
+    "scrub_state":"idle",
     "dimms":[
       {
         "dev":"nmem1",
