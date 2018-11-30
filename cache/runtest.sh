@@ -39,7 +39,7 @@ fi
 echo "****** TEST RESULTS *****" >> $LOG_FILE
 
 #echo "./perc_progs" >> $LOG_FILE
-#./perc_progs >> $BASE_FILE"-anonymous.json" 2>&1
+./perc_progs >> $BASE_FILE"-anonymous.json" 2>&1
 
 #echo "./perc_progs -d /tmp/fsgeek-test.dat" >> $LOG_FILE
 #./perc_progs -d /tmp/fsgeek-test.dat >> $BASE_FILE"-tmp.json" 2>&1
