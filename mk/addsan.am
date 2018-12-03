@@ -1,0 +1,4 @@
+ASAN_FLAGS = -fsanitize=address -fno-omit-frame-pointer -Wno-format-securityfd
+ASAN_LD_FLAGS = $(ASAN_FLAGS)
+ASAN_LIBS  = -lasan
+

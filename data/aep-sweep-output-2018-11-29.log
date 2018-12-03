@@ -1,0 +1,96 @@
+=======================================================================
+Starting AEP Bandwidth and latency measurements using MLC
+Version 1.2.1E
+=======================================================================
+Using pmem memory mounted to:     /mnt/pmem1
+Using MLC command:                ./mlc_avx512
+MLC version:                      v3.5
+MLC output files stored in:       ./outputs.1129-1422
+mount found, FS type:             xfs
+Kernel version:                   4.18.8-200.fc28.x86_64
+CPUs detected:                    24
+WARNING: Using less than 24 processors per node makes it harder to saturate memory
+Management software version:
+
+Intel(R) Optane(TM) DC Persistent Memory Command Line Interface Version 5.5.5.5555
+Intel(R) Optane(TM) DC Persistent Memory Driver API Version 0.0.0.0
+AEP Firmware versions:
+
+DimmID                ActiveFWVersion    StagedFWVersion
+0x0001                01.01.00.5253      N/A
+0x0011                01.01.00.5253      N/A
+0x0021                01.01.00.5253      N/A
+0x0101                01.01.00.5253      N/A
+0x0111                01.01.00.5253      N/A
+0x0121                01.01.00.5253      N/A
+0x1001                01.01.00.5253      N/A
+0x1011                01.01.00.5253      N/A
+0x1021                01.01.00.5253      N/A
+0x1101                01.01.00.5253      N/A
+0x1111                01.01.00.5253      N/A
+0x1121                01.01.00.5253      N/A
+NDCTL version:                    62
+AEP DIMM count in namespace:      1
+
+AEP idle sequential latency: Each iteration took 366.4 core clocks (    166.9   ns)
+AEP idle random     latency: Each iteration took 660.6 core clocks (    301.0   ns)
+
+AEP bandwidth: using 8 for seq read, 2 for rnd read, 1 for write, 2 for mixed
+max AEP bandwidth for bw_seq_READ_8.txt - Delay, nS, MBPS:  00000         0.00     6713.7
+max AEP bandwidth for bw_rnd_READ_2.txt - Delay, nS, MBPS:  00000         0.00     1820.2
+max AEP bandwidth for bw_seq_WRNT_1.txt - Delay, nS, MBPS:  00000         0.00     2252.9
+max AEP bandwidth for bw_rnd_WRNT_1.txt - Delay, nS, MBPS:  00000         0.00      595.8
+max AEP bandwidth for bw_seq_21NT_2.txt - Delay, nS, MBPS:  00000         0.00     4018.3
+max AEP bandwidth for bw_rnd_21NT_2.txt - Delay, nS, MBPS:  00000         0.00     1071.5
+max AEP bandwidth for bw_seq_11RFO_2.txt - Delay, nS, MBPS:  00000        0.00     1193.7
+max AEP bandwidth for bw_rnd_11RFO_2.txt - Delay, nS, MBPS:  00000        0.00      900.2
+max AEP bandwidth for bw_seq_21RFO_2.txt - Delay, nS, MBPS:  00000        0.00     1640.7
+max AEP bandwidth for bw_rnd_21RFO_2.txt - Delay, nS, MBPS:  00000        0.00     1080.4
+
+8 core AEP sequential read loaded latency sweep:
+ Delay nS         MBPS
+ 00000  1755.67    6640.1
+ 00050  1509.63    6773.4
+ 00100  1320.94    6779.7
+ 00200  1291.38    6780.9
+ 00300  1253.22    6781.8
+ 00400  1220.64    6781.1
+ 00500  1184.28    6782.1
+ 00700  1038.12    6784.8
+ 00850  802.64     6800.1
+ 01000  345.60     6798.8
+ 01150  205.76     6188.9
+ 01300  196.34     5544.4
+ 01500  188.75     4875.9
+ 01700  184.44     4359.7
+ 02500  176.25     3106.4
+ 03500  172.20     2337.5
+ 05000  169.43     1757.1
+ 20000  164.13      736.2
+ 40000  162.26      567.7
+ 80000  161.31      483.4
+2 core AEP random read loaded latency sweep:
+ Delay nS         MBPS
+ 00000  782.90     1831.3
+ 00050  552.49     1819.6
+ 00100  399.66     1623.7
+ 00200  389.93     1558.1
+ 00300  380.88     1495.6
+ 00400  375.18     1435.0
+ 00500  372.78     1376.3
+ 00700  365.73     1273.1
+ 00850  362.86     1206.6
+ 01000  356.05     1149.0
+ 01150  352.69     1094.8
+ 01300  350.27     1045.2
+ 01500  347.80      989.8
+ 01700  342.71      941.9
+ 02500  333.68      791.4
+ 03500  327.30      672.5
+ 05000  319.49      563.7
+ 20000  300.40      320.1
+ 40000  291.83      274.5
+ 80000  286.44      251.4
+=======================================================================
+AEP Bandwidth and latency measurements Complete
+=======================================================================

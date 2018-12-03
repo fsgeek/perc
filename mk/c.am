@@ -1,0 +1,16 @@
+AM_CFLAGS  = -std=c11
+AM_CFLAGS += -Wall
+AM_CFLAGS += -Wextra
+AM_CFLAGS += -Werror
+AM_CFLAGS += -Wstrict-prototypes
+AM_CFLAGS += -Wmissing-prototypes
+AM_CFLAGS += -Wdeclaration-after-statement
+AM_CFLAGS += -Wshadow
+AM_CFLAGS += -Wcast-qual
+AM_CFLAGS += -Wformat=2
+AM_CFLAGS += -fno-omit-frame-pointer
+AM_CFLAGS += -fstrict-aliasing
+AM_CFLAGS += -fstrict-overflow
+# AM_CFLAGS += -fsanitize=address
+# AM_LDFLAGS = -fsanitize=address
+

@@ -24,7 +24,6 @@
 			"walk list + sfence after each run": {"pagecount": 4,"runs": 100,"time": 35.220000}
 			}
 		},
-,
 		"test_cache_behavior_2":{
 			"initialize all blocks": { "pagecount": 4, "runs": 100, "time": 3227.440000},
 			"run one cache line with fence at end": { "pagecount": 4, "runs": 100, "time": 853.940000},
@@ -98,26 +97,15 @@
 			"summary": { "min": { "time": 614.120000, "stride": 50 }, "max": { "time": 889.940000, "stride": 24 } }
 			}
 		},
-,
-		"test_cache_behavior_3":{ "ticks per nop (over 1 billion)": 2.998452}
-	},
-,
-		"test_cache_behavior_4":{ "results": ""}
-	},
-,
+		"test_cache_behavior_3":{ "ticks per nop (over 1 billion)": 2.998452},
+		"test_cache_behavior_4":{ "results": ""},
 		"test_cache_behavior_5":{
 			"results": ""
-			}
-		},
-,
+			},
 		"test_cache_behavior_6":{
 			"results": ""
-			}
-		},
-,
-		"test_cache_behavior_7":{ "results": ""}
-	},
-,
+			},
+		"test_cache_behavior_7":{ "results": ""},
 		"test_cache_behavior_8":{
 			"noflush, nofence": {"same cache set": 4504, "different cache set": 4486},
 			"noflush, sfence end": {"same cache set": 6000, "different cache set": 5996},
@@ -129,9 +117,7 @@
 			"clwb, sfence end": {"same cache set": 6032, "different cache set": 6034},
 			"pagecount": 4,
 			"runs": 100
-			}
-		},
-,
+			},
 		"test_cache_behavior_9":{
 			"frequency tests": {
 				"noflush, sfence periodic": {
@@ -203,11 +189,8 @@
 					},
 			"pagecount": 4,
 			"runs": 100
-		}
-	},
-,
-		"test_nontemporal_behavior": {"size": 16384, "ticks": 884108}
 		},
+		"test_nontemporal_behavior": {"size": 16384, "ticks": 884108},
 	"size 24KB": {
 		"write time test": [144840.000000, 131086.000000, 137036.000000, 130194.000000, 129952.000000, 124936.000000, 119448.000000, 126314.000000, 136756.000000, 138434.000000],
 		"fsync time test": [50892.000000, 1960.000000, 1106.000000, 1056.000000, 1046.000000, 1048.000000, 1046.000000, 1048.000000, 1046.000000, 1070.000000],
@@ -219,9 +202,7 @@
 			"walk list + clflush after each write": {"pagecount": 6,"runs": 100,"time": 1223.660000},
 			"walk list + sfence after each write": {"pagecount": 6,"runs": 100,"time": 62.280000},
 			"walk list + sfence after each run": {"pagecount": 6,"runs": 100,"time": 46.500000}
-			}
-		},
-,
+			},
 		"test_cache_behavior_2":{
 			"initialize all blocks": { "pagecount": 6, "runs": 100, "time": 4162.620000},
 			"run one cache line with fence at end": { "pagecount": 6, "runs": 100, "time": 816.580000},
@@ -293,28 +274,16 @@
 			"run stride 62": { "pagecount": 6, "runs": 100, "time": 758.640000},
 			"run stride 63": { "pagecount": 6, "runs": 100, "time": 778.460000},
 			"summary": { "min": { "time": 623.740000, "stride": 50 }, "max": { "time": 901.300000, "stride": 1 } }
-			}
-		},
-,
-		"test_cache_behavior_3":{ "ticks per nop (over 1 billion)": 2.998452}
-	},
-,
-		"test_cache_behavior_4":{ "results": ""}
-	},
-,
+			},
+		"test_cache_behavior_3":{ "ticks per nop (over 1 billion)": 2.998452},
+		"test_cache_behavior_4":{ "results": ""},
 		"test_cache_behavior_5":{
 			"results": ""
-			}
-		},
-,
+			},
 		"test_cache_behavior_6":{
 			"results": ""
-			}
-		},
-,
-		"test_cache_behavior_7":{ "results": ""}
-	},
-,
+			},
+		"test_cache_behavior_7":{ "results": ""},
 		"test_cache_behavior_8":{
 			"noflush, nofence": {"same cache set": 7416, "different cache set": 7458},
 			"noflush, sfence end": {"same cache set": 8976, "different cache set": 9024},
@@ -326,9 +295,7 @@
 			"clwb, sfence end": {"same cache set": 8990, "different cache set": 9108},
 			"pagecount": 6,
 			"runs": 100
-			}
-		},
-,
+			},
 		"test_cache_behavior_9":{
 			"frequency tests": {
 				"noflush, sfence periodic": {
@@ -400,9 +367,7 @@
 					},
 			"pagecount": 6,
 			"runs": 100
-		}
-	},
-,
+		},
 		"test_nontemporal_behavior": {"size": 24576, "ticks": 1325044}
 		},
 	"size 32KB": {
@@ -416,9 +381,7 @@
 			"walk list + clflush after each write": {"pagecount": 8,"runs": 100,"time": 1550.660000},
 			"walk list + sfence after each write": {"pagecount": 8,"runs": 100,"time": 92.200000},
 			"walk list + sfence after each run": {"pagecount": 8,"runs": 100,"time": 57.680000}
-			}
-		},
-,
+			},
 		"test_cache_behavior_2":{
 			"initialize all blocks": { "pagecount": 8, "runs": 100, "time": 4929.260000},
 			"run one cache line with fence at end": { "pagecount": 8, "runs": 100, "time": 783.960000},
@@ -490,28 +453,16 @@
 			"run stride 62": { "pagecount": 8, "runs": 100, "time": 722.060000},
 			"run stride 63": { "pagecount": 8, "runs": 100, "time": 811.220000},
 			"summary": { "min": { "time": 650.200000, "stride": 10 }, "max": { "time": 864.700000, "stride": 51 } }
-			}
-		},
-,
-		"test_cache_behavior_3":{ "ticks per nop (over 1 billion)": 2.998452}
-	},
-,
-		"test_cache_behavior_4":{ "results": ""}
-	},
-,
+			},
+		"test_cache_behavior_3":{ "ticks per nop (over 1 billion)": 2.998452},
+		"test_cache_behavior_4":{ "results": ""},
 		"test_cache_behavior_5":{
 			"results": ""
-			}
-		},
-,
+			},
 		"test_cache_behavior_6":{
 			"results": ""
-			}
-		},
-,
-		"test_cache_behavior_7":{ "results": ""}
-	},
-,
+			},
+		"test_cache_behavior_7":{ "results": ""},
 		"test_cache_behavior_8":{
 			"noflush, nofence": {"same cache set": 10578, "different cache set": 10660},
 			"noflush, sfence end": {"same cache set": 12340, "different cache set": 12464},
@@ -523,9 +474,7 @@
 			"clwb, sfence end": {"same cache set": 12672, "different cache set": 12578},
 			"pagecount": 8,
 			"runs": 100
-			}
-		},
-,
+			},
 		"test_cache_behavior_9":{
 			"frequency tests": {
 				"noflush, sfence periodic": {
@@ -597,9 +546,7 @@
 					},
 			"pagecount": 8,
 			"runs": 100
-		}
-	},
-,
+		},
 		"test_nontemporal_behavior": {"size": 32768, "ticks": 1769030}
 		},
 	"size 48KB": {
@@ -613,9 +560,7 @@
 			"walk list + clflush after each write": {"pagecount": 12,"runs": 100,"time": 2385.240000},
 			"walk list + sfence after each write": {"pagecount": 12,"runs": 100,"time": 297.920000},
 			"walk list + sfence after each run": {"pagecount": 12,"runs": 100,"time": 148.800000}
-			}
-		},
-,
+			},
 		"test_cache_behavior_2":{
 			"initialize all blocks": { "pagecount": 12, "runs": 100, "time": 8635.180000},
 			"run one cache line with fence at end": { "pagecount": 12, "runs": 100, "time": 877.300000},
@@ -687,15 +632,9 @@
 			"run stride 62": { "pagecount": 12, "runs": 100, "time": 799.400000},
 			"run stride 63": { "pagecount": 12, "runs": 100, "time": 774.920000},
 			"summary": { "min": { "time": 745.880000, "stride": 53 }, "max": { "time": 969.660000, "stride": 22 } }
-			}
-		},
-,
-		"test_cache_behavior_3":{ "ticks per nop (over 1 billion)": 2.998452}
-	},
-,
-		"test_cache_behavior_4":{ "results": ""}
-	},
-,
+			},
+		"test_cache_behavior_3":{ "ticks per nop (over 1 billion)": 2.998452},
+		"test_cache_behavior_4":{ "results": ""},
 		"test_cache_behavior_5":{
 			"results": {
 				"transaction length 2": {"committed count": 100, "aborted count": 0, "total time": 7340, "op time": 2086},
@@ -711,9 +650,7 @@
 			},
 			"pagecount": 12,
 			"runs": 100
-			}
-		},
-,
+			},
 		"test_cache_behavior_6":{
 			"run list (cold cache) in ticks": 68580.000000,
 			"run list (warm cache) in ticks": 98268.000000,
@@ -730,12 +667,8 @@
 			"clflush+sfence 16 writes on same cache line in ticks": 205628.000000,
 			"pagecount": 12,
 			"runs": 100
-			}
-		},
-,
-		"test_cache_behavior_7":{ "results": ""}
-	},
-,
+			},
+		"test_cache_behavior_7":{ "results": ""},
 		"test_cache_behavior_8":{
 			"noflush, nofence": {"same cache set": 16314, "different cache set": 16422},
 			"noflush, sfence end": {"same cache set": 17954, "different cache set": 18022},
@@ -747,9 +680,7 @@
 			"clwb, sfence end": {"same cache set": 18016, "different cache set": 17866},
 			"pagecount": 12,
 			"runs": 100
-			}
-		},
-,
+			},
 		"test_cache_behavior_9":{
 			"frequency tests": {
 				"noflush, sfence periodic": {
@@ -821,9 +752,7 @@
 					},
 			"pagecount": 12,
 			"runs": 100
-		}
-	},
-,
+		},
 		"test_nontemporal_behavior": {"size": 49152, "ticks": 2657606}
 		},
 	"size 64KB": {
@@ -837,9 +766,7 @@
 			"walk list + clflush after each write": {"pagecount": 16,"runs": 100,"time": 3188.500000},
 			"walk list + sfence after each write": {"pagecount": 16,"runs": 100,"time": 376.440000},
 			"walk list + sfence after each run": {"pagecount": 16,"runs": 100,"time": 255.200000}
-			}
-		},
-,
+			},
 		"test_cache_behavior_2":{
 			"initialize all blocks": { "pagecount": 16, "runs": 100, "time": 14757.720000},
 			"run one cache line with fence at end": { "pagecount": 16, "runs": 100, "time": 889.400000},
@@ -911,28 +838,16 @@
 			"run stride 62": { "pagecount": 16, "runs": 100, "time": 1109.900000},
 			"run stride 63": { "pagecount": 16, "runs": 100, "time": 1161.940000},
 			"summary": { "min": { "time": 902.440000, "stride": 40 }, "max": { "time": 1222.580000, "stride": 51 } }
-			}
-		},
-,
-		"test_cache_behavior_3":{ "ticks per nop (over 1 billion)": 2.998452}
-	},
-,
-		"test_cache_behavior_4":{ "results": ""}
-	},
-,
+			},
+		"test_cache_behavior_3":{ "ticks per nop (over 1 billion)": 2.998452},
+		"test_cache_behavior_4":{ "results": ""},
 		"test_cache_behavior_5":{
 			"results": ""
-			}
-		},
-,
+			},
 		"test_cache_behavior_6":{
 			"results": ""
-			}
-		},
-,
-		"test_cache_behavior_7":{ "results": ""}
-	},
-,
+			},
+		"test_cache_behavior_7":{ "results": ""},
 		"test_cache_behavior_8":{
 			"noflush, nofence": {"same cache set": 22400, "different cache set": 22520},
 			"noflush, sfence end": {"same cache set": 29942, "different cache set": 23944},
@@ -944,9 +859,7 @@
 			"clwb, sfence end": {"same cache set": 23956, "different cache set": 24010},
 			"pagecount": 16,
 			"runs": 100
-			}
-		},
-,
+			},
 		"test_cache_behavior_9":{
 			"frequency tests": {
 				"noflush, sfence periodic": {
@@ -1018,9 +931,7 @@
 					},
 			"pagecount": 16,
 			"runs": 100
-		}
-	},
-,
+		},
 		"test_nontemporal_behavior": {"size": 65536, "ticks": 3539940}
 		},
 	"size 128KB": {
@@ -1034,9 +945,7 @@
 			"walk list + clflush after each write": {"pagecount": 32,"runs": 100,"time": 6648.080000},
 			"walk list + sfence after each write": {"pagecount": 32,"runs": 100,"time": 615.260000},
 			"walk list + sfence after each run": {"pagecount": 32,"runs": 100,"time": 491.860000}
-			}
-		},
-,
+			},
 		"test_cache_behavior_2":{
 			"initialize all blocks": { "pagecount": 32, "runs": 100, "time": 34909.900000},
 			"run one cache line with fence at end": { "pagecount": 32, "runs": 100, "time": 1700.720000},
@@ -1108,28 +1017,16 @@
 			"run stride 62": { "pagecount": 32, "runs": 100, "time": 1578.100000},
 			"run stride 63": { "pagecount": 32, "runs": 100, "time": 1532.580000},
 			"summary": { "min": { "time": 1482.100000, "stride": 12 }, "max": { "time": 1735.080000, "stride": 51 } }
-			}
-		},
-,
-		"test_cache_behavior_3":{ "ticks per nop (over 1 billion)": 2.998452}
-	},
-,
-		"test_cache_behavior_4":{ "results": ""}
-	},
-,
+			},
+		"test_cache_behavior_3":{ "ticks per nop (over 1 billion)": 2.998452},
+		"test_cache_behavior_4":{ "results": ""},
 		"test_cache_behavior_5":{
 			"results": ""
-			}
-		},
-,
+			},
 		"test_cache_behavior_6":{
 			"results": ""
-			}
-		},
-,
-		"test_cache_behavior_7":{ "results": ""}
-	},
-,
+			},
+		"test_cache_behavior_7":{ "results": ""},
 		"test_cache_behavior_8":{
 			"noflush, nofence": {"same cache set": 46724, "different cache set": 47140},
 			"noflush, sfence end": {"same cache set": 48902, "different cache set": 49050},
@@ -1141,9 +1038,7 @@
 			"clwb, sfence end": {"same cache set": 48828, "different cache set": 49550},
 			"pagecount": 32,
 			"runs": 100
-			}
-		},
-,
+			},
 		"test_cache_behavior_9":{
 			"frequency tests": {
 				"noflush, sfence periodic": {
@@ -1215,9 +1110,7 @@
 					},
 			"pagecount": 32,
 			"runs": 100
-		}
-	},
-,
+		},
 		"test_nontemporal_behavior": {"size": 131072, "ticks": 7074314}
 		},
 	"size 256KB": {
@@ -1231,9 +1124,7 @@
 			"walk list + clflush after each write": {"pagecount": 64,"runs": 100,"time": 13573.120000},
 			"walk list + sfence after each write": {"pagecount": 64,"runs": 100,"time": 1070.620000},
 			"walk list + sfence after each run": {"pagecount": 64,"runs": 100,"time": 948.060000}
-			}
-		},
-,
+			},
 		"test_cache_behavior_2":{
 			"initialize all blocks": { "pagecount": 64, "runs": 100, "time": 73050.620000},
 			"run one cache line with fence at end": { "pagecount": 64, "runs": 100, "time": 2383.200000},
@@ -1305,28 +1196,16 @@
 			"run stride 62": { "pagecount": 64, "runs": 100, "time": 2585.260000},
 			"run stride 63": { "pagecount": 64, "runs": 100, "time": 2554.460000},
 			"summary": { "min": { "time": 2345.180000, "stride": 14 }, "max": { "time": 2708.860000, "stride": 51 } }
-			}
-		},
-,
-		"test_cache_behavior_3":{ "ticks per nop (over 1 billion)": 2.998452}
-	},
-,
-		"test_cache_behavior_4":{ "results": ""}
-	},
-,
+			},
+		"test_cache_behavior_3":{ "ticks per nop (over 1 billion)": 2.998452},
+		"test_cache_behavior_4":{ "results": ""},
 		"test_cache_behavior_5":{
 			"results": ""
-			}
-		},
-,
+			},
 		"test_cache_behavior_6":{
 			"results": ""
-			}
-		},
-,
-		"test_cache_behavior_7":{ "results": ""}
-	},
-,
+			},
+		"test_cache_behavior_7":{ "results": ""},
 		"test_cache_behavior_8":{
 			"noflush, nofence": {"same cache set": 95322, "different cache set": 95538},
 			"noflush, sfence end": {"same cache set": 97336, "different cache set": 97392},
@@ -1338,9 +1217,7 @@
 			"clwb, sfence end": {"same cache set": 97460, "different cache set": 97972},
 			"pagecount": 64,
 			"runs": 100
-			}
-		},
-,
+			},
 		"test_cache_behavior_9":{
 			"frequency tests": {
 				"noflush, sfence periodic": {
@@ -1412,12 +1289,9 @@
 					},
 			"pagecount": 64,
 			"runs": 100
-		}
-	},
-,
+		},
 		"test_nontemporal_behavior": {"size": 262144, "ticks": 14144914}
 		},
 	"backing file": "/mnt/pmem1/fsgeek-test.dat",
 	"number of runs": 10
-	}
 }

@@ -1,0 +1,9 @@
+RPCGEN ?= rpcgen
+
+%.h: %.x
+	$(RPCGEN) -Mh $< > $@
+
+%_xdr.c: %.x %.h
+	$(RPCGEN) -Mc $< > $@
+
+RPCGEN_CFLAGS  = -Wno-unused-variable
