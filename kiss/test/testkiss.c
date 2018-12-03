@@ -18,6 +18,9 @@
 
 extern char *files_in_path[];
 
+#define __notused
+
+
 static MunitResult
 test_one(
     const MunitParameter params[] __notused,
@@ -168,7 +171,11 @@ static MunitResult test_lookup_table(const MunitParameter params[], void *arg)
 
 #define TEST_MOUNT_PREFIX "mountprefix"
 #define TEST_OPEN_FILE_PARAM_FILE "file"
+#endif // 0
+
 #define TEST_OPEN_FILE_PARAM_DIR "dir"
+
+#if 0
 #define TEST_FILE_COUNT "filecount"
 #define TEST_NICCOLUM_OPTION "niccolum"
 

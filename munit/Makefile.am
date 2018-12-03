@@ -1,5 +1,6 @@
 include $(top_srcdir)/mk/c.am
 
+CC=gcc
 AM_CFLAGS += -Wno-declaration-after-statement
 AM_CFLAGS += -Wno-cast-qual
 
