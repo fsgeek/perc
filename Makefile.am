@@ -1,5 +1,5 @@
 AUTOMAKE_OPTIONS = foreign
-SUBDIRS = cpu cache stream alloc kiss
+SUBDIRS = munit cpu cache stream alloc kiss
 
 ACLOCAL_AMFLAGS = -I m4 --install
 dist_noinst_SCRIPTS = autogen.sh
