@@ -25,4 +25,4 @@ test-driver
 *.lai
 *.so*
 *.o
-
+*.lo
