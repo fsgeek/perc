@@ -264,8 +264,7 @@ static unsigned find_first_available(alloc_block_t alloc_block)
             index = alloc_block->cpu_index_hint[index] = get_next_index_hint(alloc_block);
         }
         saved_mask = current = block->Bitset[index];
-        saved_mask = block->Bitset[index];
-        allocated_bit = __builtin_ctzll(~update);
+        allocated_bit = __builtin_ctzll(~current);
         update = current | (((unsigned long long)1) << allocated_bit);
         assert(count_set_bits((uint8_t *)&current, BITS_PER_ULL) + 1 == count_set_bits((uint8_t *)&update, BITS_PER_ULL));
         if (current == __sync_val_compare_and_swap(&block->Bitset[index], current, update)) {
