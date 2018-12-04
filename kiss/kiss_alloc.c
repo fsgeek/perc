@@ -755,6 +755,7 @@ void kiss_free(void *address)
                 break;                
             }
         }
+        break;
     }
 
     return;
