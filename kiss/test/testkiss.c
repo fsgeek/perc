@@ -15,6 +15,7 @@
 #include <uuid/uuid.h>
 #include <pthread.h>
 #include <munit/munit.h>
+#include <kiss_alloc.h>
 
 extern char *files_in_path[];
 
@@ -28,6 +29,18 @@ test_one(
 {
     return MUNIT_OK;
 }
+
+static MunitResult
+test_init(
+    const MunitParameter params[] __notused,
+    void *prv __notused)
+{
+    init_kiss_allocator("/tmp/foo", 64, 1000);
+    stop_kiss_allocator();
+
+    return MUNIT_OK;
+}
+
 
 #if 0
 static MunitResult test_lookup_table_create(const MunitParameter params[], void *arg)
@@ -807,6 +820,7 @@ main(
 {
     static MunitTest tests[] = {
         TEST("/one", test_one, NULL),
+        TEST("/init", test_init, NULL),
         TEST(NULL, NULL, NULL),
     };
     static const MunitSuite suite = {

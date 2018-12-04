@@ -19,6 +19,7 @@ LDADD += -lrt
 
 testkiss_CPPFLAGS  = $(AM_CPPFLAGS)
 testkiss_CPPFLAGS += -I$(top_srcdir)/munit
+testkiss_CPPFLAGS += -I$(top_srcdir)/kiss
 
 
 CLEANFILES = *~

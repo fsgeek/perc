@@ -40,6 +40,7 @@
 #include <uuid/uuid.h>
 #include <stddef.h>
 #include <cpu.h>
+#include <kiss_alloc.h>
 
 // This is here to quiet the IDE complaining this isn't defined.
 #if !defined(MAP_ANONYMOUS)
@@ -123,8 +124,11 @@ typedef struct alloc_block {
     size_t length;
     uuid_t Uuid;
     size_t unit_size;
-    unsigned last_alloc; // hint
+    size_t  next_offset_hint; 
+    size_t  largest_offset_hint;
     unsigned free_blocks; // hint
+    size_t  bitset_length;
+    size_t  cpu_offset_hint[128]; // per CPU offset hint
     unsigned file_name_length;
     char file_name[1];
 } *alloc_block_t;
@@ -142,6 +146,32 @@ typedef struct nvm_block_header {
     unsigned long long Bitset[0];
 } *nvm_block_header_t;
 
+
+static unsigned get_next_offset_hint(alloc_block_t alloc_block)
+{
+    unsigned offset;
+
+    assert(NULL != alloc_block);
+
+    while (alloc_block) {
+        offset = __sync_fetch_and_add(&alloc_block->next_offset_hint, 1);
+        if (offset < alloc_block->largest_offset_hint) {
+            // common case
+            break;
+        }
+        // the race condition case
+        //   -if WE set it to zero, then we know the hint is offset 0
+        //   -if some OTHER thread set it to zero, then we jump up and compute
+        //    the offset again.
+        offset = __sync_val_compare_and_swap(&alloc_block->next_offset_hint, offset, 0);
+        if (0 == offset) {
+            // we won the race
+            break;
+        }
+        // otherwise we LOST and we try again above
+    }
+    return offset;
+}
 
 C_ASSERT(64 == sizeof(struct nvm_block_header));
 
@@ -208,55 +238,84 @@ static unsigned find_first_available(alloc_block_t alloc_block)
     nvm_block_header_t block = (nvm_block_header_t) alloc_block->base_addr;
     unsigned bitset_length = alloc_block->length / (8 * sizeof(unsigned long long) * alloc_block->unit_size);
     unsigned allocated_block = ~0;
+    unsigned index;
 
     assert(bitset_length * 64 * alloc_block->unit_size == alloc_block->length); // sanity
 
     // Open question: perhaps we should add a hint to the ephemeral header
-    // 2MB 
-    for (unsigned index = 0; index < bitset_length; index++) {
-        if (0 != block->Bitset[index]) {
-            unsigned long long current,update;
-            
-            current = update = block->Bitset[index];
+    // 2MB
+    assert(sched_getcpu() <= (sizeof(alloc_block->cpu_offset_hint) / sizeof(size_t)));
+    while (alloc_block->free_blocks > 0) {
+        unsigned long long current,update;
 
-            allocated_block = __builtin_ctzll(update);
-            update &= ~(1<<allocated_block);
-            if (current == __sync_val_compare_and_swap(&block->Bitset[index], current, update)) {
-                alloc_block->free_blocks--; // update hint
-                alloc_block->last_alloc = allocated_block; // update hint
-                break;
-            }
-            // this is where we lost the race and need to search again.
-            allocated_block = ~0;
-       }
+        index = alloc_block->cpu_offset_hint[sched_getcpu()];
+        // if the index isn't usable or the bitset has nothing in it
+        while((index > alloc_block->largest_offset_hint) || (~0 == block->Bitset[index])) {
+            index = alloc_block->cpu_offset_hint[index] = get_next_offset_hint(alloc_block);
+        }
+            
+        current = update = block->Bitset[index];
+
+        allocated_block = __builtin_ctzll(~update);
+        update |= 1<<allocated_block;
+        if (current == __sync_val_compare_and_swap(&block->Bitset[index], current, update)) {
+            alloc_block->free_blocks--; // update hint
+            allocated_block += index * 8 * sizeof(unsigned long long);
+            break;
+        }
+        // this is where we lost the race and need to search again.
+        allocated_block = ~0;
     }
+
     return allocated_block;
 }
 
+#define BITS_PER_ULL (size_t)(8*sizeof(unsigned long long))
 
 static int layout_alloc_map(alloc_block_t alloc_block)
 {
     nvm_block_header_t block = (nvm_block_header_t) alloc_block->base_addr;
-    unsigned bitset_length = alloc_block->length / (8 * sizeof(unsigned long long) * alloc_block->unit_size);
     uintptr_t header_end = (uintptr_t) alloc_block->base_addr;
     uintptr_t offset = 0;
+    size_t header_length;
+    size_t header_allocated = 0;
+    unsigned index = 0;
 
     // set the fields
     uuid_copy(block->Uuid, alloc_block->Uuid);
     block->unit_size = alloc_block->unit_size;
     block->map_address = (uintptr_t) alloc_block->base_addr;
+    alloc_block->bitset_length = alloc_block->length / (BITS_PER_ULL * alloc_block->unit_size);
 
     // make sure allocation map is clear
     header_end += offsetof(struct nvm_block_header, Bitset);
-    header_end += ((63 + (bitset_length * sizeof(unsigned long long))) & ~63); // round up
+    header_end += ((63 + (alloc_block->bitset_length * sizeof(unsigned long long))) & ~63); // round up to next cache line
     memset(block->Bitset, 0, (size_t)(header_end - (uintptr_t)block->Bitset));
 
-    cpu_clwb(block);
+    // now set the bits corresponding to the header + bitmap region
+    header_length = (size_t)header_end - (uintptr_t)alloc_block->base_addr;
+    
+    while ((header_length - header_allocated) > (alloc_block->unit_size * BITS_PER_ULL)) {
+        // allocate an entire bitset element
+        block->Bitset[index] = ~0; // all allocated
+        alloc_block->free_blocks -= BITS_PER_ULL;
+        header_allocated += alloc_block->unit_size * BITS_PER_ULL;
+        index++;
+    }
 
-    // now we have to allocate the region we've used.
-    while (offset < header_end) {
-        // allocate a block
-        offset = ((uintptr_t)block) + (alloc_block->unit_size * find_first_available(alloc_block));
+    // now we do the final bits
+    while ((header_allocated < header_length)) {
+        block->Bitset[index] << 1;
+        block->Bitset[index] |= 1;
+        header_allocated += alloc_block->unit_size;
+        alloc_block->free_blocks--;
+    }
+
+    // now let's walk the range and flush it
+    for (offset = (uintptr_t) alloc_block->base_addr; 
+         offset < header_end;
+         offset += 64) {
+             cpu_clwb((void *)offset);
     }
 
     cpu_sfence(); // make the changes persistent.
@@ -567,6 +626,12 @@ static alloc_block_t create_alloc_map(const char *nvm_dir, size_t unit_size, uns
         ab->length = 0;
         uuid_copy(ab->Uuid, uuid);
         ab->unit_size = unit_size;
+        ab->free_blocks = 0;
+        for (unsigned index = 0; index < (sizeof(ab->cpu_offset_hint) / sizeof(size_t)); index++) {
+            ab->cpu_offset_hint[index] = index + 1;
+        }
+        ab->next_offset_hint = (sizeof(ab->cpu_offset_hint) / sizeof(size_t)) + 1;
+        ab->largest_offset_hint = (LARGE_PAGE_SIZE * large_page_count) / unit_size;
     }
 
     // make sure directory hierarchy exists
@@ -587,10 +652,13 @@ static alloc_block_t create_alloc_map(const char *nvm_dir, size_t unit_size, uns
                              MAP_SHARED, memfd, 0);
     }
     assert((void *)-1 != ab->base_addr);
-    ab->length = LARGE_PAGE_SIZE * large_page_count;
     close(memfd);
+
+    ab->length = LARGE_PAGE_SIZE * large_page_count;
+    ab->free_blocks = ab->length / unit_size;
     code = layout_alloc_map(ab);
     assert(0 == code);
+
     return ab;
 }
 
@@ -602,6 +670,96 @@ static void test_bitmap(void)
     t = 0;
     assert(0 == count_set_bits((const uint8_t *)&t, sizeof(t) * 8));
 }
+
+static alloc_block_t kiss_alloc_block;
+
+void init_kiss_allocator(const char *nvm_dir, size_t unit_size, size_t object_count)
+{
+    size_t memory_size = unit_size * object_count;
+    static int cpu_initialized = 0;
+
+    if (0 == cpu_initialized) {
+        cpu_init();
+        cpu_initialized = 1;
+    }
+
+    assert(NULL == kiss_alloc_block);
+
+    memory_size += (LARGE_PAGE_SIZE - 1);
+    memory_size &= ~(LARGE_PAGE_SIZE - 1);
+
+    //static alloc_block_t create_alloc_map(const char *nvm_dir, size_t unit_size, unsigned large_page_count)
+    kiss_alloc_block = create_alloc_map(nvm_dir, unit_size, memory_size / LARGE_PAGE_SIZE);
+
+    assert(NULL != kiss_alloc_block);
+
+}
+
+void stop_kiss_allocator(void)
+{
+    assert(NULL != kiss_alloc_block);
+    delete_alloc_map(kiss_alloc_block);
+    kiss_alloc_block = NULL;
+}
+
+void *kiss_malloc(size_t size) 
+{
+    unsigned int offset;
+    uintptr_t address = 0;
+
+    assert(size <= kiss_alloc_block->unit_size);
+    offset = find_first_available(kiss_alloc_block);
+    if ((~0) != offset) {
+        address = ((uintptr_t)kiss_alloc_block->base_addr) + (offset * kiss_alloc_block->unit_size);
+    }
+    return (void *)address;
+}
+
+void *kiss_preserve(size_t size)
+{
+    // TODO: implement this
+    return NULL;
+}
+
+void *kiss_pcommit(void *address)
+{
+    // TODO: implement this
+    return address;
+}
+
+void kiss_free(void *address)
+{
+    uintptr_t offset;
+    while (NULL != address) {
+        unsigned index = 0;
+        unsigned long long bit = 0;
+        unsigned long long current, update;
+        nvm_block_header_t bh = (nvm_block_header_t)kiss_alloc_block->base_addr;
+
+        // basic sanity checks
+        assert((uintptr_t)address >= ((uintptr_t)kiss_alloc_block->base_addr + 
+                          offsetof(struct nvm_block_header, Bitset) + 
+                          kiss_alloc_block->bitset_length));
+        offset = (uintptr_t) address - (uintptr_t)kiss_alloc_block->base_addr;
+        assert(offset < kiss_alloc_block->length);
+        index = offset / (kiss_alloc_block->unit_size * BITS_PER_ULL);
+        bit = offset - (index *kiss_alloc_block->unit_size * BITS_PER_ULL);
+        bit /= kiss_alloc_block->unit_size; // could convert to a bit shift
+        assert(bit < BITS_PER_ULL);
+        while(1) {
+            current = bh->Bitset[index];
+            update = current & ~(1<<bit);
+            assert(update != current);
+            if (__sync_val_compare_and_swap(&bh->Bitset[index], current, update)) {
+                kiss_alloc_block->free_blocks++;
+                break;                
+            }
+        }
+    }
+
+    return;
+}
+
 
 
 #if 0
