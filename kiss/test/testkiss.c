@@ -74,16 +74,11 @@ test_alloc_free(
     return MUNIT_OK;
 }
 
-static void *thread_test_alloc_free(void *arg)
+static void thread_test_alloc_free_helper(unsigned iterations, int free)
 {
-    unsigned iterations = 100; // use munit_rand_uint32() to make this a bit more dynamic?
     void *memory = NULL;
     void **memtable = malloc(iterations * sizeof(void *));
     unsigned index;
-
-    (void)arg;
-
-    sleep(2);
 
     munit_assert_not_null(memtable);
     memset(memtable, 0, iterations * sizeof(void *));
@@ -100,13 +95,38 @@ static void *thread_test_alloc_free(void *arg)
         memtable[index] = memory;
     }
 
-
-    for (index = 0; index < iterations; index++) {
-        kiss_free(memtable[index]);
-        memtable[index] = NULL;
+    if (free) {
+        for (index = 0; index < iterations; index++) {
+            kiss_free(memtable[index]);
+            memtable[index] = NULL;
+        }
     }
 
-    return NULL;
+    return;
+}
+
+static void *thread_test_alloc_free(void *arg)
+{
+    unsigned iterations = 100; // TODO: make this dynamic
+
+    sleep(2);
+
+    thread_test_alloc_free_helper(iterations, 1);
+
+    return arg;
+
+}
+
+static void *thread_test_alloc(void *arg)
+{
+    unsigned iterations = 100; // TODO: make this dynamic
+
+    sleep(2);
+
+    thread_test_alloc_free_helper(iterations, 0);
+
+    return arg;
+
 }
 
 static MunitResult
@@ -185,6 +205,31 @@ test_multi_alloc_free_mt(
     return MUNIT_OK;
 }
 
+static MunitResult
+test_multi_alloc_mt(
+    const MunitParameter params[] __notused,
+    void *prv __notused)
+{
+    void *memory;
+    unsigned threadcount = 5;
+    pthread_t threads[threadcount];
+
+    init_kiss_allocator("/tmp/foo", 64, 1000);
+
+    for (unsigned index = 0; index < threadcount; index++) {
+        munit_assert(pthread_create(&threads[index], NULL, thread_test_alloc, NULL) >= 0);
+    }
+
+    for (unsigned index = 0; index < threadcount; index++) {
+        munit_assert(pthread_join(threads[index], NULL) >= 0);
+    }
+
+    kiss_verify();
+
+    stop_kiss_allocator();
+
+    return MUNIT_OK;
+}
 
 #define TEST_OPEN_FILE_PARAM_DIR "dir"
 
@@ -219,6 +264,7 @@ main(
         TEST("/alloc_free", test_alloc_free, NULL),
         TEST("/multi_alloc_free", test_multi_alloc_free, NULL),
         TEST("/alloc_free_limits", test_alloc_free_limits, NULL),
+        TEST("/mt_alloc", test_multi_alloc_mt, NULL),
         TEST("/mt_alloc_free", test_multi_alloc_free_mt, NULL),
         TEST(NULL, NULL, NULL),
     };
