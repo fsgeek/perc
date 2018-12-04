@@ -247,8 +247,6 @@ static unsigned find_first_available(alloc_block_t alloc_block)
     unsigned allocated_block = ~0;
     unsigned allocated_bit;
     unsigned index;
-    unsigned free_before = alloc_block->free_blocks;
-    unsigned free_after;
     unsigned long long saved_mask;
     unsigned long long current,update;
 
@@ -265,15 +263,13 @@ static unsigned find_first_available(alloc_block_t alloc_block)
         while((index > alloc_block->largest_index_hint) || (~0 == block->Bitset[index])) {
             index = alloc_block->cpu_index_hint[index] = get_next_index_hint(alloc_block);
         }
-            
-        current = update = block->Bitset[index];
+        saved_mask = current = block->Bitset[index];
         saved_mask = block->Bitset[index];
         allocated_bit = __builtin_ctzll(~update);
-        update |= ((unsigned long long)1)<<allocated_bit;
+        update = current | (((unsigned long long)1) << allocated_bit);
         assert(count_set_bits((uint8_t *)&current, BITS_PER_ULL) + 1 == count_set_bits((uint8_t *)&update, BITS_PER_ULL));
-
         if (current == __sync_val_compare_and_swap(&block->Bitset[index], current, update)) {
-            alloc_block->free_blocks--; // update hint
+            __sync_fetch_and_sub(&alloc_block->free_blocks, 1);
             allocated_block = allocated_bit + (index * 8 * sizeof(unsigned long long));
             break;
         }
