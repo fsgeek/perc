@@ -523,9 +523,9 @@ static void verify_blockcount(alloc_block_t alloc_block, unsigned long long *sav
         }
         printf("RECOUNT: count is %u\n", count_set_bits_lookup((const uint8_t *)bh->Bitset, alloc_block->bitset_length * BITS_PER_ULL ));
     }
-    // printf("count is %u, alloc_block->free_blocks is %u\n", count, alloc_block->free_blocks);
-    // printf("count + alloc_block->free_blocks is %u\n", count + alloc_block->free_blocks);
-    // printf("expected is %u\n", (unsigned) (alloc_block->length / alloc_block->unit_size));
+    printf("count is %u, alloc_block->free_blocks is %u\n", count, alloc_block->free_blocks);
+    printf("count + alloc_block->free_blocks is %u\n", count + alloc_block->free_blocks);
+    printf("expected is %u\n", (unsigned) (alloc_block->length / alloc_block->unit_size));
     assert((count + alloc_block->free_blocks) == (alloc_block->length / alloc_block->unit_size));
 }
 
