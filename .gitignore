@@ -29,3 +29,4 @@ test-driver
 *.o
 *.lo
 *.Plo
+core

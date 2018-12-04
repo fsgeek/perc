@@ -767,6 +767,7 @@ void kiss_free(void *address)
     unsigned index = 0;
     unsigned long long bit = 0;
     unsigned long long current, update;
+    int count;
     nvm_block_header_t bh = (nvm_block_header_t)kiss_alloc_block->base_addr;
 
     while (NULL != address) {
@@ -783,14 +784,17 @@ void kiss_free(void *address)
         assert(bit < BITS_PER_ULL);
         while(1) {
             current = bh->Bitset[index];
-            update = current & ~(((unsigned long long)1)<<bit);
-            assert(1 == __builtin_popcountll(update));
+            update = (((unsigned long long)1)<<bit);
+            count = __builtin_popcountll(update);
+            assert(1 == count); // only one bit should be set
+            update = current & ~update;
             assert(update != current);
             if (__sync_val_compare_and_swap(&bh->Bitset[index], current, update) == current) {
-                kiss_alloc_block->free_blocks++;
+                __sync_fetch_and_add(&kiss_alloc_block->free_blocks, 1);
                 address = NULL;
                 break;                
             }
+            printf("lost race\n");
         }
     }
 
