@@ -785,7 +785,7 @@ void kiss_free(void *address)
             current = bh->Bitset[index];
             update = current & ~(((unsigned long long)1)<<bit);
             assert(update != current);
-            if (__sync_val_compare_and_swap(&bh->Bitset[index], current, update)) {
+            if (__sync_val_compare_and_swap(&bh->Bitset[index], current, update) == current) {
                 kiss_alloc_block->free_blocks++;
                 break;                
             }
