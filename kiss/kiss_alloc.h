@@ -21,5 +21,6 @@ void *kiss_malloc(size_t size);
 void *kiss_preserve(size_t size);
 void *kiss_pcommit(void *address);
 void kiss_free(void *address);
+void kiss_verify(void); // single-threaded testing only
 
 #endif // __KISS_ALLOC_H__

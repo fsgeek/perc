@@ -73,6 +73,7 @@ static FILE *logfile;
 #define MAP_HUGE_1GB    (30 << MAP_HUGE_SHIFT)
 #endif
 
+#define BITS_PER_ULL (size_t)(8*sizeof(unsigned long long))
 
 const char *USAGE = "\
 usage:             \n\
@@ -124,11 +125,11 @@ typedef struct alloc_block {
     size_t length;
     uuid_t Uuid;
     size_t unit_size;
-    size_t  next_offset_hint; 
-    size_t  largest_offset_hint;
+    size_t  next_index_hint;
+    size_t  largest_index_hint;
     unsigned free_blocks; // hint
     size_t  bitset_length;
-    size_t  cpu_offset_hint[128]; // per CPU offset hint
+    size_t  cpu_index_hint[128]; // per CPU hint
     unsigned file_name_length;
     char file_name[1];
 } *alloc_block_t;
@@ -147,15 +148,20 @@ typedef struct nvm_block_header {
 } *nvm_block_header_t;
 
 
-static unsigned get_next_offset_hint(alloc_block_t alloc_block)
+static void verify_blockcount(alloc_block_t alloc_block, unsigned long long *saved_bitset);
+static unsigned count_set_bits_initializer(const uint8_t *data, const size_t size);
+typedef unsigned (*count_set_bits_t)(const uint8_t *data, const size_t size);
+count_set_bits_t count_set_bits = count_set_bits_initializer;
+
+static unsigned get_next_index_hint(alloc_block_t alloc_block)
 {
-    unsigned offset;
+    unsigned current, update;
 
     assert(NULL != alloc_block);
 
     while (alloc_block) {
-        offset = __sync_fetch_and_add(&alloc_block->next_offset_hint, 1);
-        if (offset < alloc_block->largest_offset_hint) {
+        update = __sync_fetch_and_add(&alloc_block->next_index_hint, 1);
+        if (update < alloc_block->largest_index_hint) {
             // common case
             break;
         }
@@ -163,14 +169,15 @@ static unsigned get_next_offset_hint(alloc_block_t alloc_block)
         //   -if WE set it to zero, then we know the hint is offset 0
         //   -if some OTHER thread set it to zero, then we jump up and compute
         //    the offset again.
-        offset = __sync_val_compare_and_swap(&alloc_block->next_offset_hint, offset, 0);
-        if (0 == offset) {
+        update = alloc_block->next_index_hint;
+        current = __sync_val_compare_and_swap(&alloc_block->next_index_hint, update, 0);
+        if (current == update) {
             // we won the race
             break;
         }
         // otherwise we LOST and we try again above
     }
-    return offset;
+    return update;
 }
 
 C_ASSERT(64 == sizeof(struct nvm_block_header));
@@ -238,29 +245,36 @@ static unsigned find_first_available(alloc_block_t alloc_block)
     nvm_block_header_t block = (nvm_block_header_t) alloc_block->base_addr;
     unsigned bitset_length = alloc_block->length / (8 * sizeof(unsigned long long) * alloc_block->unit_size);
     unsigned allocated_block = ~0;
+    unsigned allocated_bit;
     unsigned index;
+    unsigned free_before = alloc_block->free_blocks;
+    unsigned free_after;
+    unsigned long long saved_mask;
+    unsigned long long current,update;
 
     assert(bitset_length * 64 * alloc_block->unit_size == alloc_block->length); // sanity
 
     // Open question: perhaps we should add a hint to the ephemeral header
     // 2MB
-    assert(sched_getcpu() <= (sizeof(alloc_block->cpu_offset_hint) / sizeof(size_t)));
+    assert(sched_getcpu() <= (sizeof(alloc_block->cpu_index_hint) / sizeof(size_t)));
     while (alloc_block->free_blocks > 0) {
-        unsigned long long current,update;
 
-        index = alloc_block->cpu_offset_hint[sched_getcpu()];
+        index = alloc_block->cpu_index_hint[sched_getcpu()];
+        assert(index < alloc_block->largest_index_hint);
         // if the index isn't usable or the bitset has nothing in it
-        while((index > alloc_block->largest_offset_hint) || (~0 == block->Bitset[index])) {
-            index = alloc_block->cpu_offset_hint[index] = get_next_offset_hint(alloc_block);
+        while((index > alloc_block->largest_index_hint) || (~0 == block->Bitset[index])) {
+            index = alloc_block->cpu_index_hint[index] = get_next_index_hint(alloc_block);
         }
             
         current = update = block->Bitset[index];
+        saved_mask = block->Bitset[index];
+        allocated_bit = __builtin_ctzll(~update);
+        update |= ((unsigned long long)1)<<allocated_bit;
+        assert(count_set_bits((uint8_t *)&current, BITS_PER_ULL) + 1 == count_set_bits((uint8_t *)&update, BITS_PER_ULL));
 
-        allocated_block = __builtin_ctzll(~update);
-        update |= 1<<allocated_block;
         if (current == __sync_val_compare_and_swap(&block->Bitset[index], current, update)) {
             alloc_block->free_blocks--; // update hint
-            allocated_block += index * 8 * sizeof(unsigned long long);
+            allocated_block = allocated_bit + (index * 8 * sizeof(unsigned long long));
             break;
         }
         // this is where we lost the race and need to search again.
@@ -270,7 +284,6 @@ static unsigned find_first_available(alloc_block_t alloc_block)
     return allocated_block;
 }
 
-#define BITS_PER_ULL (size_t)(8*sizeof(unsigned long long))
 
 static int layout_alloc_map(alloc_block_t alloc_block)
 {
@@ -319,6 +332,8 @@ static int layout_alloc_map(alloc_block_t alloc_block)
     }
 
     cpu_sfence(); // make the changes persistent.
+
+    verify_blockcount(alloc_block, NULL);
 
     return 0;
 }
@@ -401,10 +416,7 @@ uint8_t lookup8bit[256] = {
 	/* fc */ 6, /* fd */ 7, /* fe */ 7, /* ff */ 8
 };
 
-static unsigned count_set_bits_initializer(const uint8_t *data, const size_t size);
 
-typedef unsigned (*count_set_bits_t)(const uint8_t *data, const size_t size);
-count_set_bits_t count_set_bits = count_set_bits_initializer;
 
 static unsigned count_set_bits_avx512(const uint8_t *data, const size_t size)
 {  
@@ -496,6 +508,30 @@ static unsigned count_set_bits_initializer(const uint8_t *data, const size_t siz
         count_set_bits = count_set_bits_lookup;
     }
     return count_set_bits(data, size);
+}
+
+static void verify_blockcount(alloc_block_t alloc_block, unsigned long long *saved_bitset)
+{
+    // Note: this can be used for debugging SINGLE THREADED code but it isn't going to work MT.
+    unsigned count = 0;
+    nvm_block_header_t bh;
+
+    assert(NULL != alloc_block);
+    assert(NULL != alloc_block->base_addr);
+    bh = (nvm_block_header_t) alloc_block->base_addr;
+    count = count_set_bits((const uint8_t *)bh->Bitset, alloc_block->bitset_length * BITS_PER_ULL );
+    if ((NULL != saved_bitset) /* && ((count + alloc_block->free_blocks) != (alloc_block->length / alloc_block->unit_size)) */) {
+        for (unsigned index = 0; index < alloc_block->bitset_length; index++) {
+            if (saved_bitset[index] != bh->Bitset[index]) {
+                printf("%u: 0x%llx 0x%llx\n", index, saved_bitset[index], bh->Bitset[index]);
+            }
+        }
+        printf("RECOUNT: count is %u\n", count_set_bits_lookup((const uint8_t *)bh->Bitset, alloc_block->bitset_length * BITS_PER_ULL ));
+    }
+    // printf("count is %u, alloc_block->free_blocks is %u\n", count, alloc_block->free_blocks);
+    // printf("count + alloc_block->free_blocks is %u\n", count + alloc_block->free_blocks);
+    // printf("expected is %u\n", (unsigned) (alloc_block->length / alloc_block->unit_size));
+    assert((count + alloc_block->free_blocks) == (alloc_block->length / alloc_block->unit_size));
 }
 
 
@@ -627,11 +663,13 @@ static alloc_block_t create_alloc_map(const char *nvm_dir, size_t unit_size, uns
         uuid_copy(ab->Uuid, uuid);
         ab->unit_size = unit_size;
         ab->free_blocks = 0;
-        for (unsigned index = 0; index < (sizeof(ab->cpu_offset_hint) / sizeof(size_t)); index++) {
-            ab->cpu_offset_hint[index] = index + 1;
+        ab->largest_index_hint = (LARGE_PAGE_SIZE * large_page_count) / (BITS_PER_ULL * unit_size);
+
+        for (unsigned index = 0; index < (sizeof(ab->cpu_index_hint) / sizeof(size_t)); index++) {
+            ab->cpu_index_hint[index] = index + 1;
+            assert(ab->cpu_index_hint[index] < ab->largest_index_hint);
         }
-        ab->next_offset_hint = (sizeof(ab->cpu_offset_hint) / sizeof(size_t)) + 1;
-        ab->largest_offset_hint = (LARGE_PAGE_SIZE * large_page_count) / unit_size;
+        ab->next_index_hint = (sizeof(ab->cpu_index_hint) / sizeof(size_t)) + 1;
     }
 
     // make sure directory hierarchy exists
@@ -730,11 +768,13 @@ void *kiss_pcommit(void *address)
 void kiss_free(void *address)
 {
     uintptr_t offset;
+    nvm_block_header_t block = (nvm_block_header_t) kiss_alloc_block->base_addr;
+    unsigned index = 0;
+    unsigned long long bit = 0;
+    unsigned long long current, update;
+    nvm_block_header_t bh = (nvm_block_header_t)kiss_alloc_block->base_addr;
+
     while (NULL != address) {
-        unsigned index = 0;
-        unsigned long long bit = 0;
-        unsigned long long current, update;
-        nvm_block_header_t bh = (nvm_block_header_t)kiss_alloc_block->base_addr;
 
         // basic sanity checks
         assert((uintptr_t)address >= ((uintptr_t)kiss_alloc_block->base_addr + 
@@ -748,17 +788,23 @@ void kiss_free(void *address)
         assert(bit < BITS_PER_ULL);
         while(1) {
             current = bh->Bitset[index];
-            update = current & ~(1<<bit);
+            update = current & ~(((unsigned long long)1)<<bit);
             assert(update != current);
             if (__sync_val_compare_and_swap(&bh->Bitset[index], current, update)) {
                 kiss_alloc_block->free_blocks++;
                 break;                
             }
+            assert(0);
         }
         break;
     }
 
     return;
+}
+
+void kiss_verify(void)
+{
+    verify_blockcount(kiss_alloc_block, NULL);
 }
 
 
