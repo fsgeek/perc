@@ -247,8 +247,6 @@ static unsigned find_first_available(alloc_block_t alloc_block)
     unsigned allocated_block = ~0;
     unsigned allocated_bit;
     unsigned index;
-    unsigned free_before = alloc_block->free_blocks;
-    unsigned free_after;
     unsigned long long saved_mask;
     unsigned long long current,update;
 
@@ -265,15 +263,12 @@ static unsigned find_first_available(alloc_block_t alloc_block)
         while((index > alloc_block->largest_index_hint) || (~0 == block->Bitset[index])) {
             index = alloc_block->cpu_index_hint[index] = get_next_index_hint(alloc_block);
         }
-            
-        current = update = block->Bitset[index];
-        saved_mask = block->Bitset[index];
-        allocated_bit = __builtin_ctzll(~update);
-        update |= ((unsigned long long)1)<<allocated_bit;
+        saved_mask = current = block->Bitset[index];
+        allocated_bit = __builtin_ctzll(~current);
+        update = current | (((unsigned long long)1) << allocated_bit);
         assert(count_set_bits((uint8_t *)&current, BITS_PER_ULL) + 1 == count_set_bits((uint8_t *)&update, BITS_PER_ULL));
-
         if (current == __sync_val_compare_and_swap(&block->Bitset[index], current, update)) {
-            alloc_block->free_blocks--; // update hint
+            __sync_fetch_and_sub(&alloc_block->free_blocks, 1);
             allocated_block = allocated_bit + (index * 8 * sizeof(unsigned long long));
             break;
         }
@@ -528,9 +523,9 @@ static void verify_blockcount(alloc_block_t alloc_block, unsigned long long *sav
         }
         printf("RECOUNT: count is %u\n", count_set_bits_lookup((const uint8_t *)bh->Bitset, alloc_block->bitset_length * BITS_PER_ULL ));
     }
-    // printf("count is %u, alloc_block->free_blocks is %u\n", count, alloc_block->free_blocks);
-    // printf("count + alloc_block->free_blocks is %u\n", count + alloc_block->free_blocks);
-    // printf("expected is %u\n", (unsigned) (alloc_block->length / alloc_block->unit_size));
+    printf("count is %u, alloc_block->free_blocks is %u\n", count, alloc_block->free_blocks);
+    printf("count + alloc_block->free_blocks is %u\n", count + alloc_block->free_blocks);
+    printf("expected is %u\n", (unsigned) (alloc_block->length / alloc_block->unit_size));
     assert((count + alloc_block->free_blocks) == (alloc_block->length / alloc_block->unit_size));
 }
 
@@ -772,6 +767,7 @@ void kiss_free(void *address)
     unsigned index = 0;
     unsigned long long bit = 0;
     unsigned long long current, update;
+    int count;
     nvm_block_header_t bh = (nvm_block_header_t)kiss_alloc_block->base_addr;
 
     while (NULL != address) {
@@ -788,15 +784,18 @@ void kiss_free(void *address)
         assert(bit < BITS_PER_ULL);
         while(1) {
             current = bh->Bitset[index];
-            update = current & ~(((unsigned long long)1)<<bit);
+            update = (((unsigned long long)1)<<bit);
+            count = __builtin_popcountll(update);
+            assert(1 == count); // only one bit should be set
+            update = current & ~update;
             assert(update != current);
-            if (__sync_val_compare_and_swap(&bh->Bitset[index], current, update)) {
-                kiss_alloc_block->free_blocks++;
+            if (__sync_val_compare_and_swap(&bh->Bitset[index], current, update) == current) {
+                __sync_fetch_and_add(&kiss_alloc_block->free_blocks, 1);
+                address = NULL;
                 break;                
             }
-            assert(0);
+            printf("lost race\n");
         }
-        break;
     }
 
     return;
