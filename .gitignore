@@ -28,3 +28,4 @@ test-driver
 *.so*
 *.o
 *.lo
+*.Plo
