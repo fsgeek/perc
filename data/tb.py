@@ -14,17 +14,19 @@ def size_to_pages(size):
     return count
 
 
+
+
 def main():
     parser = argparse.ArgumentParser(description="Browse Test Results")
     parser.add_argument('--noaction', dest='echo_args', action='store_true', default=False)
     parser.add_argument('--test', dest='test_name', default = 'backing file test')
-    parser.add_argument('--run', dest='test_run', default = 'None')
+    parser.add_argument('--run', dest='test_run', default=None)
     parser.add_argument('--subtest', dest='subtest', default=None)
     parser.add_argument('--instance', dest='instance', default=None)
+    parser.add_argument('--list', dest='list', action='store_true', default=False)
     parser.add_argument('inputfile', nargs='?', type=argparse.FileType('r'), default=sys.stdin)
     args = parser.parse_args()
     data = json.load(args.inputfile)
-
 
     tests = [i for i in data]
     if 0 is len(tests):
@@ -54,58 +56,74 @@ def main():
                 if i not in instances: instances.append(i)
     #print(instances)
 
-    # for s in subtests:
-    s = 'test_cache_behavior_9'
-    once = False
-    for i in instances:
-        if 'stride' in i: continue
-        if 'results' in i: continue
-        if 'runs' in i: continue
-        if 'pagecount' in i: continue
-        if 'summary' in i: continue
-        for r in runs:
-            if s not in data[args.test_name][r]: continue
-            if i not in data[args.test_name][r][s]: continue
-            if s != 'test_cache_behavior_9':
-                # print('("{}", "{}", "{}", "{}")'.format(i, s, r, data[args.test_name][r][s][i]))
-                continue
-            # for test 9: field 4 is a compound field that consists of the period and then the
-            # specific results
-            frequency=[]
-            for f in data[args.test_name][r][s][i]:
-                for p in data[args.test_name][r][s][i][f]:
-                    # if 'set' not in p: print(p)
-                    if p not in frequency: frequency.append(p)
-            for p in frequency:
+    if args.list:
+        print("Run options: {}".format(runs))
+        print("Subtest options: {}".format(subtests))
+        print("Instance options: {}".format(instances))
+        return
+
+    if args.subtest is not None: subtests = [args.subtest]
+
+    for s in subtests:
+        # s = 'test_cache_behavior_9'
+        once = False
+        for i in instances:
+            if 'stride' in i: continue
+            if 'results' in i: continue
+            if 'runs' in i: continue
+            if 'pagecount' in i: continue
+            if 'summary' in i: continue
+            for r in runs:
+                if s not in data[args.test_name][r]: continue
+                if i not in data[args.test_name][r][s]: continue
+                if s != 'test_cache_behavior_9':
+                    op = '"{}", "{}", "{}", "{}"'.format(i, s, r,
+                         data[args.test_name][r][s][i])
+                    if  data[args.test_name][r][s][i] is not dict:
+                        op = '{} {}'.format(op, data[args.test_name][r][s][i])
+                    else: 
+                        for res in data[args.test_name][r][s][i]:
+                            op = '{} {}'.format(op, data[args.test_name][r][s][i][res])
+                    print(op)
+                    continue
+                # for test 9: field 4 is a compound field that consists of the period and then the
+                # specific results
+                frequency=[]
                 for f in data[args.test_name][r][s][i]:
-                    """
-                    print('("{}", "{}", "{}", "{}, {}")'.format(i, s, r, 
-                    data[args.test_name][r][s][i],
-                    data[args.test_name][r][s][i][f]))
-                    """
-                    for j in data[args.test_name][r][s][i][f]:
-                        if 'cache' in j:
-                            #continue
-                            #print(r)
-                            for c in data[args.test_name][r][s][i][f]:
-                                if not once:
-                                    once = True
-                                    print('Page Count\tTest\tcache\tTime (100 Runs)')
-                                print('{}\t{}\t{}\t{}'.format(size_to_pages(r), f, c, data[args.test_name][r][s][i][f][c]))
-                        else:
-                            continue
-                            for c in data[args.test_name][r][s][i][f]:
-                                for period in data[args.test_name][r][s][i][f][c]:
+                    #print(data[args.test_name][r][s][i][f])
+                    for p in data[args.test_name][r][s][i][f]:
+                        # if 'set' not in p: print(p)
+                        if p not in frequency: frequency.append(p)
+                for p in frequency:
+                    for f in data[args.test_name][r][s][i]:
+                        """
+                        print('("{}", "{}", "{}", "{}, {}")'.format(i, s, r, 
+                        data[args.test_name][r][s][i],
+                        data[args.test_name][r][s][i][f]))
+                        """
+                        for j in data[args.test_name][r][s][i][f]:
+                            if 'cache' in j:
+                                #continue
+                                #print(r)
+                                for c in data[args.test_name][r][s][i][f]:
                                     if not once:
                                         once = True
-                                        print('Page Count\tTest\tFence Period\tcache\tTime (100 Runs)')
-                                        #print('{}, {}, {}, {}, {}, {}, {}\n'.format(r, s, i, f, p, period, 
-                                        #data[args.test_name][r][s][i][f]))
-                                    print('{}\t{}\t{}\t{}\t{}'.format(size_to_pages(r),
-                                    f, c, period, 
-                                    data[args.test_name][r][s][i][f][c][period]))
-                                    #print('{}, "{}", {}", {}'.format(c, f, period, data[args.test_name][r]))
-                    #print('({}, {})\n'.format(p, data[args.test_name][r][s][i][f]))
+                                        print('Page Count\tTest\tcache\tTime (100 Runs)')
+                                    print('{}\t{}\t{}\t{}'.format(size_to_pages(r), f, c, data[args.test_name][r][s][i][f][c]))
+                            else:
+                                continue
+                                for c in data[args.test_name][r][s][i][f]:
+                                    for period in data[args.test_name][r][s][i][f][c]:
+                                        if not once:
+                                            once = True
+                                            print('Page Count\tTest\tFence Period\tcache\tTime (100 Runs)')
+                                            #print('{}, {}, {}, {}, {}, {}, {}\n'.format(r, s, i, f, p, period, 
+                                            #data[args.test_name][r][s][i][f]))
+                                        print('{}\t{}\t{}\t{}\t{}'.format(size_to_pages(r),
+                                        f, c, period, 
+                                        data[args.test_name][r][s][i][f][c][period]))
+                                        #print('{}, "{}", {}", {}'.format(c, f, period, data[args.test_name][r]))
+                        #print('({}, {})\n'.format(p, data[args.test_name][r][s][i][f]))
 
     #print("done")
 

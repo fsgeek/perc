@@ -1,0 +1,40 @@
+"clwb, nofence", "test_cache_behavior_8", "size 24KB", "{u'different cache set': 7526, u'same cache set': 7536}" {u'different cache set': 7526, u'same cache set': 7536}
+"clwb, nofence", "test_cache_behavior_8", "size 256KB", "{u'different cache set': 96576, u'same cache set': 96114}" {u'different cache set': 96576, u'same cache set': 96114}
+"clwb, nofence", "test_cache_behavior_8", "size 32KB", "{u'different cache set': 10754, u'same cache set': 10768}" {u'different cache set': 10754, u'same cache set': 10768}
+"clwb, nofence", "test_cache_behavior_8", "size 128KB", "{u'different cache set': 48178, u'same cache set': 47472}" {u'different cache set': 48178, u'same cache set': 47472}
+"clwb, nofence", "test_cache_behavior_8", "size 64KB", "{u'different cache set': 22508, u'same cache set': 22448}" {u'different cache set': 22508, u'same cache set': 22448}
+"clflushopt, nofence", "test_cache_behavior_8", "size 24KB", "{u'different cache set': 7540, u'same cache set': 7542}" {u'different cache set': 7540, u'same cache set': 7542}
+"clflushopt, nofence", "test_cache_behavior_8", "size 256KB", "{u'different cache set': 100782, u'same cache set': 100080}" {u'different cache set': 100782, u'same cache set': 100080}
+"clflushopt, nofence", "test_cache_behavior_8", "size 32KB", "{u'different cache set': 10954, u'same cache set': 10900}" {u'different cache set': 10954, u'same cache set': 10900}
+"clflushopt, nofence", "test_cache_behavior_8", "size 128KB", "{u'different cache set': 49426, u'same cache set': 49132}" {u'different cache set': 49426, u'same cache set': 49132}
+"clflushopt, nofence", "test_cache_behavior_8", "size 64KB", "{u'different cache set': 23838, u'same cache set': 23294}" {u'different cache set': 23838, u'same cache set': 23294}
+"clwb, sfence end", "test_cache_behavior_8", "size 24KB", "{u'different cache set': 9076, u'same cache set': 11810}" {u'different cache set': 9076, u'same cache set': 11810}
+"clwb, sfence end", "test_cache_behavior_8", "size 256KB", "{u'different cache set': 98096, u'same cache set': 97390}" {u'different cache set': 98096, u'same cache set': 97390}
+"clwb, sfence end", "test_cache_behavior_8", "size 32KB", "{u'different cache set': 12402, u'same cache set': 12470}" {u'different cache set': 12402, u'same cache set': 12470}
+"clwb, sfence end", "test_cache_behavior_8", "size 128KB", "{u'different cache set': 49490, u'same cache set': 48776}" {u'different cache set': 49490, u'same cache set': 48776}
+"clwb, sfence end", "test_cache_behavior_8", "size 64KB", "{u'different cache set': 24080, u'same cache set': 24104}" {u'different cache set': 24080, u'same cache set': 24104}
+"clflush, sfence end", "test_cache_behavior_8", "size 24KB", "{u'different cache set': 8946, u'same cache set': 12074}" {u'different cache set': 8946, u'same cache set': 12074}
+"clflush, sfence end", "test_cache_behavior_8", "size 256KB", "{u'different cache set': 101372, u'same cache set': 107438}" {u'different cache set': 101372, u'same cache set': 107438}
+"clflush, sfence end", "test_cache_behavior_8", "size 32KB", "{u'different cache set': 12388, u'same cache set': 12356}" {u'different cache set': 12388, u'same cache set': 12356}
+"clflush, sfence end", "test_cache_behavior_8", "size 128KB", "{u'different cache set': 50924, u'same cache set': 50628}" {u'different cache set': 50924, u'same cache set': 50628}
+"clflush, sfence end", "test_cache_behavior_8", "size 64KB", "{u'different cache set': 24952, u'same cache set': 24638}" {u'different cache set': 24952, u'same cache set': 24638}
+"clflushopt, sfence end", "test_cache_behavior_8", "size 24KB", "{u'different cache set': 8990, u'same cache set': 8976}" {u'different cache set': 8990, u'same cache set': 8976}
+"clflushopt, sfence end", "test_cache_behavior_8", "size 256KB", "{u'different cache set': 97360, u'same cache set': 97396}" {u'different cache set': 97360, u'same cache set': 97396}
+"clflushopt, sfence end", "test_cache_behavior_8", "size 32KB", "{u'different cache set': 12206, u'same cache set': 12242}" {u'different cache set': 12206, u'same cache set': 12242}
+"clflushopt, sfence end", "test_cache_behavior_8", "size 128KB", "{u'different cache set': 49346, u'same cache set': 49032}" {u'different cache set': 49346, u'same cache set': 49032}
+"clflushopt, sfence end", "test_cache_behavior_8", "size 64KB", "{u'different cache set': 24712, u'same cache set': 24618}" {u'different cache set': 24712, u'same cache set': 24618}
+"noflush, nofence", "test_cache_behavior_8", "size 24KB", "{u'different cache set': 7412, u'same cache set': 7460}" {u'different cache set': 7412, u'same cache set': 7460}
+"noflush, nofence", "test_cache_behavior_8", "size 256KB", "{u'different cache set': 95752, u'same cache set': 94610}" {u'different cache set': 95752, u'same cache set': 94610}
+"noflush, nofence", "test_cache_behavior_8", "size 32KB", "{u'different cache set': 10594, u'same cache set': 10512}" {u'different cache set': 10594, u'same cache set': 10512}
+"noflush, nofence", "test_cache_behavior_8", "size 128KB", "{u'different cache set': 47614, u'same cache set': 46988}" {u'different cache set': 47614, u'same cache set': 46988}
+"noflush, nofence", "test_cache_behavior_8", "size 64KB", "{u'different cache set': 22320, u'same cache set': 22322}" {u'different cache set': 22320, u'same cache set': 22322}
+"noflush, sfence end", "test_cache_behavior_8", "size 24KB", "{u'different cache set': 9040, u'same cache set': 8952}" {u'different cache set': 9040, u'same cache set': 8952}
+"noflush, sfence end", "test_cache_behavior_8", "size 256KB", "{u'different cache set': 97476, u'same cache set': 97546}" {u'different cache set': 97476, u'same cache set': 97546}
+"noflush, sfence end", "test_cache_behavior_8", "size 32KB", "{u'different cache set': 12244, u'same cache set': 12204}" {u'different cache set': 12244, u'same cache set': 12204}
+"noflush, sfence end", "test_cache_behavior_8", "size 128KB", "{u'different cache set': 49294, u'same cache set': 49006}" {u'different cache set': 49294, u'same cache set': 49006}
+"noflush, sfence end", "test_cache_behavior_8", "size 64KB", "{u'different cache set': 24016, u'same cache set': 23964}" {u'different cache set': 24016, u'same cache set': 23964}
+"clflush, nofence", "test_cache_behavior_8", "size 24KB", "{u'different cache set': 7466, u'same cache set': 7556}" {u'different cache set': 7466, u'same cache set': 7556}
+"clflush, nofence", "test_cache_behavior_8", "size 256KB", "{u'different cache set': 100098, u'same cache set': 100366}" {u'different cache set': 100098, u'same cache set': 100366}
+"clflush, nofence", "test_cache_behavior_8", "size 32KB", "{u'different cache set': 10742, u'same cache set': 13856}" {u'different cache set': 10742, u'same cache set': 13856}
+"clflush, nofence", "test_cache_behavior_8", "size 128KB", "{u'different cache set': 49496, u'same cache set': 49254}" {u'different cache set': 49496, u'same cache set': 49254}
+"clflush, nofence", "test_cache_behavior_8", "size 64KB", "{u'different cache set': 23304, u'same cache set': 23614}" {u'different cache set': 23304, u'same cache set': 23614}

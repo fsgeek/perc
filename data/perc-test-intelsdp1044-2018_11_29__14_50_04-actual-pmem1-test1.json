@@ -1,0 +1,49 @@
+"walk list", "test_cache_behavior_1", "size 24KB", "{u'runs': 100, u'time': 40.02, u'pagecount': 6}" {u'runs': 100, u'time': 40.02, u'pagecount': 6}
+"walk list", "test_cache_behavior_1", "size 256KB", "{u'runs': 100, u'time': 842.22, u'pagecount': 64}" {u'runs': 100, u'time': 842.22, u'pagecount': 64}
+"walk list", "test_cache_behavior_1", "size 16KB", "{u'runs': 100, u'time': 35.98, u'pagecount': 4}" {u'runs': 100, u'time': 35.98, u'pagecount': 4}
+"walk list", "test_cache_behavior_1", "size 48KB", "{u'runs': 100, u'time': 136.2, u'pagecount': 12}" {u'runs': 100, u'time': 136.2, u'pagecount': 12}
+"walk list", "test_cache_behavior_1", "size 32KB", "{u'runs': 100, u'time': 49.24, u'pagecount': 8}" {u'runs': 100, u'time': 49.24, u'pagecount': 8}
+"walk list", "test_cache_behavior_1", "size 128KB", "{u'runs': 100, u'time': 439.5, u'pagecount': 32}" {u'runs': 100, u'time': 439.5, u'pagecount': 32}
+"walk list", "test_cache_behavior_1", "size 64KB", "{u'runs': 100, u'time': 253.76, u'pagecount': 16}" {u'runs': 100, u'time': 253.76, u'pagecount': 16}
+"walk list + prefetch next entry + clflush after each write", "test_cache_behavior_1", "size 24KB", "{u'runs': 100, u'time': 1186.62, u'pagecount': 6}" {u'runs': 100, u'time': 1186.62, u'pagecount': 6}
+"walk list + prefetch next entry + clflush after each write", "test_cache_behavior_1", "size 256KB", "{u'runs': 100, u'time': 13409.44, u'pagecount': 64}" {u'runs': 100, u'time': 13409.44, u'pagecount': 64}
+"walk list + prefetch next entry + clflush after each write", "test_cache_behavior_1", "size 16KB", "{u'runs': 100, u'time': 903.2, u'pagecount': 4}" {u'runs': 100, u'time': 903.2, u'pagecount': 4}
+"walk list + prefetch next entry + clflush after each write", "test_cache_behavior_1", "size 48KB", "{u'runs': 100, u'time': 2411.78, u'pagecount': 12}" {u'runs': 100, u'time': 2411.78, u'pagecount': 12}
+"walk list + prefetch next entry + clflush after each write", "test_cache_behavior_1", "size 32KB", "{u'runs': 100, u'time': 1595.68, u'pagecount': 8}" {u'runs': 100, u'time': 1595.68, u'pagecount': 8}
+"walk list + prefetch next entry + clflush after each write", "test_cache_behavior_1", "size 128KB", "{u'runs': 100, u'time': 6677.86, u'pagecount': 32}" {u'runs': 100, u'time': 6677.86, u'pagecount': 32}
+"walk list + prefetch next entry + clflush after each write", "test_cache_behavior_1", "size 64KB", "{u'runs': 100, u'time': 3231.1, u'pagecount': 16}" {u'runs': 100, u'time': 3231.1, u'pagecount': 16}
+"walk list + clflush after each write", "test_cache_behavior_1", "size 24KB", "{u'runs': 100, u'time': 1223.66, u'pagecount': 6}" {u'runs': 100, u'time': 1223.66, u'pagecount': 6}
+"walk list + clflush after each write", "test_cache_behavior_1", "size 256KB", "{u'runs': 100, u'time': 13573.12, u'pagecount': 64}" {u'runs': 100, u'time': 13573.12, u'pagecount': 64}
+"walk list + clflush after each write", "test_cache_behavior_1", "size 16KB", "{u'runs': 100, u'time': 880.62, u'pagecount': 4}" {u'runs': 100, u'time': 880.62, u'pagecount': 4}
+"walk list + clflush after each write", "test_cache_behavior_1", "size 48KB", "{u'runs': 100, u'time': 2385.24, u'pagecount': 12}" {u'runs': 100, u'time': 2385.24, u'pagecount': 12}
+"walk list + clflush after each write", "test_cache_behavior_1", "size 32KB", "{u'runs': 100, u'time': 1550.66, u'pagecount': 8}" {u'runs': 100, u'time': 1550.66, u'pagecount': 8}
+"walk list + clflush after each write", "test_cache_behavior_1", "size 128KB", "{u'runs': 100, u'time': 6648.08, u'pagecount': 32}" {u'runs': 100, u'time': 6648.08, u'pagecount': 32}
+"walk list + clflush after each write", "test_cache_behavior_1", "size 64KB", "{u'runs': 100, u'time': 3188.5, u'pagecount': 16}" {u'runs': 100, u'time': 3188.5, u'pagecount': 16}
+"initialize first record of each page", "test_cache_behavior_1", "size 24KB", "{u'runs': 1, u'time': 106.0, u'pagecount': 6}" {u'runs': 1, u'time': 106.0, u'pagecount': 6}
+"initialize first record of each page", "test_cache_behavior_1", "size 256KB", "{u'runs': 1, u'time': 3644.0, u'pagecount': 64}" {u'runs': 1, u'time': 3644.0, u'pagecount': 64}
+"initialize first record of each page", "test_cache_behavior_1", "size 16KB", "{u'runs': 1, u'time': 160.0, u'pagecount': 4}" {u'runs': 1, u'time': 160.0, u'pagecount': 4}
+"initialize first record of each page", "test_cache_behavior_1", "size 48KB", "{u'runs': 1, u'time': 164.0, u'pagecount': 12}" {u'runs': 1, u'time': 164.0, u'pagecount': 12}
+"initialize first record of each page", "test_cache_behavior_1", "size 32KB", "{u'runs': 1, u'time': 180.0, u'pagecount': 8}" {u'runs': 1, u'time': 180.0, u'pagecount': 8}
+"initialize first record of each page", "test_cache_behavior_1", "size 128KB", "{u'runs': 1, u'time': 1232.0, u'pagecount': 32}" {u'runs': 1, u'time': 1232.0, u'pagecount': 32}
+"initialize first record of each page", "test_cache_behavior_1", "size 64KB", "{u'runs': 1, u'time': 256.0, u'pagecount': 16}" {u'runs': 1, u'time': 256.0, u'pagecount': 16}
+"walk list + prefetch next entry", "test_cache_behavior_1", "size 24KB", "{u'runs': 100, u'time': 52.82, u'pagecount': 6}" {u'runs': 100, u'time': 52.82, u'pagecount': 6}
+"walk list + prefetch next entry", "test_cache_behavior_1", "size 256KB", "{u'runs': 100, u'time': 900.78, u'pagecount': 64}" {u'runs': 100, u'time': 900.78, u'pagecount': 64}
+"walk list + prefetch next entry", "test_cache_behavior_1", "size 16KB", "{u'runs': 100, u'time': 44.96, u'pagecount': 4}" {u'runs': 100, u'time': 44.96, u'pagecount': 4}
+"walk list + prefetch next entry", "test_cache_behavior_1", "size 48KB", "{u'runs': 100, u'time': 146.9, u'pagecount': 12}" {u'runs': 100, u'time': 146.9, u'pagecount': 12}
+"walk list + prefetch next entry", "test_cache_behavior_1", "size 32KB", "{u'runs': 100, u'time': 67.14, u'pagecount': 8}" {u'runs': 100, u'time': 67.14, u'pagecount': 8}
+"walk list + prefetch next entry", "test_cache_behavior_1", "size 128KB", "{u'runs': 100, u'time': 566.9, u'pagecount': 32}" {u'runs': 100, u'time': 566.9, u'pagecount': 32}
+"walk list + prefetch next entry", "test_cache_behavior_1", "size 64KB", "{u'runs': 100, u'time': 291.54, u'pagecount': 16}" {u'runs': 100, u'time': 291.54, u'pagecount': 16}
+"walk list + sfence after each write", "test_cache_behavior_1", "size 24KB", "{u'runs': 100, u'time': 62.28, u'pagecount': 6}" {u'runs': 100, u'time': 62.28, u'pagecount': 6}
+"walk list + sfence after each write", "test_cache_behavior_1", "size 256KB", "{u'runs': 100, u'time': 1070.62, u'pagecount': 64}" {u'runs': 100, u'time': 1070.62, u'pagecount': 64}
+"walk list + sfence after each write", "test_cache_behavior_1", "size 16KB", "{u'runs': 100, u'time': 44.94, u'pagecount': 4}" {u'runs': 100, u'time': 44.94, u'pagecount': 4}
+"walk list + sfence after each write", "test_cache_behavior_1", "size 48KB", "{u'runs': 100, u'time': 297.92, u'pagecount': 12}" {u'runs': 100, u'time': 297.92, u'pagecount': 12}
+"walk list + sfence after each write", "test_cache_behavior_1", "size 32KB", "{u'runs': 100, u'time': 92.2, u'pagecount': 8}" {u'runs': 100, u'time': 92.2, u'pagecount': 8}
+"walk list + sfence after each write", "test_cache_behavior_1", "size 128KB", "{u'runs': 100, u'time': 615.26, u'pagecount': 32}" {u'runs': 100, u'time': 615.26, u'pagecount': 32}
+"walk list + sfence after each write", "test_cache_behavior_1", "size 64KB", "{u'runs': 100, u'time': 376.44, u'pagecount': 16}" {u'runs': 100, u'time': 376.44, u'pagecount': 16}
+"walk list + sfence after each run", "test_cache_behavior_1", "size 24KB", "{u'runs': 100, u'time': 46.5, u'pagecount': 6}" {u'runs': 100, u'time': 46.5, u'pagecount': 6}
+"walk list + sfence after each run", "test_cache_behavior_1", "size 256KB", "{u'runs': 100, u'time': 948.06, u'pagecount': 64}" {u'runs': 100, u'time': 948.06, u'pagecount': 64}
+"walk list + sfence after each run", "test_cache_behavior_1", "size 16KB", "{u'runs': 100, u'time': 35.22, u'pagecount': 4}" {u'runs': 100, u'time': 35.22, u'pagecount': 4}
+"walk list + sfence after each run", "test_cache_behavior_1", "size 48KB", "{u'runs': 100, u'time': 148.8, u'pagecount': 12}" {u'runs': 100, u'time': 148.8, u'pagecount': 12}
+"walk list + sfence after each run", "test_cache_behavior_1", "size 32KB", "{u'runs': 100, u'time': 57.68, u'pagecount': 8}" {u'runs': 100, u'time': 57.68, u'pagecount': 8}
+"walk list + sfence after each run", "test_cache_behavior_1", "size 128KB", "{u'runs': 100, u'time': 491.86, u'pagecount': 32}" {u'runs': 100, u'time': 491.86, u'pagecount': 32}
+"walk list + sfence after each run", "test_cache_behavior_1", "size 64KB", "{u'runs': 100, u'time': 255.2, u'pagecount': 16}" {u'runs': 100, u'time': 255.2, u'pagecount': 16}

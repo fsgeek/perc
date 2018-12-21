@@ -1,0 +1,6 @@
+"ticks per nop (over 1 billion)", "test_cache_behavior_3", "size 24KB", "2.987991" 2.987991
+"ticks per nop (over 1 billion)", "test_cache_behavior_3", "size 256KB", "2.987991" 2.987991
+"ticks per nop (over 1 billion)", "test_cache_behavior_3", "size 48KB", "2.987991" 2.987991
+"ticks per nop (over 1 billion)", "test_cache_behavior_3", "size 32KB", "2.987991" 2.987991
+"ticks per nop (over 1 billion)", "test_cache_behavior_3", "size 128KB", "2.987991" 2.987991
+"ticks per nop (over 1 billion)", "test_cache_behavior_3", "size 64KB", "2.987991" 2.987991

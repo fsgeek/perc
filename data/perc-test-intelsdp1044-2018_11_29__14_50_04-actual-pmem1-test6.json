@@ -1,0 +1,13 @@
+"clflush (final sfence) 7 writes on same cache line in ticks", "test_cache_behavior_6", "size 48KB", "22888.0" 22888.0
+"run list (cold cache) in ticks", "test_cache_behavior_6", "size 48KB", "68580.0" 68580.0
+"clflush (final sfence) 6 writes on same cache line in ticks", "test_cache_behavior_6", "size 48KB", "7870.0" 7870.0
+"clflush+sfence 16 writes on same cache line in ticks", "test_cache_behavior_6", "size 48KB", "205628.0" 205628.0
+"clean cache line flush in ticks", "test_cache_behavior_6", "size 48KB", "2474.0" 2474.0
+"clflush (final sfence) four writes on same cache line in ticks", "test_cache_behavior_6", "size 48KB", "2380.0" 2380.0
+"clflush (final sfence) 8 writes on same cache line in ticks", "test_cache_behavior_6", "size 48KB", "27848.0" 27848.0
+"clflush (final sfence) 11 writes on same cache line in ticks", "test_cache_behavior_6", "size 48KB", "172538.0" 172538.0
+"clflush (final sfence) 10 writes on same cache line in ticks", "test_cache_behavior_6", "size 48KB", "76760.0" 76760.0
+"run list (warm cache) in ticks", "test_cache_behavior_6", "size 48KB", "98268.0" 98268.0
+"clflush (final sfence) 16 writes on same cache line in ticks", "test_cache_behavior_6", "size 48KB", "206454.0" 206454.0
+"clflush (final sfence) 9 writes on same cache line in ticks", "test_cache_behavior_6", "size 48KB", "44686.0" 44686.0
+"clflush+sfence ticks for 4 writes on same cache line in ticks", "test_cache_behavior_6", "size 48KB", "1738.0" 1738.0
