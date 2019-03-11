@@ -95,7 +95,6 @@
 			"run stride 62": { "pagecount": 4, "runs": 100, "time": 833.880000},
 			"run stride 63": { "pagecount": 4, "runs": 100, "time": 730.900000},
 			"summary": { "min": { "time": 614.120000, "stride": 50 }, "max": { "time": 889.940000, "stride": 24 } }
-			}
 		},
 		"test_cache_behavior_3":{ "ticks per nop (over 1 billion)": 2.998452},
 		"test_cache_behavior_4":{ "results": ""},
@@ -1294,4 +1293,5 @@
 		},
 	"backing file": "/mnt/pmem1/fsgeek-test.dat",
 	"number of runs": 10
+}
 }

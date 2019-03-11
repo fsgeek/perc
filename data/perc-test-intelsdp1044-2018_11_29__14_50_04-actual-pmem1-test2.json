@@ -1,0 +1,30 @@
+"initialize all blocks", "test_cache_behavior_2", "size 24KB", "{u'runs': 100, u'time': 4162.62, u'pagecount': 6}" {u'runs': 100, u'time': 4162.62, u'pagecount': 6}
+"initialize all blocks", "test_cache_behavior_2", "size 256KB", "{u'runs': 100, u'time': 73050.62, u'pagecount': 64}" {u'runs': 100, u'time': 73050.62, u'pagecount': 64}
+"initialize all blocks", "test_cache_behavior_2", "size 48KB", "{u'runs': 100, u'time': 8635.18, u'pagecount': 12}" {u'runs': 100, u'time': 8635.18, u'pagecount': 12}
+"initialize all blocks", "test_cache_behavior_2", "size 32KB", "{u'runs': 100, u'time': 4929.26, u'pagecount': 8}" {u'runs': 100, u'time': 4929.26, u'pagecount': 8}
+"initialize all blocks", "test_cache_behavior_2", "size 128KB", "{u'runs': 100, u'time': 34909.9, u'pagecount': 32}" {u'runs': 100, u'time': 34909.9, u'pagecount': 32}
+"initialize all blocks", "test_cache_behavior_2", "size 64KB", "{u'runs': 100, u'time': 14757.72, u'pagecount': 16}" {u'runs': 100, u'time': 14757.72, u'pagecount': 16}
+"run two cache lines with fence at end", "test_cache_behavior_2", "size 24KB", "{u'runs': 100, u'time': 820.24, u'pagecount': 6}" {u'runs': 100, u'time': 820.24, u'pagecount': 6}
+"run two cache lines with fence at end", "test_cache_behavior_2", "size 256KB", "{u'runs': 100, u'time': 2502.02, u'pagecount': 64}" {u'runs': 100, u'time': 2502.02, u'pagecount': 64}
+"run two cache lines with fence at end", "test_cache_behavior_2", "size 48KB", "{u'runs': 100, u'time': 912.46, u'pagecount': 12}" {u'runs': 100, u'time': 912.46, u'pagecount': 12}
+"run two cache lines with fence at end", "test_cache_behavior_2", "size 32KB", "{u'runs': 100, u'time': 797.98, u'pagecount': 8}" {u'runs': 100, u'time': 797.98, u'pagecount': 8}
+"run two cache lines with fence at end", "test_cache_behavior_2", "size 128KB", "{u'runs': 100, u'time': 1601.56, u'pagecount': 32}" {u'runs': 100, u'time': 1601.56, u'pagecount': 32}
+"run two cache lines with fence at end", "test_cache_behavior_2", "size 64KB", "{u'runs': 100, u'time': 1088.96, u'pagecount': 16}" {u'runs': 100, u'time': 1088.96, u'pagecount': 16}
+"run eight cache lines with fence at end", "test_cache_behavior_2", "size 24KB", "{u'runs': 100, u'time': 924.04, u'pagecount': 6}" {u'runs': 100, u'time': 924.04, u'pagecount': 6}
+"run eight cache lines with fence at end", "test_cache_behavior_2", "size 256KB", "{u'runs': 100, u'time': 3324.76, u'pagecount': 64}" {u'runs': 100, u'time': 3324.76, u'pagecount': 64}
+"run eight cache lines with fence at end", "test_cache_behavior_2", "size 48KB", "{u'runs': 100, u'time': 1187.2, u'pagecount': 12}" {u'runs': 100, u'time': 1187.2, u'pagecount': 12}
+"run eight cache lines with fence at end", "test_cache_behavior_2", "size 32KB", "{u'runs': 100, u'time': 898.3, u'pagecount': 8}" {u'runs': 100, u'time': 898.3, u'pagecount': 8}
+"run eight cache lines with fence at end", "test_cache_behavior_2", "size 128KB", "{u'runs': 100, u'time': 2131.38, u'pagecount': 32}" {u'runs': 100, u'time': 2131.38, u'pagecount': 32}
+"run eight cache lines with fence at end", "test_cache_behavior_2", "size 64KB", "{u'runs': 100, u'time': 1346.02, u'pagecount': 16}" {u'runs': 100, u'time': 1346.02, u'pagecount': 16}
+"run four cache lines with fence at end", "test_cache_behavior_2", "size 24KB", "{u'runs': 100, u'time': 949.1, u'pagecount': 6}" {u'runs': 100, u'time': 949.1, u'pagecount': 6}
+"run four cache lines with fence at end", "test_cache_behavior_2", "size 256KB", "{u'runs': 100, u'time': 2985.6, u'pagecount': 64}" {u'runs': 100, u'time': 2985.6, u'pagecount': 64}
+"run four cache lines with fence at end", "test_cache_behavior_2", "size 48KB", "{u'runs': 100, u'time': 1082.94, u'pagecount': 12}" {u'runs': 100, u'time': 1082.94, u'pagecount': 12}
+"run four cache lines with fence at end", "test_cache_behavior_2", "size 32KB", "{u'runs': 100, u'time': 838.66, u'pagecount': 8}" {u'runs': 100, u'time': 838.66, u'pagecount': 8}
+"run four cache lines with fence at end", "test_cache_behavior_2", "size 128KB", "{u'runs': 100, u'time': 1839.9, u'pagecount': 32}" {u'runs': 100, u'time': 1839.9, u'pagecount': 32}
+"run four cache lines with fence at end", "test_cache_behavior_2", "size 64KB", "{u'runs': 100, u'time': 1254.22, u'pagecount': 16}" {u'runs': 100, u'time': 1254.22, u'pagecount': 16}
+"run one cache line with fence at end", "test_cache_behavior_2", "size 24KB", "{u'runs': 100, u'time': 816.58, u'pagecount': 6}" {u'runs': 100, u'time': 816.58, u'pagecount': 6}
+"run one cache line with fence at end", "test_cache_behavior_2", "size 256KB", "{u'runs': 100, u'time': 2383.2, u'pagecount': 64}" {u'runs': 100, u'time': 2383.2, u'pagecount': 64}
+"run one cache line with fence at end", "test_cache_behavior_2", "size 48KB", "{u'runs': 100, u'time': 877.3, u'pagecount': 12}" {u'runs': 100, u'time': 877.3, u'pagecount': 12}
+"run one cache line with fence at end", "test_cache_behavior_2", "size 32KB", "{u'runs': 100, u'time': 783.96, u'pagecount': 8}" {u'runs': 100, u'time': 783.96, u'pagecount': 8}
+"run one cache line with fence at end", "test_cache_behavior_2", "size 128KB", "{u'runs': 100, u'time': 1700.72, u'pagecount': 32}" {u'runs': 100, u'time': 1700.72, u'pagecount': 32}
+"run one cache line with fence at end", "test_cache_behavior_2", "size 64KB", "{u'runs': 100, u'time': 889.4, u'pagecount': 16}" {u'runs': 100, u'time': 889.4, u'pagecount': 16}

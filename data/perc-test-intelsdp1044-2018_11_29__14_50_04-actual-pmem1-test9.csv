@@ -1,0 +1,385 @@
+Page Count	Test	cache	Time (100 Runs)
+6	clwb, nofence	different cache set	7510
+6	clwb, nofence	same cache set	7818
+6	clwb, nofence	different cache set	7510
+6	clwb, nofence	same cache set	7818
+6	clflushopt, nofence	different cache set	7528
+6	clflushopt, nofence	same cache set	7488
+6	clflushopt, nofence	different cache set	7528
+6	clflushopt, nofence	same cache set	7488
+6	clwb, sfence end	different cache set	9138
+6	clwb, sfence end	same cache set	9004
+6	clwb, sfence end	different cache set	9138
+6	clwb, sfence end	same cache set	9004
+6	clflush, sfence end	different cache set	9044
+6	clflush, sfence end	same cache set	9112
+6	clflush, sfence end	different cache set	9044
+6	clflush, sfence end	same cache set	9112
+6	clflushopt, sfence end	different cache set	9024
+6	clflushopt, sfence end	same cache set	9040
+6	clflushopt, sfence end	different cache set	9024
+6	clflushopt, sfence end	same cache set	9040
+6	noflush, nofence	different cache set	7524
+6	noflush, nofence	same cache set	7558
+6	noflush, nofence	different cache set	7524
+6	noflush, nofence	same cache set	7558
+6	noflush, sfence end	different cache set	9142
+6	noflush, sfence end	same cache set	9232
+6	noflush, sfence end	different cache set	9142
+6	noflush, sfence end	same cache set	9232
+6	clflush, nofence	different cache set	7548
+6	clflush, nofence	same cache set	7552
+6	clflush, nofence	different cache set	7548
+6	clflush, nofence	same cache set	7552
+6	clwb, nofence	different cache set	7510
+6	clwb, nofence	same cache set	7818
+6	clwb, nofence	different cache set	7510
+6	clwb, nofence	same cache set	7818
+6	clflushopt, nofence	different cache set	7528
+6	clflushopt, nofence	same cache set	7488
+6	clflushopt, nofence	different cache set	7528
+6	clflushopt, nofence	same cache set	7488
+6	clwb, sfence end	different cache set	9138
+6	clwb, sfence end	same cache set	9004
+6	clwb, sfence end	different cache set	9138
+6	clwb, sfence end	same cache set	9004
+6	clflush, sfence end	different cache set	9044
+6	clflush, sfence end	same cache set	9112
+6	clflush, sfence end	different cache set	9044
+6	clflush, sfence end	same cache set	9112
+6	clflushopt, sfence end	different cache set	9024
+6	clflushopt, sfence end	same cache set	9040
+6	clflushopt, sfence end	different cache set	9024
+6	clflushopt, sfence end	same cache set	9040
+6	noflush, nofence	different cache set	7524
+6	noflush, nofence	same cache set	7558
+6	noflush, nofence	different cache set	7524
+6	noflush, nofence	same cache set	7558
+6	noflush, sfence end	different cache set	9142
+6	noflush, sfence end	same cache set	9232
+6	noflush, sfence end	different cache set	9142
+6	noflush, sfence end	same cache set	9232
+6	clflush, nofence	different cache set	7548
+6	clflush, nofence	same cache set	7552
+6	clflush, nofence	different cache set	7548
+6	clflush, nofence	same cache set	7552
+64	clwb, nofence	different cache set	97054
+64	clwb, nofence	same cache set	96232
+64	clwb, nofence	different cache set	97054
+64	clwb, nofence	same cache set	96232
+64	clflushopt, nofence	different cache set	99772
+64	clflushopt, nofence	same cache set	99318
+64	clflushopt, nofence	different cache set	99772
+64	clflushopt, nofence	same cache set	99318
+64	clwb, sfence end	different cache set	97584
+64	clwb, sfence end	same cache set	99378
+64	clwb, sfence end	different cache set	97584
+64	clwb, sfence end	same cache set	99378
+64	clflush, sfence end	different cache set	101090
+64	clflush, sfence end	same cache set	100348
+64	clflush, sfence end	different cache set	101090
+64	clflush, sfence end	same cache set	100348
+64	clflushopt, sfence end	different cache set	100188
+64	clflushopt, sfence end	same cache set	96638
+64	clflushopt, sfence end	different cache set	100188
+64	clflushopt, sfence end	same cache set	96638
+64	noflush, nofence	different cache set	94872
+64	noflush, nofence	same cache set	94920
+64	noflush, nofence	different cache set	94872
+64	noflush, nofence	same cache set	94920
+64	noflush, sfence end	different cache set	97030
+64	noflush, sfence end	same cache set	96776
+64	noflush, sfence end	different cache set	97030
+64	noflush, sfence end	same cache set	96776
+64	clflush, nofence	different cache set	99406
+64	clflush, nofence	same cache set	103604
+64	clflush, nofence	different cache set	99406
+64	clflush, nofence	same cache set	103604
+64	clwb, nofence	different cache set	97054
+64	clwb, nofence	same cache set	96232
+64	clwb, nofence	different cache set	97054
+64	clwb, nofence	same cache set	96232
+64	clflushopt, nofence	different cache set	99772
+64	clflushopt, nofence	same cache set	99318
+64	clflushopt, nofence	different cache set	99772
+64	clflushopt, nofence	same cache set	99318
+64	clwb, sfence end	different cache set	97584
+64	clwb, sfence end	same cache set	99378
+64	clwb, sfence end	different cache set	97584
+64	clwb, sfence end	same cache set	99378
+64	clflush, sfence end	different cache set	101090
+64	clflush, sfence end	same cache set	100348
+64	clflush, sfence end	different cache set	101090
+64	clflush, sfence end	same cache set	100348
+64	clflushopt, sfence end	different cache set	100188
+64	clflushopt, sfence end	same cache set	96638
+64	clflushopt, sfence end	different cache set	100188
+64	clflushopt, sfence end	same cache set	96638
+64	noflush, nofence	different cache set	94872
+64	noflush, nofence	same cache set	94920
+64	noflush, nofence	different cache set	94872
+64	noflush, nofence	same cache set	94920
+64	noflush, sfence end	different cache set	97030
+64	noflush, sfence end	same cache set	96776
+64	noflush, sfence end	different cache set	97030
+64	noflush, sfence end	same cache set	96776
+64	clflush, nofence	different cache set	99406
+64	clflush, nofence	same cache set	103604
+64	clflush, nofence	different cache set	99406
+64	clflush, nofence	same cache set	103604
+12	clwb, nofence	different cache set	16432
+12	clwb, nofence	same cache set	16432
+12	clwb, nofence	different cache set	16432
+12	clwb, nofence	same cache set	16432
+12	clflushopt, nofence	different cache set	17004
+12	clflushopt, nofence	same cache set	16794
+12	clflushopt, nofence	different cache set	17004
+12	clflushopt, nofence	same cache set	16794
+12	clwb, sfence end	different cache set	18022
+12	clwb, sfence end	same cache set	17944
+12	clwb, sfence end	different cache set	18022
+12	clwb, sfence end	same cache set	17944
+12	clflush, sfence end	different cache set	18612
+12	clflush, sfence end	same cache set	18416
+12	clflush, sfence end	different cache set	18612
+12	clflush, sfence end	same cache set	18416
+12	clflushopt, sfence end	different cache set	17994
+12	clflushopt, sfence end	same cache set	17938
+12	clflushopt, sfence end	different cache set	17994
+12	clflushopt, sfence end	same cache set	17938
+12	noflush, nofence	different cache set	16440
+12	noflush, nofence	same cache set	16366
+12	noflush, nofence	different cache set	16440
+12	noflush, nofence	same cache set	16366
+12	noflush, sfence end	different cache set	18062
+12	noflush, sfence end	same cache set	18092
+12	noflush, sfence end	different cache set	18062
+12	noflush, sfence end	same cache set	18092
+12	clflush, nofence	different cache set	16836
+12	clflush, nofence	same cache set	20244
+12	clflush, nofence	different cache set	16836
+12	clflush, nofence	same cache set	20244
+12	clwb, nofence	different cache set	16432
+12	clwb, nofence	same cache set	16432
+12	clwb, nofence	different cache set	16432
+12	clwb, nofence	same cache set	16432
+12	clflushopt, nofence	different cache set	17004
+12	clflushopt, nofence	same cache set	16794
+12	clflushopt, nofence	different cache set	17004
+12	clflushopt, nofence	same cache set	16794
+12	clwb, sfence end	different cache set	18022
+12	clwb, sfence end	same cache set	17944
+12	clwb, sfence end	different cache set	18022
+12	clwb, sfence end	same cache set	17944
+12	clflush, sfence end	different cache set	18612
+12	clflush, sfence end	same cache set	18416
+12	clflush, sfence end	different cache set	18612
+12	clflush, sfence end	same cache set	18416
+12	clflushopt, sfence end	different cache set	17994
+12	clflushopt, sfence end	same cache set	17938
+12	clflushopt, sfence end	different cache set	17994
+12	clflushopt, sfence end	same cache set	17938
+12	noflush, nofence	different cache set	16440
+12	noflush, nofence	same cache set	16366
+12	noflush, nofence	different cache set	16440
+12	noflush, nofence	same cache set	16366
+12	noflush, sfence end	different cache set	18062
+12	noflush, sfence end	same cache set	18092
+12	noflush, sfence end	different cache set	18062
+12	noflush, sfence end	same cache set	18092
+12	clflush, nofence	different cache set	16836
+12	clflush, nofence	same cache set	20244
+12	clflush, nofence	different cache set	16836
+12	clflush, nofence	same cache set	20244
+8	clwb, nofence	different cache set	10790
+8	clwb, nofence	same cache set	10554
+8	clwb, nofence	different cache set	10790
+8	clwb, nofence	same cache set	10554
+8	clflushopt, nofence	different cache set	10654
+8	clflushopt, nofence	same cache set	10570
+8	clflushopt, nofence	different cache set	10654
+8	clflushopt, nofence	same cache set	10570
+8	clwb, sfence end	different cache set	12244
+8	clwb, sfence end	same cache set	12198
+8	clwb, sfence end	different cache set	12244
+8	clwb, sfence end	same cache set	12198
+8	clflush, sfence end	different cache set	12386
+8	clflush, sfence end	same cache set	12102
+8	clflush, sfence end	different cache set	12386
+8	clflush, sfence end	same cache set	12102
+8	clflushopt, sfence end	different cache set	12140
+8	clflushopt, sfence end	same cache set	12162
+8	clflushopt, sfence end	different cache set	12140
+8	clflushopt, sfence end	same cache set	12162
+8	noflush, nofence	different cache set	10616
+8	noflush, nofence	same cache set	10500
+8	noflush, nofence	different cache set	10616
+8	noflush, nofence	same cache set	10500
+8	noflush, sfence end	different cache set	12250
+8	noflush, sfence end	same cache set	12124
+8	noflush, sfence end	different cache set	12250
+8	noflush, sfence end	same cache set	12124
+8	clflush, nofence	different cache set	10584
+8	clflush, nofence	same cache set	10448
+8	clflush, nofence	different cache set	10584
+8	clflush, nofence	same cache set	10448
+8	clwb, nofence	different cache set	10790
+8	clwb, nofence	same cache set	10554
+8	clwb, nofence	different cache set	10790
+8	clwb, nofence	same cache set	10554
+8	clflushopt, nofence	different cache set	10654
+8	clflushopt, nofence	same cache set	10570
+8	clflushopt, nofence	different cache set	10654
+8	clflushopt, nofence	same cache set	10570
+8	clwb, sfence end	different cache set	12244
+8	clwb, sfence end	same cache set	12198
+8	clwb, sfence end	different cache set	12244
+8	clwb, sfence end	same cache set	12198
+8	clflush, sfence end	different cache set	12386
+8	clflush, sfence end	same cache set	12102
+8	clflush, sfence end	different cache set	12386
+8	clflush, sfence end	same cache set	12102
+8	clflushopt, sfence end	different cache set	12140
+8	clflushopt, sfence end	same cache set	12162
+8	clflushopt, sfence end	different cache set	12140
+8	clflushopt, sfence end	same cache set	12162
+8	noflush, nofence	different cache set	10616
+8	noflush, nofence	same cache set	10500
+8	noflush, nofence	different cache set	10616
+8	noflush, nofence	same cache set	10500
+8	noflush, sfence end	different cache set	12250
+8	noflush, sfence end	same cache set	12124
+8	noflush, sfence end	different cache set	12250
+8	noflush, sfence end	same cache set	12124
+8	clflush, nofence	different cache set	10584
+8	clflush, nofence	same cache set	10448
+8	clflush, nofence	different cache set	10584
+8	clflush, nofence	same cache set	10448
+32	clwb, nofence	different cache set	47604
+32	clwb, nofence	same cache set	46940
+32	clwb, nofence	different cache set	47604
+32	clwb, nofence	same cache set	46940
+32	clflushopt, nofence	different cache set	49458
+32	clflushopt, nofence	same cache set	49142
+32	clflushopt, nofence	different cache set	49458
+32	clflushopt, nofence	same cache set	49142
+32	clwb, sfence end	different cache set	49040
+32	clwb, sfence end	same cache set	48240
+32	clwb, sfence end	different cache set	49040
+32	clwb, sfence end	same cache set	48240
+32	clflush, sfence end	different cache set	50864
+32	clflush, sfence end	same cache set	50164
+32	clflush, sfence end	different cache set	50864
+32	clflush, sfence end	same cache set	50164
+32	clflushopt, sfence end	different cache set	48856
+32	clflushopt, sfence end	same cache set	48374
+32	clflushopt, sfence end	different cache set	48856
+32	clflushopt, sfence end	same cache set	48374
+32	noflush, nofence	different cache set	47038
+32	noflush, nofence	same cache set	46748
+32	noflush, nofence	different cache set	47038
+32	noflush, nofence	same cache set	46748
+32	noflush, sfence end	different cache set	49004
+32	noflush, sfence end	same cache set	48632
+32	noflush, sfence end	different cache set	49004
+32	noflush, sfence end	same cache set	48632
+32	clflush, nofence	different cache set	49460
+32	clflush, nofence	same cache set	52560
+32	clflush, nofence	different cache set	49460
+32	clflush, nofence	same cache set	52560
+32	clwb, nofence	different cache set	47604
+32	clwb, nofence	same cache set	46940
+32	clwb, nofence	different cache set	47604
+32	clwb, nofence	same cache set	46940
+32	clflushopt, nofence	different cache set	49458
+32	clflushopt, nofence	same cache set	49142
+32	clflushopt, nofence	different cache set	49458
+32	clflushopt, nofence	same cache set	49142
+32	clwb, sfence end	different cache set	49040
+32	clwb, sfence end	same cache set	48240
+32	clwb, sfence end	different cache set	49040
+32	clwb, sfence end	same cache set	48240
+32	clflush, sfence end	different cache set	50864
+32	clflush, sfence end	same cache set	50164
+32	clflush, sfence end	different cache set	50864
+32	clflush, sfence end	same cache set	50164
+32	clflushopt, sfence end	different cache set	48856
+32	clflushopt, sfence end	same cache set	48374
+32	clflushopt, sfence end	different cache set	48856
+32	clflushopt, sfence end	same cache set	48374
+32	noflush, nofence	different cache set	47038
+32	noflush, nofence	same cache set	46748
+32	noflush, nofence	different cache set	47038
+32	noflush, nofence	same cache set	46748
+32	noflush, sfence end	different cache set	49004
+32	noflush, sfence end	same cache set	48632
+32	noflush, sfence end	different cache set	49004
+32	noflush, sfence end	same cache set	48632
+32	clflush, nofence	different cache set	49460
+32	clflush, nofence	same cache set	52560
+32	clflush, nofence	different cache set	49460
+32	clflush, nofence	same cache set	52560
+16	clwb, nofence	different cache set	22526
+16	clwb, nofence	same cache set	22450
+16	clwb, nofence	different cache set	22526
+16	clwb, nofence	same cache set	22450
+16	clflushopt, nofence	different cache set	23398
+16	clflushopt, nofence	same cache set	23336
+16	clflushopt, nofence	different cache set	23398
+16	clflushopt, nofence	same cache set	23336
+16	clwb, sfence end	different cache set	23990
+16	clwb, sfence end	same cache set	23884
+16	clwb, sfence end	different cache set	23990
+16	clwb, sfence end	same cache set	23884
+16	clflush, sfence end	different cache set	24880
+16	clflush, sfence end	same cache set	24732
+16	clflush, sfence end	different cache set	24880
+16	clflush, sfence end	same cache set	24732
+16	clflushopt, sfence end	different cache set	24058
+16	clflushopt, sfence end	same cache set	24022
+16	clflushopt, sfence end	different cache set	24058
+16	clflushopt, sfence end	same cache set	24022
+16	noflush, nofence	different cache set	22450
+16	noflush, nofence	same cache set	22440
+16	noflush, nofence	different cache set	22450
+16	noflush, nofence	same cache set	22440
+16	noflush, sfence end	different cache set	23982
+16	noflush, sfence end	same cache set	24100
+16	noflush, sfence end	different cache set	23982
+16	noflush, sfence end	same cache set	24100
+16	clflush, nofence	different cache set	23082
+16	clflush, nofence	same cache set	22974
+16	clflush, nofence	different cache set	23082
+16	clflush, nofence	same cache set	22974
+16	clwb, nofence	different cache set	22526
+16	clwb, nofence	same cache set	22450
+16	clwb, nofence	different cache set	22526
+16	clwb, nofence	same cache set	22450
+16	clflushopt, nofence	different cache set	23398
+16	clflushopt, nofence	same cache set	23336
+16	clflushopt, nofence	different cache set	23398
+16	clflushopt, nofence	same cache set	23336
+16	clwb, sfence end	different cache set	23990
+16	clwb, sfence end	same cache set	23884
+16	clwb, sfence end	different cache set	23990
+16	clwb, sfence end	same cache set	23884
+16	clflush, sfence end	different cache set	24880
+16	clflush, sfence end	same cache set	24732
+16	clflush, sfence end	different cache set	24880
+16	clflush, sfence end	same cache set	24732
+16	clflushopt, sfence end	different cache set	24058
+16	clflushopt, sfence end	same cache set	24022
+16	clflushopt, sfence end	different cache set	24058
+16	clflushopt, sfence end	same cache set	24022
+16	noflush, nofence	different cache set	22450
+16	noflush, nofence	same cache set	22440
+16	noflush, nofence	different cache set	22450
+16	noflush, nofence	same cache set	22440
+16	noflush, sfence end	different cache set	23982
+16	noflush, sfence end	same cache set	24100
+16	noflush, sfence end	different cache set	23982
+16	noflush, sfence end	same cache set	24100
+16	clflush, nofence	different cache set	23082
+16	clflush, nofence	same cache set	22974
+16	clflush, nofence	different cache set	23082
+16	clflush, nofence	same cache set	22974

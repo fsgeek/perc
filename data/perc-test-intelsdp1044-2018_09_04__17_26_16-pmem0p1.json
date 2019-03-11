@@ -22,8 +22,6 @@
 			"walk list + clflush after each write": {"pagecount": 4,"runs": 100,"time": 799.040000},
 			"walk list + sfence after each write": {"pagecount": 4,"runs": 100,"time": 40.860000},
 			"walk list + sfence after each run": {"pagecount": 4,"runs": 100,"time": 19.140000}
-			}
-
 ,
 		"test_cache_behavior_2":{
 			"initialize all blocks": { "pagecount": 4, "runs": 100, "time": 1872.340000},
