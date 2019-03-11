@@ -131,6 +131,7 @@ typedef struct alloc_block {
     size_t  bitset_length;
     size_t  cpu_index_hint[128]; // per CPU hint
     unsigned file_name_length;
+    unsigned long long *ReserveBitset; // used for tracking reservations
     char file_name[1];
 } *alloc_block_t;
 
@@ -543,30 +544,34 @@ static alloc_block_t open_alloc_map(const char *nvm_path, size_t unit_size)
     unsigned bitset_length= 0;
     uintptr_t offset = 0;
     unsigned index;
-
+    uintptr_t bs = 0;
     memfd = open(nvm_path, O_RDWR);
     assert(memfd >= 0);
+    code = fstat(memfd, &st);
+    assert(0 <= code);
+    bitset_length = st.st_size / (8 * sizeof(unsigned long long) * unit_size);
 
-    len = read(memfd, buf, sizeof(buf));
+    len = read(memfd, buf, sizeof(buf)); // read the block header from the file
     assert(len >= sizeof(struct nvm_block_header));
 
     bh = (nvm_block_header_t) buf;
-    len = (sizeof(struct alloc_block) + strlen(nvm_path) + 8) & ~7;
-    ab = (alloc_block_t) malloc(len);
+    len = (sizeof(struct alloc_block) + bitset_length + strlen(nvm_path) + 8) & ~7;
+    ab = (alloc_block_t) malloc(len); // ephemeral state
     assert(NULL != ab);
+    bs = (uintptr_t)ab;
+    bs += len; // end of allocated range
+    bs -= bitset_length; // less the bitset length
+    bs &= ~7; // rounded down to the nearest 8 byte boundary.
+    ab->ReserveBitset = (unsigned long long *)bs;
+    memset(ab->ReserveBitset, 0, bitset_length); 
 
     ab->next = ab;
     ab->prev = ab;
     ab->base_addr = NULL;
-    ab->length = 0;
-    uuid_copy(ab->Uuid, bh->Uuid);
-    ab->unit_size = bh->unit_size;
-    
-    code = fstat(memfd, &st);
-    assert(0 <= code);
     ab->length = st.st_size;
     assert(0 == (ab->length % LARGE_PAGE_SIZE));
-    bitset_length = ab->length / (8 * sizeof(unsigned long long) * ab->unit_size);
+    uuid_copy(ab->Uuid, bh->Uuid);
+    ab->unit_size = bh->unit_size;
 
     ab->base_addr = mmap((void *)bh->map_address, ab->length, PROT_READ | PROT_WRITE, 
                         MAP_SHARED | MAP_HUGETLB | MAP_HUGE_2MB, memfd, 0);

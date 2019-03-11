@@ -17,7 +17,7 @@ LDADD += -ldl
 LDADD += -luuid
 LDADD += -lrt
 
-testkiss_CPPFLAGS  = $(AM_CPPFLAGS)
+testkiss_CPPFLAGS  = $(AM_CPPFLAGS) -NDEBUG
 testkiss_CPPFLAGS += -I$(top_srcdir)/munit
 testkiss_CPPFLAGS += -I$(top_srcdir)/kiss
 
