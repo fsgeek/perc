@@ -730,7 +730,7 @@ static void test_cache_behavior_9(const unsigned pagecount, const unsigned runs,
 
     printf("\t\t\t\"pagecount\": %u,\n", pagecount);
     printf("\t\t\t\"runs\": %u\n", runs);
-    printf("\t\t}\n\t},\n");
+    printf("\t\t}");
 
 }
 
@@ -759,7 +759,7 @@ static void test_cache_behavior_8(const unsigned pagecount, const unsigned runs,
     }
     printf("\n\t\t\t\"pagecount\": %u,", pagecount);
     printf("\n\t\t\t\"runs\": %u", runs);
-    printf("\n\t\t\t}\n\t\t},\n");
+    printf("\n\t\t\t}");
 
 }
 
@@ -814,7 +814,7 @@ static void test_cache_behavior_7(const unsigned pagecount, const unsigned runs,
         printf( "%s: time to walk list: %f\n", __PRETTY_FUNCTION__, time);
     }
 #endif // 0
-    printf("\t\t\"%s\":{ \"results\": \"\"}\n\t},\n", __PRETTY_FUNCTION__);
+    printf("\t\t\"%s\":{ \"results\": \"\"}", __PRETTY_FUNCTION__);
 
 }
 
@@ -833,10 +833,10 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
     unsigned start, end;
     unsigned run;
  
-    printf("\t\t\"%s\":{\n", __PRETTY_FUNCTION__);
+    printf("\t\t\"%s\":{", __PRETTY_FUNCTION__);
     if (12 != pagecount) {
         // only need to test this one case.
-        printf("\t\t\t\"results\": \"\"\n\t\t\t}\n\t\t},\n");
+        printf(" \"results\": \"\"}");
         return;
     }
 
@@ -1309,7 +1309,7 @@ static void test_cache_behavior_6(const unsigned pagecount, const unsigned runs,
 
     printf("\n\t\t\t\"pagecount\": %u,", pagecount);
     printf("\n\t\t\t\"runs\": %u", runs);
-    printf("\n\t\t\t}\n\t\t},\n");
+    printf("\n\t\t\t}");
 
 
 }
@@ -1331,16 +1331,16 @@ static void test_cache_behavior_5(const unsigned pagecount, const unsigned runs,
     unsigned committed = 0;
     unsigned aborted = 0;
 
-    printf("\t\t\"%s\":{\n", __PRETTY_FUNCTION__);
+    printf("\t\t\"%s\":", __PRETTY_FUNCTION__);
 
     if (pagecount != 12) {
         // this is our magic number - ignore all others.
-        printf("\t\t\t\"results\": \"\"\n\t\t\t}\n\t\t},\n");
+        printf("{ \"results\": \"\"}");
         return;
     }
 
     if (0 == cpu_has_rtm()) { // no RTM, nothing to do
-        printf("\t\t\t\"results\": \"\"\n\t\t\t}\n\t\t},\n");
+        printf("{\"results\": \"\"}");
         return;
     }
 
@@ -1348,7 +1348,7 @@ static void test_cache_behavior_5(const unsigned pagecount, const unsigned runs,
     // Build a list of starting addresses.  Staggering is my attempt to foil the prefetcher
     //
     init_cache_test_memory(pagecount, memory);
-    printf("\t\t\t\"results\": {\n");
+    printf("\n\t\t\t{ \"results\": {\n");
     for (unsigned index = 2; index < pagecount; index++) {
         ttimer->time = 0;
         optimer->time = 0;
@@ -1388,7 +1388,7 @@ static void test_cache_behavior_5(const unsigned pagecount, const unsigned runs,
     printf("\n\t\t\t},");
     printf("\n\t\t\t\"pagecount\": %u,", pagecount);
     printf("\n\t\t\t\"runs\": %u", runs);
-    printf("\n\t\t\t}\n\t\t},\n");
+    printf("\n\t\t\t}\n\t\t}");
 
 }
 
@@ -1400,7 +1400,7 @@ static void test_cache_behavior_4(const unsigned pagecount, const unsigned runs,
     start = cpu_rdtsc();
     end = cpu_rdtsc();
     time = ((double)(end - start));
-    printf("\t\t\"%s\":{ \"results\": \"\"}\n\t},\n", __PRETTY_FUNCTION__);
+    printf("\t\t\"%s\":{ \"results\": \"\"}", __PRETTY_FUNCTION__);
 
 }
 
@@ -1411,7 +1411,7 @@ static void test_cache_behavior_3(const unsigned pagecount, const unsigned runs,
     static int done = 0;
 
     if (done) {
-        printf("\t\t\"%s\":{ \"ticks per nop (over 1 billion)\": %f}\n\t},\n", __PRETTY_FUNCTION__, time);
+        printf("\t\t\"%s\":{ \"ticks per nop (over 1 billion)\": %f}", __PRETTY_FUNCTION__, time);
         return;
     }
 
@@ -1422,7 +1422,7 @@ static void test_cache_behavior_3(const unsigned pagecount, const unsigned runs,
     end = cpu_rdtsc();
     time = ((double)(end - start));
     time /= (double)(1000 * 1000 * 1000);
-    printf("\t\t\"%s\":{ \"ticks per nop (over 1 billion)\": %f}\n\t},\n", __PRETTY_FUNCTION__, time);
+    printf("\t\t\"%s\":{ \"ticks per nop (over 1 billion)\": %f}", __PRETTY_FUNCTION__, time);
 
     done = 1;
 }
@@ -1619,7 +1619,7 @@ static void test_cache_behavior_2(const unsigned pagecount, const unsigned runs,
         LOG_RESULTS(pagecount, runs, time, buffer);
     }
 
-    printf("\t\t\t\"summary\": { \"min\": { \"time\": %f, \"stride\": %u }, \"max\": { \"time\": %f, \"stride\": %u } }\n\t\t\t}\n\t\t},\n", 
+    printf("\t\t\t\"summary\": { \"min\": { \"time\": %f, \"stride\": %u }, \"max\": { \"time\": %f, \"stride\": %u } }\n\t\t}", 
             min_time, min_index, max_time, max_index);
 
 }
@@ -1655,6 +1655,23 @@ static void test_cache_behavior_1(const unsigned pagecount, const unsigned runs,
 
     flush_cache();
 
+    time = 0.0;
+    start = cpu_rdtsc();
+    for (unsigned index = 0; index < runs; index++) {
+        r = (record_t *)memory;
+        do {
+            r = r->s.next;
+        } while(r != memory);
+    }
+    end = cpu_rdtsc();
+    time = ((double)(end - start)) / (double)runs;
+    printf("\t\t\t\"%s\": {", "walk list without update");
+    printf("\"pagecount\": %d,", pagecount);
+    printf("\"runs\": %d,", runs);
+    printf("\"time\": %f},\n", time);
+    // LOG_RESULTS(pagecount, runs, time, "walk list");
+
+    flush_cache();
     time = 0.0;
     start = cpu_rdtsc();
     for (unsigned index = 0; index < runs; index++) {
@@ -1779,7 +1796,7 @@ static void test_cache_behavior_1(const unsigned pagecount, const unsigned runs,
     // LOG_RESULTS(pagecount, runs, time, "walk list + sfence after each run");
     
     // close json
-    printf("\t\t\t}\n\t\t},\n");
+    printf("\t\t}");
 }
 
 static void test_nontemporal_behavior(const unsigned pagecount, const unsigned runs, void *memory)
@@ -1801,7 +1818,7 @@ static void test_nontemporal_behavior(const unsigned pagecount, const unsigned r
         }
     }
 
-    printf("\t\t\"%s\": {\"size\": %zu, \"ticks\": %lu}\n\t\t},\n", __PRETTY_FUNCTION__, size, time);
+    printf("\t\t\"%s\": {\"size\": %zu, \"ticks\": %lu}", __PRETTY_FUNCTION__, size, time);
     
     // printf( "\"non-temporal move\":");
     // printf( "{\"size\": %zu, \"time\": %lu}\n", size, time);
@@ -1858,10 +1875,15 @@ void test_cache_behavior(unsigned specific_test, const unsigned pagecount, int f
 
         memset(memory, 0, pagecount * pagesize);
 
+#if 0
         if ((((unsigned)~0) == specific_test) && (index > 0)) {
             printf(",\n");
         }
+#endif // 0
         cache_tests[index](pagecount, runs, memory);
+        if (NULL != cache_tests[index+1]) {
+            printf(",\n");
+        }
         if (munmap(memory, pagecount * pagesize) < 0) {
             perror("munmap");
             exit(-1);
@@ -1906,7 +1928,7 @@ int main(int argc, char **argv)
     cpu_cache_data_t *cd;
     char *daxmem = NULL;
     char *logfname = NULL;
-    static const unsigned samples[] = {4, 6, 8, 12, 16, 32, 64, /* 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536 */};
+    static const unsigned samples[] = { 4, 6, 8, 10, 12, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536};
     unsigned processor = 2;
     cpu_set_t cpuset;
     pthread_t self = pthread_self();
@@ -2104,6 +2126,10 @@ int main(int argc, char **argv)
             }
         }
         test_cache_behavior(test, samples[index], memfd);
+        if (index < sizeof(samples)/sizeof(samples[0])) {
+            printf(",");
+        }
+        printf("\n");
         if (NULL != daxmem) {
         }
         close(memfd);
@@ -2111,12 +2137,12 @@ int main(int argc, char **argv)
     }
 
     if (NULL != daxmem) {
-        printf( "\t\"backing file\": \"%s\",\n", daxmem);
+        printf( "\t\t\"backing file\": \"%s\",\n", daxmem);
     }
     else {
         printf("\t\"backing file\": \"anonymous\",\n");
     }
-    printf("\t\"number of runs\": %d\n\t}\n}\n", runs);
+    printf("\t\"number of runs\": %d\n}", runs);
 
 #if 0
     _mm_sfence();
