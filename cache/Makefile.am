@@ -2,7 +2,7 @@
 
 SUBDIRS = .
 
-AM_CFLAGS = -Werror -Wall -g3 -O0
+AM_CFLAGS = -Werror -Wall -O3
 
 cache_progs = perc_progs
 noinst_PROGRAMS = $(cache_progs)

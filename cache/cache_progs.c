@@ -1841,9 +1841,8 @@ cache_test_t cache_tests[] = {
     NULL,
 };
 
-void test_cache_behavior(unsigned specific_test, const unsigned pagecount, int fd)
+void test_cache_behavior(unsigned specific_test, const unsigned pagecount, int fd, const unsigned runs)
 {
-    const unsigned runs = 100;
     const size_t pagesize = sysconf(_SC_PAGESIZE);
     unsigned length = pagecount;
     unsigned start, end;
@@ -2125,7 +2124,7 @@ int main(int argc, char **argv)
                 // printf( "%s: fsync ticks for %dKB blocks is %f\n", __PRETTY_FUNCTION__, 4 * samples[index], time);
             }
         }
-        test_cache_behavior(test, samples[index], memfd);
+        test_cache_behavior(test, samples[index], memfd, runs);
         if (index < sizeof(samples)/sizeof(samples[0])) {
             printf(",");
         }
