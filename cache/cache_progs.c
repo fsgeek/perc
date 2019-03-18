@@ -1624,6 +1624,167 @@ static void test_cache_behavior_2(const unsigned pagecount, const unsigned runs,
 
 }
 
+static void test_cache_behavior_10(const unsigned pagecount, const unsigned runs, void *memory)
+{
+    unsigned start, end;
+    double time;
+    record_t *r = NULL;
+    assert(NULL != memory);
+
+    flush_cache();
+
+    printf("\t\t\"%s\":{\n", __PRETTY_FUNCTION__);
+
+    init_cache_test_memory_different_set(pagecount, memory);
+
+    flush_cache();
+
+    time = 0.0;
+    start = cpu_rdtsc();
+    for (unsigned index = 0; index < runs; index++) {
+        r = (record_t *)memory;
+        do {
+            r = r->s.next;
+        } while(r != memory);
+    }
+    end = cpu_rdtsc();
+    time = ((double)(end - start)) / (double)runs;
+    printf("\t\t\t\"%s\": {", "walk list without update");
+    printf("\"pagecount\": %d,", pagecount);
+    printf("\"runs\": %d,", runs);
+    printf("\"time\": %f},\n", time);
+    // LOG_RESULTS(pagecount, runs, time, "walk list");
+
+    flush_cache();
+    time = 0.0;
+    start = cpu_rdtsc();
+    for (unsigned index = 0; index < runs; index++) {
+        r = (record_t *)memory;
+        do {
+            r->s.counter++;
+            r = r->s.next;
+        } while(r != memory);
+    }
+    end = cpu_rdtsc();
+    time = ((double)(end - start)) / (double)runs;
+    printf("\t\t\t\"%s\": {", "walk list");
+    printf("\"pagecount\": %d,", pagecount);
+    printf("\"runs\": %d,", runs);
+    printf("\"time\": %f}\n", time);
+    // LOG_RESULTS(pagecount, runs, time, "walk list");
+
+#if 0
+    flush_cache();
+
+    time = 0.0;
+    start = cpu_rdtsc();
+    for (unsigned index = 0; index < runs; index++) {
+        r = (record_t *)memory;
+        do {
+            cpu_prefetch_l1(r->s.next);
+            r->s.counter++;
+            r = r->s.next;
+        } while(r != memory);
+    }
+    end = cpu_rdtsc();
+    time = ((double)(end - start)) / (double)runs;
+    printf("\t\t\t\"%s\": {", "walk list + prefetch next entry");
+    printf("\"pagecount\": %d,", pagecount);
+    printf("\"runs\": %d,", runs);
+    printf("\"time\": %f},\n", time);
+    // LOG_RESULTS(pagecount, runs, time, "walk list + prefetch next entry");
+    flush_cache();
+
+    //
+    time = 0.0;
+    start = cpu_rdtsc();
+    for (unsigned index = 0; index < runs; index++) {
+        r = (record_t *)memory;
+        do {
+            record_t *n = r->s.next;
+            cpu_prefetch_l1(n);
+            r->s.counter++;
+            cpu_clflush(r);
+            r = n;
+        } while(r != memory);
+    }
+    end = cpu_rdtsc();
+    time = ((double)(end - start)) / (double)runs;
+    printf("\t\t\t\"%s\": {", "walk list + prefetch next entry + clflush after each write");
+    printf("\"pagecount\": %d,", pagecount);
+    printf("\"runs\": %d,", runs);
+    printf("\"time\": %f},\n", time);
+    // LOG_RESULTS(pagecount, runs, time, "walk list + prefetch next entry + clflush after each write");
+    flush_cache();
+
+    //
+    time = 0.0;
+    start = cpu_rdtsc();
+    for (unsigned index = 0; index < runs; index++) {
+        r = (record_t *)memory;
+        do {
+            record_t *n = r->s.next;
+            r->s.counter++;
+            cpu_clflush(r);
+            r = n;
+        } while(r != memory);
+    }
+    end = cpu_rdtsc();
+    time = ((double)(end - start)) / (double)runs;
+    printf("\t\t\t\"%s\": {", "walk list + clflush after each write");
+    printf("\"pagecount\": %d,", pagecount);
+    printf("\"runs\": %d,", runs);
+    printf("\"time\": %f},\n", time);
+    //LOG_RESULTS(pagecount, runs, time, "walk list + clflush after each write");
+
+    flush_cache();
+
+    //
+    time = 0.0;
+    start = cpu_rdtsc();
+    for (unsigned index = 0; index < runs; index++) {
+        r = (record_t *)memory;
+        do {
+            record_t *n = r->s.next;
+            r->s.counter++;
+            cpu_sfence();
+            r = n;
+        } while(r != memory);
+    }
+    end = cpu_rdtsc();
+    time = ((double)(end - start)) / (double)runs;
+    printf("\t\t\t\"%s\": {", "walk list + sfence after each write");
+    printf("\"pagecount\": %d,", pagecount);
+    printf("\"runs\": %d,", runs);
+    printf("\"time\": %f},\n", time);
+    // LOG_RESULTS(pagecount, runs, time, "walk list + sfence after each write");
+    flush_cache();
+
+    //
+    time = 0.0;
+    start = cpu_rdtsc();
+    for (unsigned index = 0; index < runs; index++) {
+        r = (record_t *)memory;
+        do {
+            record_t *n = r->s.next;
+            r->s.counter++;
+            r = n;
+        } while(r != memory);
+        cpu_sfence();
+    }
+    end = cpu_rdtsc();
+    time = ((double)(end - start)) / (double)runs;
+    printf("\t\t\t\"%s\": {", "walk list + sfence after each run");
+    printf("\"pagecount\": %d,", pagecount);
+    printf("\"runs\": %d,", runs);
+    printf("\"time\": %f}\n", time);
+    // LOG_RESULTS(pagecount, runs, time, "walk list + sfence after each run");
+#endif // 0
+
+    // close json
+    printf("\t\t}");
+}
+
 static void test_cache_behavior_1(const unsigned pagecount, const unsigned runs, void *memory)
 {
     unsigned start, end;
@@ -1799,6 +1960,7 @@ static void test_cache_behavior_1(const unsigned pagecount, const unsigned runs,
     printf("\t\t}");
 }
 
+
 static void test_nontemporal_behavior(const unsigned pagecount, const unsigned runs, void *memory)
 {
     size_t size = PAGE_SIZE * pagecount;
@@ -1828,6 +1990,7 @@ static void test_nontemporal_behavior(const unsigned pagecount, const unsigned r
 typedef void (*cache_test_t)(const unsigned pagecount, const unsigned runs, const void *memory);
 
 cache_test_t cache_tests[] = {
+#if 0
     (cache_test_t)test_cache_behavior_1,
     (cache_test_t)test_cache_behavior_2,
     (cache_test_t)test_cache_behavior_3,
@@ -1838,6 +2001,8 @@ cache_test_t cache_tests[] = {
     (cache_test_t)test_cache_behavior_8,
     (cache_test_t)test_cache_behavior_9,
     (cache_test_t)test_nontemporal_behavior, 
+#endif // 0
+    (cache_test_t)test_cache_behavior_10,
     NULL,
 };
 
@@ -1927,7 +2092,8 @@ int main(int argc, char **argv)
     cpu_cache_data_t *cd;
     char *daxmem = NULL;
     char *logfname = NULL;
-    static const unsigned samples[] = { 4, 6, 8, 10, 12, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536};
+    // static const unsigned samples[] = { 4, 6, 8, 10, 12, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536};
+    static const unsigned samples[] = { 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576};
     unsigned processor = 2;
     cpu_set_t cpuset;
     pthread_t self = pthread_self();

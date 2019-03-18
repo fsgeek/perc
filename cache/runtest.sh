@@ -57,8 +57,8 @@ echo "****** TEST RESULTS *****" >> $LOG_FILE
 #fi
 
 if [ -d "/mnt/pmem7" ]; then
-    echo "./perc_progs -d /mnt/pmem7/fsgeek-test.dat" >> $LOG_FILE 
-    ./perc_progs -d /mnt/pmem7/fsgeek-test.dat >> $BASE_FILE"-actual-pmem7.json" 2>&1
+    echo "./perc_progs -p 26 -d /mnt/pmem7/fsgeek-test.dat" >> $LOG_FILE 
+    ./perc_progs -p 26 -d /mnt/pmem7/fsgeek-test.dat >> $BASE_FILE"-actual-pmem7.json" 2>&1
 fi
 
 
