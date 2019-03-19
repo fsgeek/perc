@@ -1670,10 +1670,9 @@ static void test_cache_behavior_10(const unsigned pagecount, const unsigned runs
     printf("\t\t\t\"%s\": {", "walk list");
     printf("\"pagecount\": %d,", pagecount);
     printf("\"runs\": %d,", runs);
-    printf("\"time\": %f}\n", time);
+    printf("\"time\": %f},\n", time);
     // LOG_RESULTS(pagecount, runs, time, "walk list");
 
-#if 0
     flush_cache();
 
     time = 0.0;
@@ -1779,7 +1778,6 @@ static void test_cache_behavior_10(const unsigned pagecount, const unsigned runs
     printf("\"runs\": %d,", runs);
     printf("\"time\": %f}\n", time);
     // LOG_RESULTS(pagecount, runs, time, "walk list + sfence after each run");
-#endif // 0
 
     // close json
     printf("\t\t}");
