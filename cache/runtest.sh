@@ -39,7 +39,7 @@ fi
 echo "****** TEST RESULTS *****" >> $LOG_FILE
 
 #echo "./perc_progs" >> $LOG_FILE
-./perc_progs >> $BASE_FILE"-anonymous.json" 2>&1
+#./perc_progs >> $BASE_FILE"-anonymous.json" 2>&1
 
 #echo "./perc_progs -d /tmp/fsgeek-test.dat" >> $LOG_FILE
 #./perc_progs -d /tmp/fsgeek-test.dat >> $BASE_FILE"-tmp.json" 2>&1
@@ -51,14 +51,14 @@ echo "****** TEST RESULTS *****" >> $LOG_FILE
 #echo "./perc_progs -d" $target >> $LOG_FILE
 #./perc_progs -d $target >> $BASE_FILE"-cwd.json" 2>&1
 
-if [ -d "/mnt/pmem0" ]; then
-    echo "./perc_progs -d /mnt/pmem0/fsgeek-test.dat" >> $LOG_FILE 
-    ./perc_progs -d /mnt/pmem0/fsgeek-test.dat >> $BASE_FILE"-emulated-pmem0.json" 2>&1
-fi
+#if [ -d "/mnt/pmem0" ]; then
+#    echo "./perc_progs -d /mnt/pmem0/fsgeek-test.dat" >> $LOG_FILE 
+#    ./perc_progs -d /mnt/pmem0/fsgeek-test.dat >> $BASE_FILE"-emulated-pmem0.json" 2>&1
+#fi
 
-if [ -d "/mnt/pmem1" ]; then
-    echo "./perc_progs -d /mnt/pmem1/fsgeek-test.dat" >> $LOG_FILE 
-    ./perc_progs -d /mnt/pmem1/fsgeek-test.dat >> $BASE_FILE"-actual-pmem1.json" 2>&1
+if [ -d "/mnt/pmem7" ]; then
+    echo "./perc_progs -p 26 -d /mnt/pmem7/fsgeek-test.dat" >> $LOG_FILE 
+    ./perc_progs -p 26 -d /mnt/pmem7/fsgeek-test.dat >> $BASE_FILE"-actual-pmem7.json" 2>&1
 fi
 
 
