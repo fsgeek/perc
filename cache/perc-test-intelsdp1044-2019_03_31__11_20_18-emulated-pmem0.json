@@ -1,0 +1,456 @@
+{ "system description": {
+"processor": 2,
+"file backing memory": "/mnt/pmem0/fsgeek-test.dat",
+"RTM" : 1,
+"HLE" : 1,
+"CLFLUSHOPT": 1,
+"CLWB": 1,
+"cache line size": 64,
+"L1 cache size (KB)": 32,
+"L2 cache size (KB)": 1024,
+"L3 cache size (KB)": 33792,
+"cache info": " "},
+"backing file test": {
+	"size 8KB": {
+		"write time test": [101644.000000, 30076.000000, 29260.000000, 29112.000000, 29514.000000, 29614.000000, 30544.000000, 28758.000000, 45516.000000, 29574.000000],
+		"fsync time test": [321402.000000, 2148.000000, 810.000000, 786.000000, 786.000000, 788.000000, 780.000000, 786.000000, 786.000000, 776.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 2,"runs": 1,"time": 86.000000},
+			"walk list without update": {"pagecount": 2,"runs": 10,"time": 115.000000},
+			"walk list": {"pagecount": 2,"runs": 10,"time": 92.200000},
+			"walk list + prefetch next entry": {"pagecount": 2,"runs": 10,"time": 89.800000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 2,"runs": 10,"time": 412.000000},
+			"walk list + clflush after each write": {"pagecount": 2,"runs": 10,"time": 362.200000},
+			"walk list + sfence after each write": {"pagecount": 2,"runs": 10,"time": 122.200000},
+			"walk list + sfence after each run": {"pagecount": 2,"runs": 10,"time": 86.800000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 2,"runs": 10,"time": 77.600000},
+			"walk list": {"pagecount": 2,"runs": 10,"time": 89.200000},
+			"walk list + prefetch next entry": {"pagecount": 2,"runs": 10,"time": 24.200000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 2,"runs": 10,"time": 240.200000},
+			"walk list + clflush after each write": {"pagecount": 2,"runs": 10,"time": 465.400000},
+			"walk list + sfence after each write": {"pagecount": 2,"runs": 10,"time": 82.000000},
+			"walk list + sfence after each run": {"pagecount": 2,"runs": 10,"time": 59.000000}
+		},
+	"size 16KB": {
+		"write time test": [91794.000000, 59632.000000, 56908.000000, 55080.000000, 64516.000000, 56452.000000, 56066.000000, 56922.000000, 58738.000000, 57366.000000],
+		"fsync time test": [332100.000000, 1768.000000, 786.000000, 786.000000, 788.000000, 786.000000, 772.000000, 782.000000, 780.000000, 778.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 4,"runs": 1,"time": 74.000000},
+			"walk list without update": {"pagecount": 4,"runs": 10,"time": 60.200000},
+			"walk list": {"pagecount": 4,"runs": 10,"time": 86.400000},
+			"walk list + prefetch next entry": {"pagecount": 4,"runs": 10,"time": 45.000000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 4,"runs": 10,"time": 766.000000},
+			"walk list + clflush after each write": {"pagecount": 4,"runs": 10,"time": 695.400000},
+			"walk list + sfence after each write": {"pagecount": 4,"runs": 10,"time": 158.200000},
+			"walk list + sfence after each run": {"pagecount": 4,"runs": 10,"time": 89.800000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 4,"runs": 10,"time": 82.400000},
+			"walk list": {"pagecount": 4,"runs": 10,"time": 83.600000},
+			"walk list + prefetch next entry": {"pagecount": 4,"runs": 10,"time": 39.400000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 4,"runs": 10,"time": 630.400000},
+			"walk list + clflush after each write": {"pagecount": 4,"runs": 10,"time": 791.000000},
+			"walk list + sfence after each write": {"pagecount": 4,"runs": 10,"time": 106.000000},
+			"walk list + sfence after each run": {"pagecount": 4,"runs": 10,"time": 87.000000}
+		},
+	"size 32KB": {
+		"write time test": [129238.000000, 113286.000000, 117234.000000, 113498.000000, 115154.000000, 129248.000000, 114454.000000, 114238.000000, 115956.000000, 114126.000000],
+		"fsync time test": [320076.000000, 1444.000000, 788.000000, 788.000000, 778.000000, 784.000000, 782.000000, 788.000000, 780.000000, 790.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 8,"runs": 1,"time": 114.000000},
+			"walk list without update": {"pagecount": 8,"runs": 10,"time": 93.400000},
+			"walk list": {"pagecount": 8,"runs": 10,"time": 107.600000},
+			"walk list + prefetch next entry": {"pagecount": 8,"runs": 10,"time": 108.200000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 8,"runs": 10,"time": 1449.200000},
+			"walk list + clflush after each write": {"pagecount": 8,"runs": 10,"time": 1501.000000},
+			"walk list + sfence after each write": {"pagecount": 8,"runs": 10,"time": 255.200000},
+			"walk list + sfence after each run": {"pagecount": 8,"runs": 10,"time": 77.800000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 8,"runs": 10,"time": 90.400000},
+			"walk list": {"pagecount": 8,"runs": 10,"time": 101.400000},
+			"walk list + prefetch next entry": {"pagecount": 8,"runs": 10,"time": 89.000000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 8,"runs": 10,"time": 1510.000000},
+			"walk list + clflush after each write": {"pagecount": 8,"runs": 10,"time": 1483.400000},
+			"walk list + sfence after each write": {"pagecount": 8,"runs": 10,"time": 255.800000},
+			"walk list + sfence after each run": {"pagecount": 8,"runs": 10,"time": 98.600000}
+		},
+	"size 64KB": {
+		"write time test": [245786.000000, 231734.000000, 243410.000000, 231112.000000, 231494.000000, 227512.000000, 228950.000000, 227764.000000, 233186.000000, 229250.000000],
+		"fsync time test": [324774.000000, 1984.000000, 790.000000, 770.000000, 772.000000, 774.000000, 772.000000, 770.000000, 768.000000, 772.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 16,"runs": 1,"time": 192.000000},
+			"walk list without update": {"pagecount": 16,"runs": 10,"time": 161.400000},
+			"walk list": {"pagecount": 16,"runs": 10,"time": 267.400000},
+			"walk list + prefetch next entry": {"pagecount": 16,"runs": 10,"time": 261.800000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 16,"runs": 10,"time": 3129.600000},
+			"walk list + clflush after each write": {"pagecount": 16,"runs": 10,"time": 2972.000000},
+			"walk list + sfence after each write": {"pagecount": 16,"runs": 10,"time": 611.600000},
+			"walk list + sfence after each run": {"pagecount": 16,"runs": 10,"time": 245.600000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 16,"runs": 10,"time": 124.200000},
+			"walk list": {"pagecount": 16,"runs": 10,"time": 148.400000},
+			"walk list + prefetch next entry": {"pagecount": 16,"runs": 10,"time": 156.000000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 16,"runs": 10,"time": 2897.800000},
+			"walk list + clflush after each write": {"pagecount": 16,"runs": 10,"time": 3019.600000},
+			"walk list + sfence after each write": {"pagecount": 16,"runs": 10,"time": 440.400000},
+			"walk list + sfence after each run": {"pagecount": 16,"runs": 10,"time": 86.400000}
+		},
+	"size 128KB": {
+		"write time test": [475892.000000, 451328.000000, 451626.000000, 454232.000000, 468066.000000, 453986.000000, 454024.000000, 448812.000000, 450050.000000, 464698.000000],
+		"fsync time test": [324042.000000, 1760.000000, 776.000000, 770.000000, 758.000000, 764.000000, 764.000000, 770.000000, 770.000000, 774.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 32,"runs": 1,"time": 328.000000},
+			"walk list without update": {"pagecount": 32,"runs": 10,"time": 302.400000},
+			"walk list": {"pagecount": 32,"runs": 10,"time": 487.000000},
+			"walk list + prefetch next entry": {"pagecount": 32,"runs": 10,"time": 585.800000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 32,"runs": 10,"time": 6471.400000},
+			"walk list + clflush after each write": {"pagecount": 32,"runs": 10,"time": 6173.000000},
+			"walk list + sfence after each write": {"pagecount": 32,"runs": 10,"time": 1023.400000},
+			"walk list + sfence after each run": {"pagecount": 32,"runs": 10,"time": 491.800000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 32,"runs": 10,"time": 177.600000},
+			"walk list": {"pagecount": 32,"runs": 10,"time": 234.400000},
+			"walk list + prefetch next entry": {"pagecount": 32,"runs": 10,"time": 268.600000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 32,"runs": 10,"time": 5962.200000},
+			"walk list + clflush after each write": {"pagecount": 32,"runs": 10,"time": 6135.200000},
+			"walk list + sfence after each write": {"pagecount": 32,"runs": 10,"time": 979.600000},
+			"walk list + sfence after each run": {"pagecount": 32,"runs": 10,"time": 224.200000}
+		},
+	"size 256KB": {
+		"write time test": [959882.000000, 905428.000000, 917040.000000, 905424.000000, 912872.000000, 907838.000000, 902138.000000, 908042.000000, 912184.000000, 914104.000000],
+		"fsync time test": [442750.000000, 1772.000000, 768.000000, 760.000000, 766.000000, 762.000000, 770.000000, 762.000000, 770.000000, 790.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 64,"runs": 1,"time": 704.000000},
+			"walk list without update": {"pagecount": 64,"runs": 10,"time": 517.600000},
+			"walk list": {"pagecount": 64,"runs": 10,"time": 923.800000},
+			"walk list + prefetch next entry": {"pagecount": 64,"runs": 10,"time": 858.200000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 64,"runs": 10,"time": 13162.200000},
+			"walk list + clflush after each write": {"pagecount": 64,"runs": 10,"time": 13117.200000},
+			"walk list + sfence after each write": {"pagecount": 64,"runs": 10,"time": 2121.200000},
+			"walk list + sfence after each run": {"pagecount": 64,"runs": 10,"time": 916.000000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 64,"runs": 10,"time": 315.600000},
+			"walk list": {"pagecount": 64,"runs": 10,"time": 387.400000},
+			"walk list + prefetch next entry": {"pagecount": 64,"runs": 10,"time": 495.600000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 64,"runs": 10,"time": 12237.200000},
+			"walk list + clflush after each write": {"pagecount": 64,"runs": 10,"time": 12636.600000},
+			"walk list + sfence after each write": {"pagecount": 64,"runs": 10,"time": 1847.400000},
+			"walk list + sfence after each run": {"pagecount": 64,"runs": 10,"time": 417.400000}
+		},
+	"size 512KB": {
+		"write time test": [1844336.000000, 1809414.000000, 1808410.000000, 1802408.000000, 1796100.000000, 1791170.000000, 1807056.000000, 1798610.000000, 1802140.000000, 1809006.000000],
+		"fsync time test": [362030.000000, 1658.000000, 772.000000, 772.000000, 772.000000, 792.000000, 766.000000, 770.000000, 774.000000, 764.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 128,"runs": 1,"time": 3070.000000},
+			"walk list without update": {"pagecount": 128,"runs": 10,"time": 1747.000000},
+			"walk list": {"pagecount": 128,"runs": 10,"time": 2450.000000},
+			"walk list + prefetch next entry": {"pagecount": 128,"runs": 10,"time": 2518.800000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 128,"runs": 10,"time": 26293.800000},
+			"walk list + clflush after each write": {"pagecount": 128,"runs": 10,"time": 26531.800000},
+			"walk list + sfence after each write": {"pagecount": 128,"runs": 10,"time": 5281.400000},
+			"walk list + sfence after each run": {"pagecount": 128,"runs": 10,"time": 2545.800000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 128,"runs": 10,"time": 1145.400000},
+			"walk list": {"pagecount": 128,"runs": 10,"time": 1343.800000},
+			"walk list + prefetch next entry": {"pagecount": 128,"runs": 10,"time": 1519.600000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 128,"runs": 10,"time": 25531.000000},
+			"walk list + clflush after each write": {"pagecount": 128,"runs": 10,"time": 26346.800000},
+			"walk list + sfence after each write": {"pagecount": 128,"runs": 10,"time": 3804.200000},
+			"walk list + sfence after each run": {"pagecount": 128,"runs": 10,"time": 1403.000000}
+		},
+	"size 1024KB": {
+		"write time test": [3676382.000000, 3826700.000000, 3802460.000000, 3803636.000000, 3754468.000000, 3775488.000000, 3796908.000000, 3840700.000000, 3768746.000000, 3875328.000000],
+		"fsync time test": [387362.000000, 1710.000000, 798.000000, 792.000000, 792.000000, 784.000000, 786.000000, 792.000000, 788.000000, 784.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 256,"runs": 1,"time": 8176.000000},
+			"walk list without update": {"pagecount": 256,"runs": 10,"time": 9426.400000},
+			"walk list": {"pagecount": 256,"runs": 10,"time": 7911.000000},
+			"walk list + prefetch next entry": {"pagecount": 256,"runs": 10,"time": 7470.200000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 256,"runs": 10,"time": 53319.200000},
+			"walk list + clflush after each write": {"pagecount": 256,"runs": 10,"time": 53664.000000},
+			"walk list + sfence after each write": {"pagecount": 256,"runs": 10,"time": 12936.600000},
+			"walk list + sfence after each run": {"pagecount": 256,"runs": 10,"time": 7720.200000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 256,"runs": 10,"time": 3229.000000},
+			"walk list": {"pagecount": 256,"runs": 10,"time": 2751.400000},
+			"walk list + prefetch next entry": {"pagecount": 256,"runs": 10,"time": 2943.000000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 256,"runs": 10,"time": 50893.200000},
+			"walk list + clflush after each write": {"pagecount": 256,"runs": 10,"time": 52584.400000},
+			"walk list + sfence after each write": {"pagecount": 256,"runs": 10,"time": 7792.600000},
+			"walk list + sfence after each run": {"pagecount": 256,"runs": 10,"time": 2708.000000}
+		},
+	"size 2048KB": {
+		"write time test": [7381154.000000, 7269298.000000, 7519664.000000, 7508194.000000, 7528754.000000, 7499126.000000, 7498400.000000, 7491044.000000, 7490016.000000, 7493604.000000],
+		"fsync time test": [409552.000000, 2158.000000, 872.000000, 758.000000, 760.000000, 760.000000, 762.000000, 760.000000, 768.000000, 764.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 512,"runs": 1,"time": 15308.000000},
+			"walk list without update": {"pagecount": 512,"runs": 10,"time": 29976.000000},
+			"walk list": {"pagecount": 512,"runs": 10,"time": 27069.600000},
+			"walk list + prefetch next entry": {"pagecount": 512,"runs": 10,"time": 27046.600000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 512,"runs": 10,"time": 106680.000000},
+			"walk list + clflush after each write": {"pagecount": 512,"runs": 10,"time": 107114.600000},
+			"walk list + sfence after each write": {"pagecount": 512,"runs": 10,"time": 37816.000000},
+			"walk list + sfence after each run": {"pagecount": 512,"runs": 10,"time": 27558.400000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 512,"runs": 10,"time": 7895.400000},
+			"walk list": {"pagecount": 512,"runs": 10,"time": 5647.600000},
+			"walk list + prefetch next entry": {"pagecount": 512,"runs": 10,"time": 6165.800000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 512,"runs": 10,"time": 102741.000000},
+			"walk list + clflush after each write": {"pagecount": 512,"runs": 10,"time": 104066.600000},
+			"walk list + sfence after each write": {"pagecount": 512,"runs": 10,"time": 15325.600000},
+			"walk list + sfence after each run": {"pagecount": 512,"runs": 10,"time": 5711.400000}
+		},
+	"size 4096KB": {
+		"write time test": [14799736.000000, 14874482.000000, 14893228.000000, 14866162.000000, 15035458.000000, 14887650.000000, 14859216.000000, 14854616.000000, 14876666.000000, 14881126.000000],
+		"fsync time test": [493096.000000, 1944.000000, 772.000000, 760.000000, 770.000000, 768.000000, 794.000000, 762.000000, 766.000000, 760.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 1024,"runs": 1,"time": 42582.000000},
+			"walk list without update": {"pagecount": 1024,"runs": 10,"time": 66427.800000},
+			"walk list": {"pagecount": 1024,"runs": 10,"time": 54912.400000},
+			"walk list + prefetch next entry": {"pagecount": 1024,"runs": 10,"time": 54272.400000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 1024,"runs": 10,"time": 213365.800000},
+			"walk list + clflush after each write": {"pagecount": 1024,"runs": 10,"time": 214790.400000},
+			"walk list + sfence after each write": {"pagecount": 1024,"runs": 10,"time": 78694.400000},
+			"walk list + sfence after each run": {"pagecount": 1024,"runs": 10,"time": 54222.200000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 1024,"runs": 10,"time": 21344.000000},
+			"walk list": {"pagecount": 1024,"runs": 10,"time": 17776.200000},
+			"walk list + prefetch next entry": {"pagecount": 1024,"runs": 10,"time": 17729.400000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 1024,"runs": 10,"time": 208075.800000},
+			"walk list + clflush after each write": {"pagecount": 1024,"runs": 10,"time": 210580.000000},
+			"walk list + sfence after each write": {"pagecount": 1024,"runs": 10,"time": 36259.200000},
+			"walk list + sfence after each run": {"pagecount": 1024,"runs": 10,"time": 17738.800000}
+		},
+	"size 8192KB": {
+		"write time test": [29231776.000000, 29515084.000000, 29510368.000000, 29342260.000000, 29396784.000000, 29524920.000000, 29453904.000000, 29436376.000000, 29420506.000000, 29474438.000000],
+		"fsync time test": [408358.000000, 2196.000000, 770.000000, 776.000000, 774.000000, 794.000000, 766.000000, 770.000000, 768.000000, 762.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 2048,"runs": 1,"time": 114236.000000},
+			"walk list without update": {"pagecount": 2048,"runs": 10,"time": 158848.200000},
+			"walk list": {"pagecount": 2048,"runs": 10,"time": 121253.200000},
+			"walk list + prefetch next entry": {"pagecount": 2048,"runs": 10,"time": 125685.400000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 2048,"runs": 10,"time": 442862.800000},
+			"walk list + clflush after each write": {"pagecount": 2048,"runs": 10,"time": 444126.400000},
+			"walk list + sfence after each write": {"pagecount": 2048,"runs": 10,"time": 171838.000000},
+			"walk list + sfence after each run": {"pagecount": 2048,"runs": 10,"time": 119591.000000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 2048,"runs": 10,"time": 64964.400000},
+			"walk list": {"pagecount": 2048,"runs": 10,"time": 108408.400000},
+			"walk list + prefetch next entry": {"pagecount": 2048,"runs": 10,"time": 67752.000000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 2048,"runs": 10,"time": 432968.800000},
+			"walk list + clflush after each write": {"pagecount": 2048,"runs": 10,"time": 437621.600000},
+			"walk list + sfence after each write": {"pagecount": 2048,"runs": 10,"time": 108772.800000},
+			"walk list + sfence after each run": {"pagecount": 2048,"runs": 10,"time": 112627.800000}
+		},
+	"size 16384KB": {
+		"write time test": [60335604.000000, 60367702.000000, 60433374.000000, 60591184.000000, 60519024.000000, 60432218.000000, 60411954.000000, 60377106.000000, 60574580.000000, 60431580.000000],
+		"fsync time test": [438180.000000, 2176.000000, 810.000000, 772.000000, 770.000000, 768.000000, 766.000000, 768.000000, 766.000000, 768.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 4096,"runs": 1,"time": 259418.000000},
+			"walk list without update": {"pagecount": 4096,"runs": 10,"time": 332086.400000},
+			"walk list": {"pagecount": 4096,"runs": 10,"time": 255163.800000},
+			"walk list + prefetch next entry": {"pagecount": 4096,"runs": 10,"time": 261875.800000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 4096,"runs": 10,"time": 882565.600000},
+			"walk list + clflush after each write": {"pagecount": 4096,"runs": 10,"time": 885520.200000},
+			"walk list + sfence after each write": {"pagecount": 4096,"runs": 10,"time": 354703.400000},
+			"walk list + sfence after each run": {"pagecount": 4096,"runs": 10,"time": 255172.400000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 4096,"runs": 10,"time": 227185.000000},
+			"walk list": {"pagecount": 4096,"runs": 10,"time": 236818.800000},
+			"walk list + prefetch next entry": {"pagecount": 4096,"runs": 10,"time": 237180.400000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 4096,"runs": 10,"time": 859560.200000},
+			"walk list + clflush after each write": {"pagecount": 4096,"runs": 10,"time": 867651.800000},
+			"walk list + sfence after each write": {"pagecount": 4096,"runs": 10,"time": 315673.000000},
+			"walk list + sfence after each run": {"pagecount": 4096,"runs": 10,"time": 238626.200000}
+		},
+	"size 32768KB": {
+		"write time test": [116045910.000000, 116126584.000000, 115962564.000000, 115950054.000000, 118097844.000000, 118762876.000000, 118497174.000000, 118450550.000000, 118996160.000000, 119071926.000000],
+		"fsync time test": [499728.000000, 2554.000000, 774.000000, 770.000000, 770.000000, 772.000000, 764.000000, 768.000000, 770.000000, 764.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 8192,"runs": 1,"time": 606270.000000},
+			"walk list without update": {"pagecount": 8192,"runs": 10,"time": 840937.600000},
+			"walk list": {"pagecount": 8192,"runs": 10,"time": 768450.600000},
+			"walk list + prefetch next entry": {"pagecount": 8192,"runs": 10,"time": 764166.600000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 8192,"runs": 10,"time": 1766831.400000},
+			"walk list + clflush after each write": {"pagecount": 8192,"runs": 10,"time": 1768171.600000},
+			"walk list + sfence after each write": {"pagecount": 8192,"runs": 10,"time": 868757.000000},
+			"walk list + sfence after each run": {"pagecount": 8192,"runs": 10,"time": 769428.400000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 8192,"runs": 10,"time": 598257.200000},
+			"walk list": {"pagecount": 8192,"runs": 10,"time": 488882.400000},
+			"walk list + prefetch next entry": {"pagecount": 8192,"runs": 10,"time": 496428.400000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 8192,"runs": 10,"time": 1706224.400000},
+			"walk list + clflush after each write": {"pagecount": 8192,"runs": 10,"time": 1718908.200000},
+			"walk list + sfence after each write": {"pagecount": 8192,"runs": 10,"time": 667535.400000},
+			"walk list + sfence after each run": {"pagecount": 8192,"runs": 10,"time": 486341.800000}
+		},
+	"size 65536KB": {
+		"write time test": [230721156.000000, 228730154.000000, 232679408.000000, 236410716.000000, 235472502.000000, 234829330.000000, 234854324.000000, 234804170.000000, 234743078.000000, 235506250.000000],
+		"fsync time test": [541182.000000, 1944.000000, 776.000000, 776.000000, 770.000000, 770.000000, 774.000000, 768.000000, 774.000000, 766.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 16384,"runs": 1,"time": 1324828.000000},
+			"walk list without update": {"pagecount": 16384,"runs": 10,"time": 3274160.000000},
+			"walk list": {"pagecount": 16384,"runs": 10,"time": 3272660.200000},
+			"walk list + prefetch next entry": {"pagecount": 16384,"runs": 10,"time": 3269765.800000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 16384,"runs": 10,"time": 3534510.600000},
+			"walk list + clflush after each write": {"pagecount": 16384,"runs": 10,"time": 3531525.400000},
+			"walk list + sfence after each write": {"pagecount": 16384,"runs": 10,"time": 3472176.000000},
+			"walk list + sfence after each run": {"pagecount": 16384,"runs": 10,"time": 3440739.200000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 16384,"runs": 10,"time": 1394421.600000},
+			"walk list": {"pagecount": 16384,"runs": 10,"time": 1106487.600000},
+			"walk list + prefetch next entry": {"pagecount": 16384,"runs": 10,"time": 1120450.600000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 16384,"runs": 10,"time": 3403911.600000},
+			"walk list + clflush after each write": {"pagecount": 16384,"runs": 10,"time": 3425666.200000},
+			"walk list + sfence after each write": {"pagecount": 16384,"runs": 10,"time": 1458539.800000},
+			"walk list + sfence after each run": {"pagecount": 16384,"runs": 10,"time": 1104449.600000}
+		},
+	"size 131072KB": {
+		"write time test": [456423470.000000, 454827050.000000, 470066572.000000, 470371450.000000, 469898782.000000, 475289268.000000, 476476672.000000, 476748550.000000, 475278642.000000, 474411582.000000],
+		"fsync time test": [690010.000000, 2378.000000, 766.000000, 774.000000, 770.000000, 768.000000, 764.000000, 768.000000, 774.000000, 770.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 32768,"runs": 1,"time": 2729520.000000},
+			"walk list without update": {"pagecount": 32768,"runs": 10,"time": 6793735.800000},
+			"walk list": {"pagecount": 32768,"runs": 10,"time": 7029573.800000},
+			"walk list + prefetch next entry": {"pagecount": 32768,"runs": 10,"time": 7063145.400000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 32768,"runs": 10,"time": 7091677.200000},
+			"walk list + clflush after each write": {"pagecount": 32768,"runs": 10,"time": 7037987.600000},
+			"walk list + sfence after each write": {"pagecount": 32768,"runs": 10,"time": 7100471.600000},
+			"walk list + sfence after each run": {"pagecount": 32768,"runs": 10,"time": 7057941.800000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 32768,"runs": 10,"time": 5064994.600000},
+			"walk list": {"pagecount": 32768,"runs": 10,"time": 4865549.600000},
+			"walk list + prefetch next entry": {"pagecount": 32768,"runs": 10,"time": 4992878.000000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 32768,"runs": 10,"time": 6816714.200000},
+			"walk list + clflush after each write": {"pagecount": 32768,"runs": 10,"time": 6772958.200000},
+			"walk list + sfence after each write": {"pagecount": 32768,"runs": 10,"time": 5365290.800000},
+			"walk list + sfence after each run": {"pagecount": 32768,"runs": 10,"time": 5013152.600000}
+		},
+	"size 262144KB": {
+		"write time test": [929235494.000000, 954197268.000000, 950670686.000000, 951630896.000000, 951396658.000000, 960033904.000000, 957006084.000000, 956424556.000000, 955019264.000000, 953453304.000000],
+		"fsync time test": [304710.000000, 1816.000000, 774.000000, 764.000000, 772.000000, 794.000000, 760.000000, 760.000000, 768.000000, 760.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 65536,"runs": 1,"time": 5544322.000000},
+			"walk list without update": {"pagecount": 65536,"runs": 10,"time": 13788443.800000},
+			"walk list": {"pagecount": 65536,"runs": 10,"time": 14210101.400000},
+			"walk list + prefetch next entry": {"pagecount": 65536,"runs": 10,"time": 14420896.400000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 65536,"runs": 10,"time": 14207411.200000},
+			"walk list + clflush after each write": {"pagecount": 65536,"runs": 10,"time": 14037037.000000},
+			"walk list + sfence after each write": {"pagecount": 65536,"runs": 10,"time": 14288200.000000},
+			"walk list + sfence after each run": {"pagecount": 65536,"runs": 10,"time": 14215130.800000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 65536,"runs": 10,"time": 11208141.000000},
+			"walk list": {"pagecount": 65536,"runs": 10,"time": 11640637.400000},
+			"walk list + prefetch next entry": {"pagecount": 65536,"runs": 10,"time": 11771424.200000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 65536,"runs": 10,"time": 13702154.200000},
+			"walk list + clflush after each write": {"pagecount": 65536,"runs": 10,"time": 13575563.200000},
+			"walk list + sfence after each write": {"pagecount": 65536,"runs": 10,"time": 12878997.400000},
+			"walk list + sfence after each run": {"pagecount": 65536,"runs": 10,"time": 12270011.400000}
+		},
+	"size 524288KB": {
+		"write time test": [1868097354.000000, 1905943510.000000, 1898497512.000000, 1886439540.000000, 1891385164.000000, 1917829260.000000, 1899124890.000000, 1892082114.000000, 1901018752.000000, 1907563638.000000],
+		"fsync time test": [443608.000000, 2146.000000, 828.000000, 782.000000, 772.000000, 792.000000, 768.000000, 984.000000, 990.000000, 970.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 131072,"runs": 1,"time": 11172076.000000},
+			"walk list without update": {"pagecount": 131072,"runs": 10,"time": 28407335.000000},
+			"walk list": {"pagecount": 131072,"runs": 10,"time": 28777071.400000},
+			"walk list + prefetch next entry": {"pagecount": 131072,"runs": 10,"time": 28887818.200000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 131072,"runs": 10,"time": 28646549.800000},
+			"walk list + clflush after each write": {"pagecount": 131072,"runs": 10,"time": 28356429.400000},
+			"walk list + sfence after each write": {"pagecount": 131072,"runs": 10,"time": 28785981.400000},
+			"walk list + sfence after each run": {"pagecount": 131072,"runs": 10,"time": 28554521.800000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 131072,"runs": 10,"time": 25099076.400000},
+			"walk list": {"pagecount": 131072,"runs": 10,"time": 25355077.200000},
+			"walk list + prefetch next entry": {"pagecount": 131072,"runs": 10,"time": 25758174.200000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 131072,"runs": 10,"time": 27678181.000000},
+			"walk list + clflush after each write": {"pagecount": 131072,"runs": 10,"time": 27562433.000000},
+			"walk list + sfence after each write": {"pagecount": 131072,"runs": 10,"time": 25988115.800000},
+			"walk list + sfence after each run": {"pagecount": 131072,"runs": 10,"time": 25612468.600000}
+		},
+	"size 1048576KB": {
+		"write time test": [3746330202.000000, 3795617466.000000, 3788387430.000000, 3819614202.000000, 3789039122.000000, 3812485630.000000, 3788645508.000000, 3783480046.000000, 3800056168.000000, 3813249714.000000],
+		"fsync time test": [350762.000000, 1764.000000, 796.000000, 778.000000, 764.000000, 790.000000, 784.000000, 774.000000, 758.000000, 762.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 262144,"runs": 1,"time": 22421482.000000},
+			"walk list without update": {"pagecount": 262144,"runs": 10,"time": 60277526.800000},
+			"walk list": {"pagecount": 262144,"runs": 10,"time": 61693274.000000},
+			"walk list + prefetch next entry": {"pagecount": 262144,"runs": 10,"time": 61842652.800000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 262144,"runs": 10,"time": 58310902.200000},
+			"walk list + clflush after each write": {"pagecount": 262144,"runs": 10,"time": 57619430.800000},
+			"walk list + sfence after each write": {"pagecount": 262144,"runs": 10,"time": 57819585.800000},
+			"walk list + sfence after each run": {"pagecount": 262144,"runs": 10,"time": 57825671.400000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 262144,"runs": 10,"time": 54081767.000000},
+			"walk list": {"pagecount": 262144,"runs": 10,"time": 52855647.800000},
+			"walk list + prefetch next entry": {"pagecount": 262144,"runs": 10,"time": 53668274.400000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 262144,"runs": 10,"time": 55602535.400000},
+			"walk list + clflush after each write": {"pagecount": 262144,"runs": 10,"time": 55556686.600000},
+			"walk list + sfence after each write": {"pagecount": 262144,"runs": 10,"time": 54792731.000000},
+			"walk list + sfence after each run": {"pagecount": 262144,"runs": 10,"time": 52496303.200000}
+		},
+	"size 2097152KB": {
+		"write time test": [7500300456.000000, 7528285444.000000, 7516048204.000000, 7580825872.000000, 7527665800.000000, 7530260826.000000, 7534295022.000000, 7527052926.000000, 7559663026.000000, 7563312474.000000],
+		"fsync time test": [555250.000000, 1722.000000, 870.000000, 770.000000, 776.000000, 784.000000, 782.000000, 846.000000, 1000.000000, 1008.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 524288,"runs": 1,"time": 45483392.000000},
+			"walk list without update": {"pagecount": 524288,"runs": 10,"time": 121038881.000000},
+			"walk list": {"pagecount": 524288,"runs": 10,"time": 123937859.200000},
+			"walk list + prefetch next entry": {"pagecount": 524288,"runs": 10,"time": 122376328.800000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 524288,"runs": 10,"time": 116619257.200000},
+			"walk list + clflush after each write": {"pagecount": 524288,"runs": 10,"time": 115300212.200000},
+			"walk list + sfence after each write": {"pagecount": 524288,"runs": 10,"time": 115752472.800000},
+			"walk list + sfence after each run": {"pagecount": 524288,"runs": 10,"time": 115652107.200000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 524288,"runs": 10,"time": 108715065.000000},
+			"walk list": {"pagecount": 524288,"runs": 10,"time": 109192832.800000},
+			"walk list + prefetch next entry": {"pagecount": 524288,"runs": 10,"time": 109565353.000000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 524288,"runs": 10,"time": 111424954.600000},
+			"walk list + clflush after each write": {"pagecount": 524288,"runs": 10,"time": 111121073.400000},
+			"walk list + sfence after each write": {"pagecount": 524288,"runs": 10,"time": 109515867.800000},
+			"walk list + sfence after each run": {"pagecount": 524288,"runs": 10,"time": 109165046.800000}
+		},
+	"size 4194304KB": {
+		"write time test": [15276971558.000000, 15363713532.000000, 15400237522.000000, 15373939396.000000, 15294295984.000000, 14557872148.000000, 4843018706.000000, 4845660564.000000, 4840311196.000000, 4839406138.000000],
+		"fsync time test": [300224.000000, 3738.000000, 818.000000, 770.000000, 774.000000, 838.000000, 1146.000000, 1026.000000, 1024.000000, 1016.000000],
+		"test_cache_behavior_1":{
+			"initialize first record of each page": {"pagecount": 1048576,"runs": 1,"time": 89742140.000000},
+			"walk list without update": {"pagecount": 1048576,"runs": 10,"time": 242916838.200000},
+			"walk list": {"pagecount": 1048576,"runs": 10,"time": 246186390.200000},
+			"walk list + prefetch next entry": {"pagecount": 1048576,"runs": 10,"time": 244388938.200000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 1048576,"runs": 10,"time": 233132259.400000},
+			"walk list + clflush after each write": {"pagecount": 1048576,"runs": 10,"time": 230650238.400000},
+			"walk list + sfence after each write": {"pagecount": 1048576,"runs": 10,"time": 231882522.000000},
+			"walk list + sfence after each run": {"pagecount": 1048576,"runs": 10,"time": 231886955.400000}
+		},
+		"test_cache_behavior_10":{
+			"walk list without update": {"pagecount": 1048576,"runs": 10,"time": 219137076.800000},
+			"walk list": {"pagecount": 1048576,"runs": 10,"time": 220410038.000000},
+			"walk list + prefetch next entry": {"pagecount": 1048576,"runs": 10,"time": 222275858.000000},
+			"walk list + prefetch next entry + clflush after each write": {"pagecount": 1048576,"runs": 10,"time": 223475619.000000},
+			"walk list + clflush after each write": {"pagecount": 1048576,"runs": 10,"time": 222293907.800000},
+			"walk list + sfence after each write": {"pagecount": 1048576,"runs": 10,"time": 220749649.400000},
+			"walk list + sfence after each run": {"pagecount": 1048576,"runs": 10,"time": 220027065.600000}
+		},
+		"backing file": "/mnt/pmem0/fsgeek-test.dat",
+	"number of runs": 10
+}
