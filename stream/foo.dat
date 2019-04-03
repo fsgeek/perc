@@ -1,0 +1,15 @@
+Wed Apr  3 10:53:14 2019, sequential_write, p, /mnt/pmem7/copy-test, 25, 2178586262
+Wed Apr  3 10:53:14 2019, sequential_write, s, DRAM, 26, 803320608
+Wed Apr  3 10:53:21 2019, random_write, p, /mnt/pmem7/copy-test, 25, 10764836816
+Wed Apr  3 10:53:21 2019, random_write, s, DRAM, 26, 9341910730
+Wed Apr  3 10:53:41 2019, backwards_write, p, /mnt/pmem7/copy-test, 25, 2723872742
+Wed Apr  3 10:53:41 2019, backwards_write, s, DRAM, 26, 1409943978
+Wed Apr  3 10:55:14 2019, sequential_write, /mnt/pmem7/copy-test, t, 25, 2198604482
+Wed Apr  3 10:55:21 2019, random_write, t, /mnt/pmem7/copy-test, 25, 10729980626
+Wed Apr  3 10:55:40 2019, backwards_write, t, /mnt/pmem7/copy-test, 25, 2560507398
+Wed Apr  3 11:02:51 2019, sequential_write, p, /mnt/pmem7/copy-test, 25, 2187271824
+Wed Apr  3 11:02:51 2019, sequential_write, s, DRAM, 26, 805391366
+Wed Apr  3 11:03:51 2019, random_write, p, /mnt/pmem7/copy-test, 25, 89065065738
+Wed Apr  3 11:03:51 2019, random_write, s, DRAM, 26, 89807928552
+Wed Apr  3 11:04:10 2019, backwards_write, p, /mnt/pmem7/copy-test, 25, 2367298050
+Wed Apr  3 11:04:10 2019, backwards_write, s, DRAM, 26, 1086030438
