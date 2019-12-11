@@ -1,6 +1,7 @@
 # include $(top_srcdir)/mk/c.am
 
 SUBDIRS = .
+SUBDIRS += daxtest
 
 AM_CFLAGS = -Werror -Wall -O3
 

@@ -19,6 +19,9 @@
 #include <float.h>
 #include <pthread.h>
 #include <stdarg.h>
+#include <ndctl/libndctl.h>
+#include <ndctl/libdaxctl.h>
+#include <libpmem.h>
 #include "cache.h"
 #include "cpu.h"
 #include "setprocessor.h"
@@ -2053,12 +2056,64 @@ void test_cache_behavior(unsigned specific_test, const unsigned pagecount, int f
   
 }
 
+#if 0
+/*
+ * find_dev_dax -- (internal) check if device is Device DAX
+ *
+ * If there is matching Device DAX, find its region, size and alignment.
+ */
+static int
+find_dev_dax(struct ndctl_ctx *ndctl_ctx, struct daxio_device *dev)
+{
+        struct ndctl_bus *bus = NULL;
+        struct ndctl_region *region = NULL;
+        struct ndctl_dax *dax = NULL;
+        struct daxctl_region *dax_region = NULL;
+
+        ndctl_bus_foreach(ndctl_ctx, bus) {
+                ndctl_region_foreach(bus, region) {
+                        ndctl_dax_foreach(region, dax) {
+                                dax_region = ndctl_dax_get_daxctl_region(dax);
+                                if (match_dev_dax(dev, dax_region)) {
+                                        dev->is_devdax = 1;
+                                        dev->align = ndctl_dax_get_align(dax);
+                                        dev->region = region;
+                                        return 1;
+                                }
+                        }
+                }
+        }
+
+        /* try with dax regions */
+        struct daxctl_ctx *daxctl_ctx;
+        if (daxctl_new(&daxctl_ctx))
+                return 0;
+
+        int ret = 0;
+        daxctl_region_foreach(daxctl_ctx, dax_region) {
+                if (match_dev_dax(dev, dax_region)) {
+                        dev->is_devdax = 1;
+                        dev->align = daxctl_region_get_align(dax_region);
+                        dev->region = region;
+                        ret = 1;
+                        goto end;
+                }
+        }
+
+end:
+        daxctl_unref(daxctl_ctx);
+        return ret;
+}
+#endif // 0
+
+
 /// end experimental code
 
 const char *USAGE = "\
 usage:             \n\
 \t%s [options]     \n\
 options:           \n\
+\t-a    Alignment to use for memory (4,2,1 for 4K, 2M, 1G)\n\
 \t-d    Direct Access Memory file to use. [default=DRAM]\n\
 \t-h    Show this help message.\n\
 \t-l    Write output to the specified log file. [default=stdout]\n\
@@ -2069,6 +2124,7 @@ options:           \n\
 
 // options information
 static struct option gLongOptions[] = {
+    {"align",   required_argument, NULL, 'd'},
     {"daxmem",  required_argument, NULL, 'd'},
     {"help",    no_argument, NULL, 'h'},
     {"processor",     required_argument, NULL, 'p'},
@@ -2100,7 +2156,7 @@ int main(int argc, char **argv)
 
     logfile = stderr;
 
-    while (-1 != (option_char = getopt_long(argc, argv, "s:t:r:d:hl:p:", gLongOptions, NULL))) {
+    while (-1 != (option_char = getopt_long(argc, argv, "s:t:r:d:hl:p:a:", gLongOptions, NULL))) {
         switch(option_char) {
             default:
                 printf( "Unknown option -%c\n", option_char);
@@ -2251,8 +2307,20 @@ int main(int argc, char **argv)
             char *zero = NULL;
             unsigned start, end;
             double time;
+            struct stat st;
 
             printf( "\t\"size %dKB\": {\n", 4 * samples[index]);
+            if (stat(daxmem, &st) >= 0) {
+                // check to see if this is a character device - if it is, assume devdax; otherwise we
+                // will assume a file on a mounted file system
+                if (st.st_rdev != 0) {
+                    // this is a device
+                    if (S_ISCHR(st.st_mode)) {
+                        fprintf(stderr, "Using character device %s (%lu), size %zu\n",daxmem, st.st_rdev,st.st_size);
+                    }
+                }
+                exit(0); // debug only
+            }
             (void) unlink(daxmem);
             memfd = open(daxmem, O_CREAT | O_RDWR, 0644);
             if (0 > memfd) {
